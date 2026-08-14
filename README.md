@@ -6,8 +6,8 @@
 
 - Netlify project: `hanage-hub`
 - Production branch: `main`
-- Current URL: https://hanage-hub.netlify.app/
-- Planned primary domain: https://hanage.app/
+- Primary domain: https://hanage.app/ (custom domain connected, HTTPS via Let's Encrypt)
+- Netlify default URL: https://hanage-hub.netlify.app/
 - Gradient Sweeper: https://sweeper.hanage.app/
 
 Changes merged into `main` are deployed automatically by Netlify. Pull requests receive Deploy Previews when Netlify creates them.

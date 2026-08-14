@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 ## Current state
 
@@ -8,9 +8,13 @@ Last updated: 2026-08-13
 - Hosting: Netlify, connected to this GitHub repository
 - Netlify project name: `hanage-hub`
 - Production branch: `main`
-- Current public URL: https://hanage-hub.netlify.app/
-- Planned primary domain: https://hanage.app/
-- Status: initial hub site is deployed; detailed design and content can be refined later
+- Primary domain: https://hanage.app/ — connected and live, set as Primary domain in Netlify
+- Netlify default URL: https://hanage-hub.netlify.app/
+- DNS (registrar: お名前.com):
+  - `hanage.app` — A record → `75.2.60.5`
+  - `www.hanage.app` — CNAME → `hanage-hub.netlify.app` (redirects to `hanage.app`)
+- HTTPS: Let's Encrypt certificate issued for the custom domain
+- Status: custom domain is connected and serving the site; detailed design and content can be refined later
 
 ## Decisions made
 
@@ -35,7 +39,7 @@ Last updated: 2026-08-13
 
 ## Next likely tasks
 
-1. Connect the custom domain `hanage.app`.
+1. Register `hanage.app` with Google Search Console (domain property) and submit `sitemap.xml`.
 2. Replace provisional copy, links, and artwork with final content.
 3. Connect the Gradient Sweeper tile to its production URL when ready.
 4. Verify the site on iPhone and iPad, then refine spacing and tile sizing.
