@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-08-14
+Last updated: 2026-08-23
 
 ## Current state
 
@@ -37,6 +37,7 @@ Last updated: 2026-08-14
 - Responsive tile-style catalog
 - Netlify static export configuration
 - SEO-oriented routes and metadata files
+- Open Graph image and app icons, generated from `scripts/og/template.html` (see `scripts/og/generate.sh`)
 - Shared agent instructions via `AGENTS.md` and `CLAUDE.md`
 
 ## Next likely tasks

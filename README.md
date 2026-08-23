@@ -30,6 +30,19 @@ npm run lint
 npm run build
 ```
 
+## Share images and icons
+
+The Open Graph image (`src/app/opengraph-image.png`) and the app icons
+(`src/app/icon.png`, `src/app/apple-icon.png`) are committed to the repository.
+They are generated from `scripts/og/template.html`:
+
+```bash
+scripts/og/generate.sh
+```
+
+The script needs a Chromium/Chrome binary (set `CHROME=` to point at one) and
+network access to fonts.googleapis.com. Re-run it only when the artwork changes.
+
 ## AI-assisted development
 
 - Codex reads [AGENTS.md](./AGENTS.md).
