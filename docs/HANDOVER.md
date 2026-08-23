@@ -141,8 +141,11 @@ The owner does not write code. This changes how to work with them:
 - **Explain what a change does and why it matters**, not how it is implemented.
 - **Ask before anything that costs money or is hard to undo** — merging to
   `main` above all.
-- Japanese is the working language for conversation. Code, commit messages, and
-  these documents are in English; user-facing site copy is in Japanese.
+- **Japanese is the working language for anything the owner reads.** That means
+  conversation and **pull request titles and descriptions**, as well as the
+  site's own copy. Code, commit messages, and these documents stay in English.
+  A pull request is where the owner reviews the work, so write its description
+  for them: what changed and why it matters, not how it is implemented.
 
 ## Regenerating the share image and icons
 

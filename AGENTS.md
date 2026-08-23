@@ -33,7 +33,8 @@ Do not add server-only Next.js features unless the hosting/export strategy is in
 4. Do not commit credentials, analytics secrets, advertising IDs, or Netlify tokens.
 5. Do not change production domains, hosting settings, or monetization behavior without explicit user approval.
 6. Netlify runs on the free plan with a low credit balance. Deploy Previews and branch deploys are free, so use pull requests freely; a production deploy costs 15 credits, so batch changes and never merge to `main` without asking the user first.
-7. Keep documentation updated when deployment, URL structure, major design decisions, or the current development status changes. `docs/PROJECT_STATUS.md` is the file to update.
+7. Write pull request titles and descriptions in Japanese — that is where the owner reviews the work. Code, commit messages, and the files in `docs/` stay in English.
+8. Keep documentation updated when deployment, URL structure, major design decisions, or the current development status changes. `docs/PROJECT_STATUS.md` is the file to update.
 
 ## Required checks
 
