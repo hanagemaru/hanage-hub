@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>hanage.app image sources</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --navy: #202e55;
+    --blue: #3878f2;
+    --cyan: #57d8dc;
+    --pink: #ef648d;
+    --yellow: #f6c84e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--navy);
+    color: #ffffff;
+    font-family: "Noto Sans JP", "IPAGothic", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 48%),
+      var(--navy);
+    isolation: isolate;
+  }
+
+  .stage[hidden] { display: none !important; }
+
+  .stage::before {
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    content: "";
+  }
+
+  /* ---------- Open Graph card (1200x630) ---------- */
+
+  .og {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 56px;
+    padding: 64px 68px;
+  }
+
+  .og::before {
+    inset: -46% 58% 30% -22%;
+    background: radial-gradient(circle at 50% 50%, rgba(87, 216, 220, 0.34), rgba(87, 216, 220, 0) 70%);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .brandMark {
+    display: grid;
+    grid-template-columns: repeat(2, 21px);
+    grid-template-rows: repeat(2, 21px);
+    gap: 6px;
+    padding: 7px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .brandMark i { display: block; border-radius: 3px; }
+  .brandMark i:nth-child(1) { background: var(--cyan); }
+  .brandMark i:nth-child(2) { background: var(--pink); }
+  .brandMark i:nth-child(3) { background: var(--yellow); }
+  .brandMark i:nth-child(4) { background: var(--blue); }
+
+  .eyebrow {
+    margin-top: 38px;
+    color: var(--cyan);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+  }
+
+  .headline {
+    margin-top: 18px;
+    font-size: 58px;
+    font-weight: 700;
+    line-height: 1.16;
+    letter-spacing: -0.02em;
+  }
+
+  .lede {
+    margin-top: 26px;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(6, 58px);
+    grid-template-rows: repeat(6, 58px);
+    gap: 8px;
+    padding: 20px;
+    border-radius: 26px;
+    background: rgba(9, 16, 36, 0.45);
+    box-shadow: 0 24px 60px rgba(6, 12, 28, 0.42);
+  }
+
+  .cell {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 5px;
+    background: #34436c;
+    box-shadow:
+      inset -3px -3px 0 rgba(8, 16, 35, 0.4),
+      inset 3px 3px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .cell.red { background: #e76070; }
+  .cell.blue { background: #4e8bea; }
+  .cell.purple { background: #9b6dcc; }
+  .cell.light { background: #9ee0d7; }
+
+  /* ---------- App icon (square) ---------- */
+
+  .icon { display: block; }
+  .icon::before {
+    inset: -55% 42% 42% -55%;
+    background: radial-gradient(circle at 50% 50%, rgba(87, 216, 220, 0.32), rgba(87, 216, 220, 0) 70%);
+  }
+
+  .iconMark {
+    position: absolute;
+    inset: 19%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 7.5%;
+  }
+
+  .iconMark i { display: block; border-radius: 12%; }
+  .iconMark i:nth-child(1) { background: var(--cyan); }
+  .iconMark i:nth-child(2) { background: var(--pink); }
+  .iconMark i:nth-child(3) { background: var(--yellow); }
+  .iconMark i:nth-child(4) { background: var(--blue); }
+</style>
+</head>
+<body>
+  <div class="stage og" data-variant="og">
+    <div>
+      <div class="brand">
+        <span class="brandMark"><i></i><i></i><i></i><i></i></span>
+        hanage.app
+      </div>
+      <p class="eyebrow">GAMES &amp; WEB APPS</p>
+      <h1 class="headline">ちょっと変わった、<br />すぐ遊べる。</h1>
+      <p class="lede">個人制作のゲームとWebアプリを、インストールなしで。</p>
+    </div>
+    <div class="board">
+      <span class="cell"></span><span class="cell"></span><span class="cell blue"></span><span class="cell blue"></span><span class="cell"></span><span class="cell"></span>
+      <span class="cell"></span><span class="cell purple"></span><span class="cell purple"></span><span class="cell red"></span><span class="cell"></span><span class="cell"></span>
+      <span class="cell blue"></span><span class="cell purple"></span><span class="cell light"></span><span class="cell red"></span><span class="cell red"></span><span class="cell"></span>
+      <span class="cell blue"></span><span class="cell blue"></span><span class="cell purple"></span><span class="cell purple"></span><span class="cell red"></span><span class="cell"></span>
+      <span class="cell"></span><span class="cell blue"></span><span class="cell blue"></span><span class="cell purple"></span><span class="cell"></span><span class="cell"></span>
+      <span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span>
+    </div>
+  </div>
+
+  <div class="stage icon" data-variant="icon" hidden>
+    <span class="iconMark"><i></i><i></i><i></i><i></i></span>
+  </div>
+
+  <script>
+    const wanted = new URLSearchParams(location.search).get("variant") || "og";
+    for (const stage of document.querySelectorAll(".stage")) {
+      stage.hidden = stage.dataset.variant !== wanted;
+    }
+  </script>
+</body>
+</html>

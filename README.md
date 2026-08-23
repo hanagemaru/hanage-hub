@@ -6,8 +6,8 @@
 
 - Netlify project: `hanage-hub`
 - Production branch: `main`
-- Current URL: https://hanage-hub.netlify.app/
-- Planned primary domain: https://hanage.app/
+- Primary domain: https://hanage.app/ (custom domain connected, HTTPS via Let's Encrypt)
+- Netlify default URL: https://hanage-hub.netlify.app/
 - Gradient Sweeper: https://sweeper.hanage.app/
 
 Changes merged into `main` are deployed automatically by Netlify. Pull requests receive Deploy Previews when Netlify creates them.
@@ -30,8 +30,22 @@ npm run lint
 npm run build
 ```
 
+## Share images and icons
+
+The Open Graph image (`src/app/opengraph-image.png`) and the app icons
+(`src/app/icon.png`, `src/app/apple-icon.png`) are committed to the repository.
+They are generated from `scripts/og/template.html`:
+
+```bash
+scripts/og/generate.sh
+```
+
+The script needs a Chromium/Chrome binary (set `CHROME=` to point at one) and
+network access to fonts.googleapis.com. Re-run it only when the artwork changes.
+
 ## AI-assisted development
 
+- New assistants and contributors should start with [docs/HANDOVER.md](./docs/HANDOVER.md).
 - Codex reads [AGENTS.md](./AGENTS.md).
 - Claude Code reads [CLAUDE.md](./CLAUDE.md), which imports the same shared instructions.
 - Current decisions and handoff notes are recorded in [docs/PROJECT_STATUS.md](./docs/PROJECT_STATUS.md).
