@@ -45,6 +45,7 @@ network access to fonts.googleapis.com. Re-run it only when the artwork changes.
 
 ## AI-assisted development
 
+- New assistants and contributors should start with [docs/HANDOVER.md](./docs/HANDOVER.md).
 - Codex reads [AGENTS.md](./AGENTS.md).
 - Claude Code reads [CLAUDE.md](./CLAUDE.md), which imports the same shared instructions.
 - Current decisions and handoff notes are recorded in [docs/PROJECT_STATUS.md](./docs/PROJECT_STATUS.md).

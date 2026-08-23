@@ -27,12 +27,13 @@ Do not add server-only Next.js features unless the hosting/export strategy is in
 
 ## Working rules
 
-1. Read `README.md`, `docs/PROJECT_STATUS.md`, and the relevant part of `docs/SITE_PLAN.md` before making structural changes.
+1. New here? Read `docs/HANDOVER.md` first — it maps the repository and explains how to work with the owner. Then read `docs/PROJECT_STATUS.md` for the current state, and the relevant part of `docs/SITE_PLAN.md` before making structural changes.
 2. Preserve the tile-based catalog direction and verify mobile layouts first.
 3. Keep games and apps as separate projects; link to their public URLs from this hub.
 4. Do not commit credentials, analytics secrets, advertising IDs, or Netlify tokens.
 5. Do not change production domains, hosting settings, or monetization behavior without explicit user approval.
-6. Keep documentation updated when deployment, URL structure, major design decisions, or the current development status changes.
+6. Netlify runs on the free plan with a low credit balance. Deploy Previews and branch deploys are free, so use pull requests freely; a production deploy costs 15 credits, so batch changes and never merge to `main` without asking the user first.
+7. Keep documentation updated when deployment, URL structure, major design decisions, or the current development status changes. `docs/PROJECT_STATUS.md` is the file to update.
 
 ## Required checks
 
