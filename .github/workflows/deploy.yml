@@ -1,0 +1,41 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    # リポジトリ変数 CLOUDFLARE_DEPLOY を true にするまでスキップされる。
+    # Netlify から切り替える手順は docs/DEPLOY.md を参照。
+    if: vars.CLOUDFLARE_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit
+      - run: npm run lint
+      - run: npm run build
+      - name: Deploy to Cloudflare Workers
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      # リポジトリ変数 HUB_SMOKE_URL を設定すると、公開URLの生存確認を行う。
+      - name: Smoke test
+        if: vars.HUB_SMOKE_URL != ''
+        run: |
+          node --input-type=module <<'NODE'
+          const url = process.env.HUB_SMOKE_URL;
+          const response = await fetch(url);
+          const body = await response.text();
+          if (!response.ok) throw new Error(`${url} returned ${response.status}`);
+          if (!body.includes('hanage.app')) throw new Error(`${url} did not return the hub page`);
+          console.log(`Smoke test passed: ${url}`);
+          NODE
+        env:
+          HUB_SMOKE_URL: ${{ vars.HUB_SMOKE_URL }}

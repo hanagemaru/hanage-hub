@@ -1,0 +1,16 @@
+{
+  // ハブサイトは静的書き出しだけを配る。APIは持たない。
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hanage-hub",
+  "compatibility_date": "2026-08-01",
+  "assets": {
+    // next build（output: "export"）の出力先
+    "directory": "./out",
+    // trailingSlash: true なので /games/ → /games/index.html を配る
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

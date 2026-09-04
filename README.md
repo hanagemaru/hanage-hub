@@ -15,6 +15,8 @@ Game URLs are defined once in `src/lib/site.ts` (`GAME_URLS`). Update them there
 
 Changes merged into `main` are deployed automatically by Netlify. Pull requests receive Deploy Previews when Netlify creates them.
 
+A Cloudflare Workers deployment is prepared in `wrangler.jsonc` and `.github/workflows/deploy.yml`. It is skipped until the repository variable `CLOUDFLARE_DEPLOY` is set to `true`. The switch-over steps are in [docs/DEPLOY.md](./docs/DEPLOY.md).
+
 ## Development
 
 ```bash

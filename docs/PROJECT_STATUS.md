@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-04
+Last updated: 2026-09-05
 
 ## Current state
 
@@ -10,7 +10,8 @@ Last updated: 2026-09-04
 - Production branch: `main`
 - Current public URL: https://hanage-hub.netlify.app/
 - Planned primary domain: https://hanage.app/
-- Status: the catalog now lists Multicolor Sweeper and Putt. Hosting and advertising work has not started.
+- Cloudflare: `hanage.app` is now a Cloudflare zone (Phase A finished by the owner). The API token has Workers D1 edit rights.
+- Status: the catalog lists Multicolor Sweeper and Putt. The hub's Cloudflare deployment is prepared but switched off; Netlify still serves production.
 
 ## Decisions made
 
@@ -38,14 +39,17 @@ Last updated: 2026-09-04
 
 ## Migration and monetization plan
 
-Phase A (owner, account work — nothing in this repository)
+Phase A (owner, account work — nothing in this repository) — done on 2026-09-05
 
-1. Point `hanage.app` nameservers at Cloudflare.
-2. Give the Cloudflare API token Workers Scripts: Edit **and** Workers D1: Edit.
+1. ~~Point `hanage.app` nameservers at Cloudflare.~~
+2. ~~Give the Cloudflare API token Workers Scripts: Edit **and** Workers D1: Edit.~~
 
 Phase B (hosting)
 
 3. Serve the hub from Cloudflare Workers Static Assets and attach `hanage.app`.
+   `wrangler.jsonc`, `.github/workflows/ci.yml`, `.github/workflows/deploy.yml`, and `docs/DEPLOY.md`
+   are in place. The deploy job is skipped until the repository variable `CLOUDFLARE_DEPLOY` is `true`,
+   and the custom domain is attached from the Cloudflare dashboard.
 4. Attach `mcsweeper.hanage.app` to the Multicolor Sweeper Worker.
 5. Move Putt off GitHub Pages to `putt.hanage.app`.
 6. Update `GAME_URLS` and retire the Netlify deployment.
@@ -62,7 +66,7 @@ Phase D (advertising)
 
 ## Next likely tasks
 
-1. Finish Phase A, then Phase B.
+1. Finish Phase B: add the Cloudflare secrets and variables to this repository, deploy, attach `hanage.app`, then retire Netlify.
 2. Replace the interim game URLs with the `hanage.app` subdomains.
 3. Verify the site on iPhone and iPad, then refine spacing and tile sizing.
 4. Flip Putt's tile from `まもなく公開` to `公開中` when its release build ships.
