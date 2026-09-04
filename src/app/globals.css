@@ -177,7 +177,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   content: "";
 }
 
-.gameBoard {
+.sweeperBoard {
   position: absolute;
   inset: 14% 14% 25%;
   display: grid;
@@ -198,10 +198,93 @@ button, a { -webkit-tap-highlight-color: transparent; }
   box-shadow: inset -2px -2px 0 rgba(8, 16, 35, 0.4), inset 2px 2px 0 rgba(255, 255, 255, 0.08);
 }
 
-.gameCell.red { background: #e76070; }
-.gameCell.blue { background: #4e8bea; }
-.gameCell.purple { background: #9b6dcc; }
-.gameCell.light { background: #9ee0d7; }
+/* 色はゲーム本体のフラグ色に合わせる */
+.gameCell.red { background: #ef5f6d; }
+.gameCell.blue { background: #4d88ff; }
+.gameCell.green { background: #57e0a2; }
+.gameCell.yellow { background: #e9b53a; }
+.gameCell.open { background: #20243c; box-shadow: none; }
+
+.art-putt {
+  background:
+    linear-gradient(180deg, #2f6f8f 0%, #2f6f8f 26%, transparent 26%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 48%),
+    #1f6b3f;
+}
+
+/* 空は一色にしたいので、共通の背景の光は消す */
+.art-putt::before { content: none; }
+
+.puttScene { position: absolute; inset: 0; }
+
+.puttGreen {
+  position: absolute;
+  right: -12%;
+  bottom: -34%;
+  left: -12%;
+  height: 92%;
+  border-radius: 50% 50% 0 0 / 34% 34% 0 0;
+  background:
+    repeating-linear-gradient(
+      98deg,
+      rgba(255, 255, 255, 0.09) 0 2px,
+      transparent 2px 15px
+    ),
+    linear-gradient(180deg, #4aa960 0%, #2f8347 62%, #256b3a 100%);
+  box-shadow: inset 0 6px 18px rgba(255, 255, 255, 0.14);
+}
+
+.puttCup {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  width: 17%;
+  height: 7%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #10261a;
+  box-shadow: 0 2px 0 rgba(255, 255, 255, 0.22);
+}
+
+.puttFlag {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  width: 34%;
+  height: 38%;
+}
+
+.puttPole {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  background: #f2f5fa;
+  box-shadow: 0 0 0 1px rgba(12, 30, 20, 0.35);
+}
+
+.puttCloth {
+  position: absolute;
+  top: 2%;
+  left: 4px;
+  width: 74%;
+  height: 34%;
+  background: #ef648d;
+  clip-path: polygon(0 0, 100% 16%, 100% 84%, 0 100%);
+}
+
+.puttBall {
+  position: absolute;
+  bottom: 17%;
+  left: 30%;
+  width: 11%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #ffffff 0 46%, #d5dced 100%);
+  box-shadow: 0 3px 6px rgba(9, 28, 18, 0.45);
+}
 
 .artLabel {
   position: absolute;
@@ -467,4 +550,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+
+.noteText {
+  max-width: 600px;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.84rem;
 }

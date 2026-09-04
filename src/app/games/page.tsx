@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { GameTile } from "@/components/GameTile";
 import { PageHero } from "@/components/PageHero";
-import { gradientSweeper } from "@/lib/site";
+import { games } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "ゲーム",
@@ -19,7 +19,9 @@ export default function GamesPage() {
       />
       <section className="contentSection pageWidth" aria-label="ゲーム一覧">
         <div className="tileGrid">
-          <GameTile game={gradientSweeper} />
+          {games.map((game) => (
+            <GameTile game={game} key={game.slug} />
+          ))}
         </div>
       </section>
     </main>

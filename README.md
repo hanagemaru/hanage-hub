@@ -8,7 +8,10 @@
 - Production branch: `main`
 - Current URL: https://hanage-hub.netlify.app/
 - Planned primary domain: https://hanage.app/
-- Gradient Sweeper: https://sweeper.hanage.app/
+- Multicolor Sweeper: https://multicolor-sweeper.jibunnha.workers.dev/ (planned: https://mcsweeper.hanage.app/)
+- Putt: https://hanagemaru.github.io/putt/ (planned: https://putt.hanage.app/)
+
+Game URLs are defined once in `src/lib/site.ts` (`GAME_URLS`). Update them there when the custom domains are assigned.
 
 Changes merged into `main` are deployed automatically by Netlify. Pull requests receive Deploy Previews when Netlify creates them.
 
