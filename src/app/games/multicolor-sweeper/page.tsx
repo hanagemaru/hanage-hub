@@ -56,17 +56,17 @@ export default function MulticolorSweeperPage() {
           <article className="featureCard">
             <span className="featureNumber">01</span>
             <h3>色ごとの数字</h3>
-            <p>開いたマスには、周囲8マスにある爆弾の数が色ごとに分かれて出ます。手がかりが増える代わりに、爆弾の数も多くなります。</p>
+            <p>隣にある爆弾の数が、色ごとに出ます。</p>
           </article>
           <article className="featureCard">
             <span className="featureNumber">02</span>
             <h3>運で負けない</h3>
-            <p>最後まで論理だけで解ける盤面だけを出しています。しかも、色を無視すると解けなくなる盤面だけを選んでいます。</p>
+            <p>最後まで論理で解ける盤面だけを出します。</p>
           </article>
           <article className="featureCard">
             <span className="featureNumber">03</span>
             <h3>タイムアタック</h3>
-            <p>15 / 20 / 25 BOMBS の3つの難易度と、3色 / 4色を選んで挑みます。クリアタイムはオンラインランキングに登録できます。</p>
+            <p>15 / 20 / 25 BOMBS。オンラインランキングあり。</p>
           </article>
         </div>
       </section>

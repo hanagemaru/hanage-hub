@@ -13,8 +13,7 @@ export default function Home() {
           すぐ遊べる。
         </h1>
         <p className="heroCopy">
-          hanage.appは、個人制作のブラウザゲームや小さなWebアプリを公開する場所です。
-          インストールなしで、気になった作品をすぐに試せます。
+          個人制作のブラウザゲームとWebアプリ。インストールなしで、すぐ遊べます。
         </p>
       </section>
 

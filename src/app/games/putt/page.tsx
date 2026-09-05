@@ -33,9 +33,7 @@ export default function PuttPage() {
               遊び方を見る
             </Link>
           </div>
-          <p className="noteText">
-            現在は仕上げの最中です。コースの中身や数値は、公開までに変わることがあります。
-          </p>
+          <p className="noteText">仕上げの最中です。内容は公開までに変わることがあります。</p>
         </div>
       </section>
 
@@ -50,17 +48,17 @@ export default function PuttPage() {
           <article className="featureCard">
             <span className="featureNumber">01</span>
             <h3>予測線を出さない</h3>
-            <p>どこへ曲がるかを教える線はありません。出るのは打ち出す向きを示す短い線だけです。読みを外したら、それが結果になります。</p>
+            <p>どこへ曲がるかは、自分で読みます。</p>
           </article>
           <article className="featureCard">
             <span className="featureNumber">02</span>
             <h3>視点を変えて読む</h3>
-            <p>ボールの後ろ、カップの後ろ、横から、そして真上のマップ。いくつかの視点を行き来して、傾斜と距離を見積もります。</p>
+            <p>後ろ、横、カップ側、そして真上から。</p>
           </article>
           <article className="featureCard">
             <span className="featureNumber">03</span>
             <h3>スワイプで打つ</h3>
-            <p>画面を滑らせる速さが、そのまま打つ強さになります。ボタンで数値を選ぶゲージはありません。</p>
+            <p>滑らせた速さが、そのまま打つ強さです。</p>
           </article>
         </div>
       </section>

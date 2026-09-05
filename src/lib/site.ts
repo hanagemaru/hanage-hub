@@ -38,8 +38,7 @@ export const multicolorSweeper: Game = {
   title: "Multicolor Sweeper",
   titleLines: ["Multicolor", "Sweeper"],
   subtitle: "色つき爆弾のマインスイーパー",
-  description:
-    "赤・青・緑（と黄）の爆弾が混ざった9×9のマインスイーパーです。数字は色ごとに分かれていて、運に頼らず論理だけで解ける盤面しか出てきません。",
+  description: "爆弾に色がある9×9のマインスイーパーです。数字も色ごとに分かれます。",
   href: "/games/multicolor-sweeper/",
   playUrl: GAME_URLS.multicolorSweeper,
   status: "公開中",
@@ -54,8 +53,7 @@ export const putt: Game = {
   title: "Putt",
   titleLines: ["Putt"],
   subtitle: "傾斜を読む一人称パッティング",
-  description:
-    "スマホを縦に持って遊ぶ一人称のパッティングゲームです。曲がりを教えてくれる予測線はありません。自分でグリーンを読み、スワイプの速さで転がす強さを決めます。",
+  description: "グリーンを読んで、スワイプで転がす一人称パッティングです。曲がりを教える線は出ません。",
   href: "/games/putt/",
   playUrl: GAME_URLS.putt,
   status: "まもなく公開",
