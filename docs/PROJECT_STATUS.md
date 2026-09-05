@@ -58,6 +58,7 @@ Last updated: 2026-09-05
 - SEO-oriented routes and metadata files
 - Shared advertising and consent policy in `docs/ADVERTISING_POLICY.md`
 - Public privacy policy covering current ranking data, hosting providers, deletion requests, and the fact that advertising is planned but not yet in use
+- Multicolor Sweeper's settings screen links to `https://hanage.app/privacy/` and provides self-service deletion of its display name and online ranking records; the public privacy policy documents that flow
 - Shared agent instructions via `AGENTS.md` and `CLAUDE.md`
 
 ## Migration and monetization plan
@@ -82,18 +83,19 @@ Phase C (hub content) — done on 2026-09-04
 Phase D (advertising)
 
 8. Apply for AdSense once `hanage.app` serves the finished hub.
-9. Add visible `https://hanage.app/privacy/` links to each game.
+9. Add visible `https://hanage.app/privacy/` links to each game. Multicolor Sweeper is complete as of 2026-09-05; Putt remains pending.
 10. Set up a certified consent management platform and publish `ads.txt`.
 11. Define Multicolor Sweeper's game-specific ad timing, then implement H5 Games Ads in Multicolor Sweeper and Putt.
 
 ## Next likely tasks
 
 1. Set repository variable `HUB_SMOKE_URL` to `https://hanage.app/` so future deployments verify the public URL.
-2. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
-3. Assign `mcsweeper.hanage.app` and `putt.hanage.app`, then update `GAME_URLS`.
-4. Verify the site on iPhone and iPad, then refine spacing and tile sizing.
-5. Add visible privacy-policy links to each game before advertising is enabled.
-6. Define Multicolor Sweeper's ad timing before any ad implementation.
-7. Flip Putt's tile from `まもなく公開` to `公開中` when its release build ships.
+2. Assign `mcsweeper.hanage.app` to the Multicolor Sweeper Worker, then update `GAME_URLS` from the `workers.dev` URL to the custom domain.
+3. Verify the hub and Multicolor Sweeper on iPhone/iPad and confirm the PWA install/startup flow before public-release QA is closed.
+4. Move Putt off GitHub Pages to `putt.hanage.app`, then update `GAME_URLS` when its release build is ready.
+5. Add the privacy-policy link to Putt before advertising is enabled there.
+6. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
+7. Define Multicolor Sweeper's ad timing before any ad implementation.
+8. Flip Putt's tile from `まもなく公開` to `公開中` when its release build ships.
 
 Update this file whenever a major task is completed or a decision changes.
