@@ -10,18 +10,27 @@ export const metadata: Metadata = {
 export default function UpdatesPage() {
   return (
     <main>
-      <PageHero kicker="UPDATES" title="更新情報" description="サイトと公開作品の主な更新をお知らせします。" />
+      <PageHero
+        kicker="UPDATES"
+        title="更新情報"
+        description="サイトと公開作品の主な更新をお知らせします。"
+      />
       <section className="contentSection pageWidth">
         <div className="updatesList">
           <article className="updateItem">
-            <time dateTime="2026-08-13">2026.08.13</time>
-            <h2>hanage.appの制作を始めました</h2>
-            <p>自作ゲームとWebアプリをまとめるハブサイトの制作を開始しました。</p>
+            <time dateTime="2026-09-04">2026.09.04</time>
+            <h2>Multicolor Sweeperを公開しました</h2>
+            <p>色つきの爆弾を探すマインスイーパー。オンラインランキングつきです。</p>
+          </article>
+          <article className="updateItem">
+            <time dateTime="2026-09-04">2026.09.04</time>
+            <h2>Puttを掲載しました</h2>
+            <p>傾斜を自分で読む一人称パッティング。仕上げの最中で、先行版を試せます。</p>
           </article>
           <article className="updateItem">
             <time dateTime="2026-08-13">2026.08.13</time>
-            <h2>Gradient Sweeperを掲載準備中です</h2>
-            <p>色を手がかりに解くマインスイーパー「Gradient Sweeper」を開発しています。</p>
+            <h2>hanage.appの制作を始めました</h2>
+            <p>自作ゲームとWebアプリをまとめる場所を作り始めました。</p>
           </article>
         </div>
       </section>

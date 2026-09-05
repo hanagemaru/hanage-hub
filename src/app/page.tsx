@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GameTile } from "@/components/GameTile";
-import { gradientSweeper } from "@/lib/site";
+import { games } from "@/lib/site";
 
 export default function Home() {
   return (
@@ -13,8 +13,7 @@ export default function Home() {
           すぐ遊べる。
         </h1>
         <p className="heroCopy">
-          hanage.appは、個人制作のブラウザゲームや小さなWebアプリを公開する場所です。
-          インストールなしで、気になった作品をすぐに試せます。
+          個人制作のブラウザゲームとWebアプリ。インストールなしで、すぐ遊べます。
         </p>
       </section>
 
@@ -29,7 +28,9 @@ export default function Home() {
           </Link>
         </div>
         <div className="tileGrid">
-          <GameTile game={gradientSweeper} />
+          {games.map((game) => (
+            <GameTile game={game} key={game.slug} />
+          ))}
         </div>
       </section>
 
@@ -44,9 +45,9 @@ export default function Home() {
           </Link>
         </div>
         <Link className="newsRow" href="/updates/">
-          <time dateTime="2026-08-13">2026.08.13</time>
-          <span className="newsTag">SITE</span>
-          <strong>hanage.appの制作を始めました</strong>
+          <time dateTime="2026-09-04">2026.09.04</time>
+          <span className="newsTag">GAME</span>
+          <strong>Multicolor Sweeperを公開しました</strong>
           <span className="newsArrow" aria-hidden="true">→</span>
         </Link>
       </section>

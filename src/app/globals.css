@@ -160,60 +160,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
   overflow: hidden;
   aspect-ratio: 1;
   border-radius: var(--radius);
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 48%),
-    var(--navy);
+  background: var(--navy);
   box-shadow: var(--shadow);
-  isolation: isolate;
 }
 
-.tileArtwork::before,
-.detailArtwork::before {
+/* ドット絵は各ゲーム本体と同じ描き方（SVGの矩形）で、拡大しても粒が保たれる */
+.artScene {
   position: absolute;
-  inset: -35% 45% 45% -25%;
-  z-index: -1;
-  border-radius: 50%;
-  background: rgba(87, 216, 220, 0.22);
-  content: "";
-}
-
-.gameBoard {
-  position: absolute;
-  inset: 14% 14% 25%;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 3px;
-  padding: 8px;
-  border: 4px solid #0f1932;
-  border-radius: 10px;
-  background: #111b34;
-  transform: rotate(-3deg);
-}
-
-.gameCell {
-  aspect-ratio: 1;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 2px;
-  background: #34436c;
-  box-shadow: inset -2px -2px 0 rgba(8, 16, 35, 0.4), inset 2px 2px 0 rgba(255, 255, 255, 0.08);
-}
-
-.gameCell.red { background: #e76070; }
-.gameCell.blue { background: #4e8bea; }
-.gameCell.purple { background: #9b6dcc; }
-.gameCell.light { background: #9ee0d7; }
-
-.artLabel {
-  position: absolute;
-  right: 10%;
-  bottom: 9%;
-  left: 10%;
-  color: white;
-  font-size: clamp(0.62rem, 2.6vw, 1.05rem);
-  font-weight: 950;
-  line-height: 1.05;
-  letter-spacing: 0.06em;
-  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .tileArtwork { transition: transform 180ms ease, box-shadow 180ms ease; }
@@ -332,7 +289,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 .detailArtwork { width: min(100%, 460px); }
-.detailArtwork .artLabel { font-size: clamp(1rem, 4vw, 1.7rem); }
 .gameIntroCopy { align-self: center; }
 
 .gameIntroCopy h1 {
@@ -467,4 +423,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+
+.noteText {
+  max-width: 600px;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.84rem;
 }
