@@ -36,7 +36,7 @@ Last updated: 2026-09-05
 - Host individual games separately and link to them from the hub.
 - **Publish Multicolor Sweeper and Putt. Do not publish Gradient Sweeper** (its pages, tile, and `sweeper.hanage.app` link were removed on 2026-09-04).
 - **Host the hub and games on Cloudflare.** The hub moved to Cloudflare Workers Static Assets on 2026-09-05.
-- **Monetize with Google AdSense and H5 Games Ads**, shown only at natural breaks inside the games. Nothing is implemented yet.
+- **Monetize with Google AdSense and H5 Games Ads**, shown only at natural breaks inside the games. Shared rules are maintained in `docs/ADVERTISING_POLICY.md`; nothing is implemented yet.
 - Keep every game URL in `src/lib/site.ts` (`GAME_URLS`) so custom domains are a one-place change.
 - URL structure:
   - Hub: `hanage.app` (live)
@@ -56,7 +56,8 @@ Last updated: 2026-09-05
 - Cloudflare Workers Static Assets production deployment
 - GitHub Actions deployment from `main`
 - SEO-oriented routes and metadata files
-- Privacy policy covering rankings, and stating that advertising is planned but not yet in use
+- Shared advertising and consent policy in `docs/ADVERTISING_POLICY.md`
+- Public privacy policy covering current ranking data, hosting providers, deletion requests, and the fact that advertising is planned but not yet in use
 - Shared agent instructions via `AGENTS.md` and `CLAUDE.md`
 
 ## Migration and monetization plan
@@ -81,8 +82,9 @@ Phase C (hub content) — done on 2026-09-04
 Phase D (advertising)
 
 8. Apply for AdSense once `hanage.app` serves the finished hub.
-9. Set up a certified consent management platform and publish `ads.txt`.
-10. Enable H5 Games Ads and implement breaks in Multicolor Sweeper, then Putt.
+9. Add visible `https://hanage.app/privacy/` links to each game.
+10. Set up a certified consent management platform and publish `ads.txt`.
+11. Define Multicolor Sweeper's game-specific ad timing, then implement H5 Games Ads in Multicolor Sweeper and Putt.
 
 ## Next likely tasks
 
@@ -90,6 +92,8 @@ Phase D (advertising)
 2. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
 3. Assign `mcsweeper.hanage.app` and `putt.hanage.app`, then update `GAME_URLS`.
 4. Verify the site on iPhone and iPad, then refine spacing and tile sizing.
-5. Flip Putt's tile from `まもなく公開` to `公開中` when its release build ships.
+5. Add visible privacy-policy links to each game before advertising is enabled.
+6. Define Multicolor Sweeper's ad timing before any ad implementation.
+7. Flip Putt's tile from `まもなく公開` to `公開中` when its release build ships.
 
 Update this file whenever a major task is completed or a decision changes.
