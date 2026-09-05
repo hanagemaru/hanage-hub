@@ -29,7 +29,7 @@ export type Game = {
  * ハブ側の他のファイルは URL を直接持たない。
  */
 export const GAME_URLS = {
-  multicolorSweeper: "https://multicolor-sweeper.jibunnha.workers.dev/",
+  multicolorSweeper: "https://mcsweeper.hanage.app/",
   putt: "https://hanagemaru.github.io/putt/",
 } as const;
 
