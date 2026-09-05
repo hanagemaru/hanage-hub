@@ -53,12 +53,12 @@ export default function PuttPage() {
           <article className="featureCard">
             <span className="featureNumber">02</span>
             <h3>視点を変えて読む</h3>
-            <p>後ろ、横、カップ側、そして真上から。</p>
+            <p>後ろ、横、カップ側、そして真上のマップから。</p>
           </article>
           <article className="featureCard">
             <span className="featureNumber">03</span>
-            <h3>スワイプで打つ</h3>
-            <p>滑らせた速さが、そのまま打つ強さです。</p>
+            <h3>パターを振って打つ</h3>
+            <p>引いてから振り抜く速さが、そのまま強さです。</p>
           </article>
         </div>
       </section>
