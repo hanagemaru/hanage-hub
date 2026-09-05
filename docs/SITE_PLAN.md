@@ -37,18 +37,20 @@ Future products should normally use another subdomain such as `tool-name.hanage.
 
 ## Deployment
 
-The hub currently deploys to Netlify from `main`. The agreed direction is to move the hub, and the games, to Cloudflare:
+The hub deploys from `main` to Cloudflare Workers Static Assets. The Next.js static export is served from `out/`.
 
-- `hanage.app` becomes a Cloudflare zone, which is required before Workers custom domains can be assigned.
-- The hub is served from Cloudflare Workers Static Assets (the Next.js static export is unchanged).
+- Primary URL: `https://hanage.app/`
+- Alias: `https://www.hanage.app/`
+- Worker URL: `https://hanage-hub.jibunnha.workers.dev/`
 - Multicolor Sweeper already runs on Cloudflare Workers with a D1 ranking database.
-- Putt moves off GitHub Pages when it needs its own ranking API.
+- Putt remains on GitHub Pages until its Cloudflare migration is completed.
+- The former Netlify project is kept only as a temporary rollback target; its custom domains are detached.
 
-Nothing in this repository has been switched yet. Hosting changes happen only after the domain is on Cloudflare.
+## Advertising and privacy
 
-## Advertising
+The shared implementation policy is [`docs/ADVERTISING_POLICY.md`](./ADVERTISING_POLICY.md). It is the source of truth for rules shared by the hub and all first-party games. Each game specification keeps only its game-specific display timing and transitions.
 
-- Planned providers: Google AdSense and H5 Games Ads (H5 Games Ads is enabled from within an approved AdSense account).
-- Ads are shown at natural breaks inside the games, never during play.
-- Before any ad code is added: AdSense approval, a certified consent management platform for EEA/UK visitors, `ads.txt` at the root of `hanage.app`, and a privacy policy update.
-- No advertising or analytics script is present in this repository today.
+- Planned providers: Google AdSense and H5 Games Ads.
+- No advertising or external analytics script is present today.
+- The public privacy notice is maintained at `https://hanage.app/privacy/`; each game must provide a visible link to it before advertising is enabled.
+- AdSense approval, required consent management, `ads.txt`, privacy disclosure, and real-device QA are release gates for advertising.
