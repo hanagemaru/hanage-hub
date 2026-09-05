@@ -10,8 +10,24 @@ Last updated: 2026-09-05
 - Production branch: `main`
 - Current public URL: https://hanage-hub.netlify.app/
 - Planned primary domain: https://hanage.app/
-- Cloudflare: `hanage.app` is now a Cloudflare zone (Phase A finished by the owner). The API token has Workers D1 edit rights.
+- Cloudflare: `hanage.app` is an active Cloudflare zone (Phase A, finished by the owner on 2026-09-05). The shared API token has Workers Scripts, Workers D1, and Cloudflare Pages edit rights.
 - Status: the catalog lists Multicolor Sweeper and Putt. The hub's Cloudflare deployment is prepared but switched off; Netlify still serves production.
+
+### Domain and DNS (updated 2026-09-05)
+
+- `hanage.app` is registered at Onamae.com and is now an active Cloudflare zone (Free plan).
+- Nameservers were changed at the registrar to `cecelia.ns.cloudflare.com` / `dean.ns.cloudflare.com`.
+  The domain registration itself stays at Onamae.com; only DNS moved.
+- DNS records carried over to Cloudflare, all set to DNS only (grey cloud) because the origin is still Netlify:
+  - `hanage.app` A record pointing at Netlify
+  - `www.hanage.app` CNAME to `hanage-hub.netlify.app`
+  - `hanage.app` TXT `google-site-verification=...` (keep this; it is needed for Search Console and AdSense)
+- Two records were intentionally not carried over: the `sweeper.hanage.app` CNAME and the Netlify
+  subdomain ownership TXT. `sweeper.hanage.app` therefore no longer resolves.
+- Hosting still runs on Netlify. When the hub moves to Cloudflare, switch the A/CNAME records to
+  proxied (orange cloud) at that point.
+- The shared Cloudflare API token `github-actions-deploy (Workers + D1)` includes `Cloudflare Pages: Edit`,
+  so no new token is needed to deploy this site from GitHub Actions to Cloudflare.
 
 ## Decisions made
 
@@ -23,6 +39,11 @@ Last updated: 2026-09-05
 - **Move the hub and the games to Cloudflare.** `hanage.app` must become a Cloudflare zone first; Workers custom domains depend on it.
 - **Monetize with Google AdSense and H5 Games Ads**, shown only at natural breaks inside the games. Nothing is implemented yet.
 - Keep every game URL in `src/lib/site.ts` (`GAME_URLS`) so custom domains are a one-place change.
+- Planned URL structure:
+  - Hub: `hanage.app`
+  - Multicolor Sweeper: `mcsweeper.hanage.app` (not assigned yet)
+  - Putt: `putt.hanage.app` (not assigned yet)
+  - `sweeper.hanage.app` (earlier Gradient Sweeper plan) was retired on 2026-09-05 and no longer resolves
 - Use GitHub pull requests and Netlify Deploy Previews for review before merging.
 - Continue supporting both Codex and Claude Code through shared repository instructions.
 
@@ -67,6 +88,7 @@ Phase D (advertising)
 ## Next likely tasks
 
 1. Finish Phase B: add the Cloudflare secrets and variables to this repository, deploy, attach `hanage.app`, then retire Netlify.
+   The DNS records currently point at Netlify and are set to DNS only; switch them when the Worker serves the site.
 2. Replace the interim game URLs with the `hanage.app` subdomains.
 3. Verify the site on iPhone and iPad, then refine spacing and tile sizing.
 4. Flip Putt's tile from `まもなく公開` to `公開中` when its release build ships.
