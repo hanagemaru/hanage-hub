@@ -12,7 +12,7 @@ Last updated: 2026-09-06
 - Worker URL: https://hanage-hub.jibunnha.workers.dev/
 - Netlify project: `hanage-hub` remains available at https://hanage-hub.netlify.app/ for rollback; its custom domains are detached
 - Cloudflare deployment: Repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are registered, and `CLOUDFLARE_DEPLOY=true`
-- Access analytics: Cloudflare Web Analytics (cookie-less). The beacon is rendered by `src/components/WebAnalytics.tsx` only when the build-time variable `NEXT_PUBLIC_CF_BEACON_TOKEN` is set, which `deploy.yml` fills from the repository variable `CF_BEACON_TOKEN`. No token is stored in the repository.
+- Access analytics: Cloudflare Web Analytics (cookie-less), live since 2026-09-06. The site was added with **Manual setup** — automatic injection does not apply because the hub is served through a Workers custom domain. The beacon is rendered by `src/components/WebAnalytics.tsx` only when the build-time variable `NEXT_PUBLIC_CF_BEACON_TOKEN` is set, which `deploy.yml` fills from the repository variable `CF_BEACON_TOKEN`. That variable is set, and the first build carrying the beacon was the manual `Deploy` run on 2026-09-06. No token is stored in the repository.
 - Status: the catalog lists Multicolor Sweeper and Putt. The hub is live on Cloudflare and was verified on the root, `www`, and `workers.dev` URLs on 2026-09-05
 - Multicolor Sweeper is live at `https://mcsweeper.hanage.app/`; the custom domain was added to its Cloudflare Worker and verified on iPhone on 2026-09-05. hanage-hub PR #10 switched `GAME_URLS.multicolorSweeper` to this URL.
 - Putt is live at `https://putt.hanage.app/`; its Cloudflare Worker (`putt.jibunnha.workers.dev`) was deployed and the custom domain verified on iPhone on 2026-09-06. `GAME_URLS.putt` now points at this URL. The Putt repository still deploys to GitHub Pages (`https://hanagemaru.github.io/putt/`) in parallel as a fallback; that workflow is retired only after a settling period.
@@ -95,7 +95,7 @@ Phase D (advertising)
 ## Next likely tasks
 
 1. Set repository variable `HUB_SMOKE_URL` to `https://hanage.app/` so future deployments verify the public URL.
-2. Create the Cloudflare Web Analytics site for `hanage.app` (manual setup) and store its site token in the repository variable `CF_BEACON_TOKEN`. The beacon is only emitted when that variable is set. Steps are in `docs/DEPLOY.md`.
+2. Confirm that Cloudflare Web Analytics is recording page views for `hanage.app` (allow up to about 30 minutes after the first visit).
 3. Verify the hub and Multicolor Sweeper on iPhone/iPad and confirm the PWA install/startup flow before public-release QA is closed.
 4. Add a Putt deletion path to the privacy policy's 保存期間・削除 section once Putt ships online rankings; today that section names only Multicolor Sweeper.
 5. After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature.
