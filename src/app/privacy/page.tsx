@@ -17,7 +17,7 @@ export default function PrivacyPage() {
       />
       <section className="contentSection pageWidth">
         <article className="contentCard">
-          <p>制定日：2026年8月13日／最終更新：2026年9月5日</p>
+          <p>制定日：2026年8月13日／最終更新：2026年9月6日</p>
 
           <h3>適用範囲</h3>
           <p>
@@ -79,7 +79,11 @@ export default function PrivacyPage() {
 
           <h3>アクセス解析</h3>
           <p>
-            現在、外部のアクセス解析サービスは導入していません。導入した場合は、サービス名と取得される情報を本ページに追記します。
+            当サイトのページ表示状況を把握するために、Cloudflare Web
+            Analyticsを利用しています。閲覧されたページ、参照元、ブラウザや端末の種類、おおまかな地域などの統計情報を取得します。
+          </p>
+          <p>
+            このサービスはCookieやローカルストレージを使用せず、端末を横断して個人を追跡する識別子も作成しません。取得した情報から個人を特定することはありません。
           </p>
 
           <h3>保存期間・削除</h3>

@@ -38,6 +38,24 @@ GitHub Actionsの `Deploy` は、`main` へのpush時にリポジトリ変数 `C
 
 `www.hanage.app` は現在、同じWorkerへ直接接続している。必要になれば、Cloudflareのリダイレクトルールで `hanage.app` へ統一する。
 
+## アクセス解析（Cloudflare Web Analytics）
+
+ページ単位のアクセス数と参照元は Cloudflare Web Analytics で取得する。
+Cookieを使わないため同意バナーは不要だが、プライバシーポリシーの「アクセス解析」には記載済み。
+
+サイトトークンは**リポジトリに置かない**。次の手順で設定する。
+
+1. Cloudflareダッシュボード → Analytics & Logs → Web Analytics → Add a site
+2. ホスト名に `hanage.app` を入れ、**Manual setup**（JS snippet）を選ぶ
+3. 表示された `data-cf-beacon` の `token` の値をコピーする
+4. GitHubの `hanagemaru/hanage-hub` → Settings → Secrets and variables → Actions → Variables タブ
+   → New repository variable で `CF_BEACON_TOKEN` に貼り付ける
+5. `main` へのpush（または `Deploy` の手動実行）で反映される
+
+`CF_BEACON_TOKEN` が未設定のビルドではビーコンを出力しない。
+ローカルの `npm run dev` / `npm run build` でも同様に出力されないので、開発中のアクセスは計上されない。
+止めたいときは、リポジトリ変数 `CF_BEACON_TOKEN` を削除して再デプロイする。
+
 ## ロールバック
 
 Cloudflare側で問題が起きた場合は、`CLOUDFLARE_DEPLOY` を `false` に戻し、Netlify側のビルド状態を確認したうえで、Netlify向けDNSレコードを再設定する。

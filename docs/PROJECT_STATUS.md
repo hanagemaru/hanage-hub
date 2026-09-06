@@ -12,6 +12,7 @@ Last updated: 2026-09-06
 - Worker URL: https://hanage-hub.jibunnha.workers.dev/
 - Netlify project: `hanage-hub` remains available at https://hanage-hub.netlify.app/ for rollback; its custom domains are detached
 - Cloudflare deployment: Repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are registered, and `CLOUDFLARE_DEPLOY=true`
+- Access analytics: Cloudflare Web Analytics (cookie-less). The beacon is rendered by `src/components/WebAnalytics.tsx` only when the build-time variable `NEXT_PUBLIC_CF_BEACON_TOKEN` is set, which `deploy.yml` fills from the repository variable `CF_BEACON_TOKEN`. No token is stored in the repository.
 - Status: the catalog lists Multicolor Sweeper and Putt. The hub is live on Cloudflare and was verified on the root, `www`, and `workers.dev` URLs on 2026-09-05
 - Multicolor Sweeper is live at `https://mcsweeper.hanage.app/`; the custom domain was added to its Cloudflare Worker and verified on iPhone on 2026-09-05. hanage-hub PR #10 switched `GAME_URLS.multicolorSweeper` to this URL.
 - Putt is live at `https://putt.hanage.app/`; its Cloudflare Worker (`putt.jibunnha.workers.dev`) was deployed and the custom domain verified on iPhone on 2026-09-06. `GAME_URLS.putt` now points at this URL. The Putt repository still deploys to GitHub Pages (`https://hanagemaru.github.io/putt/`) in parallel as a fallback; that workflow is retired only after a settling period.
@@ -45,7 +46,7 @@ Last updated: 2026-09-06
   - Hub: `hanage.app` (live)
   - Hub alias: `www.hanage.app` (live, directly attached to the same Worker)
   - Multicolor Sweeper: `mcsweeper.hanage.app` (live)
-  - Putt: `putt.hanage.app` (not assigned yet)
+  - Putt: `putt.hanage.app` (live)
   - `sweeper.hanage.app` (earlier Gradient Sweeper plan) was retired on 2026-09-05 and no longer resolves
 - Use GitHub pull requests for review. Netlify Deploy Previews may remain available until Netlify is retired.
 - Continue supporting both Codex and Claude Code through shared repository instructions.
@@ -94,11 +95,11 @@ Phase D (advertising)
 ## Next likely tasks
 
 1. Set repository variable `HUB_SMOKE_URL` to `https://hanage.app/` so future deployments verify the public URL.
-2. Verify the hub and Multicolor Sweeper on iPhone/iPad and confirm the PWA install/startup flow before public-release QA is closed.
-3. Bring Putt to a stable end-to-end playable release state, add its privacy-policy link, and move it to `putt.hanage.app`; unfinished optional modes do not block the AdSense application.
-4. After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature.
-5. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
-6. Define Multicolor Sweeper's ad timing before any ad implementation.
-7. Flip Putt's tile from `まもなく公開` to `公開中` when its release build ships.
+2. Create the Cloudflare Web Analytics site for `hanage.app` (manual setup) and store its site token in the repository variable `CF_BEACON_TOKEN`. The beacon is only emitted when that variable is set. Steps are in `docs/DEPLOY.md`.
+3. Verify the hub and Multicolor Sweeper on iPhone/iPad and confirm the PWA install/startup flow before public-release QA is closed.
+4. Add a Putt deletion path to the privacy policy's 保存期間・削除 section once Putt ships online rankings; today that section names only Multicolor Sweeper.
+5. After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature.
+6. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
+7. Define Multicolor Sweeper's ad timing before any ad implementation.
 
 Update this file whenever a major task is completed or a decision changes.
