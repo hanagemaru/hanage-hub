@@ -10,10 +10,10 @@
 - Additional custom domain: https://www.hanage.app/
 - Worker URL: https://hanage-hub.jibunnha.workers.dev/
 - Netlify fallback: https://hanage-hub.netlify.app/ (custom domains detached; retirement pending)
-- Multicolor Sweeper: https://multicolor-sweeper.jibunnha.workers.dev/ (planned: https://mcsweeper.hanage.app/)
-- Putt: https://hanagemaru.github.io/putt/ (planned: https://putt.hanage.app/)
+- Multicolor Sweeper: https://mcsweeper.hanage.app/
+- Putt: https://putt.hanage.app/
 
-Game URLs are defined once in `src/lib/site.ts` (`GAME_URLS`). Update them there when the custom domains are assigned.
+Game URLs are defined once in `src/lib/site.ts` (`GAME_URLS`). Update them there if a game moves to another host.
 
 Changes merged into `main` are deployed automatically to Cloudflare when the repository variable `CLOUDFLARE_DEPLOY` is `true`.
 Netlify remains temporarily available for rollback and may continue to provide Deploy Previews until it is retired.

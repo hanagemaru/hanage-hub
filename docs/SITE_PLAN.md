@@ -20,11 +20,11 @@ Gradient Sweeper is **not** published on this hub. Its pages and links were remo
 | Hub site | `https://hanage.app/` |
 | Games index | `https://hanage.app/games/` |
 | Multicolor Sweeper introduction | `https://hanage.app/games/multicolor-sweeper/` |
-| Multicolor Sweeper game | `https://mcsweeper.hanage.app/` (planned) |
+| Multicolor Sweeper game | `https://mcsweeper.hanage.app/` |
 | Putt introduction | `https://hanage.app/games/putt/` |
-| Putt game | `https://putt.hanage.app/` (planned) |
+| Putt game | `https://putt.hanage.app/` |
 
-Until the custom domains are assigned, the hub links to the current deployment URLs. All game URLs live in `src/lib/site.ts` (`GAME_URLS`) so the switch is a one-place change.
+All game URLs live in `src/lib/site.ts` (`GAME_URLS`) so moving a game to another host is a one-place change.
 
 Future products should normally use another subdomain such as `tool-name.hanage.app`, while their introduction and help pages live under `hanage.app`.
 
