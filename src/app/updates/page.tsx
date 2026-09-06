@@ -23,9 +23,14 @@ export default function UpdatesPage() {
             <p>色つきの爆弾を探すマインスイーパー。オンラインランキングつきです。</p>
           </article>
           <article className="updateItem">
+            <time dateTime="2026-09-06">2026.09.06</time>
+            <h2>Puttを公開しました</h2>
+            <p>傾斜を自分で読む一人称パッティング。3コース × 9ホールで遊べます。</p>
+          </article>
+          <article className="updateItem">
             <time dateTime="2026-09-04">2026.09.04</time>
             <h2>Puttを掲載しました</h2>
-            <p>傾斜を自分で読む一人称パッティング。仕上げの最中で、先行版を試せます。</p>
+            <p>傾斜を自分で読む一人称パッティング。先行版の試遊を始めました。</p>
           </article>
           <article className="updateItem">
             <time dateTime="2026-08-13">2026.08.13</time>

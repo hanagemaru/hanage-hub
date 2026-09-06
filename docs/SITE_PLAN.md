@@ -9,7 +9,7 @@
 | Product | Repository | Status |
 | --- | --- | --- |
 | Multicolor Sweeper | `hanagemaru/multicolor-sweeper` | 公開中 |
-| Putt | `hanagemaru/putt` | 仕上げ中（先行版を公開） |
+| Putt | `hanagemaru/putt` | 公開中 |
 
 Gradient Sweeper is **not** published on this hub. Its pages and links were removed on 2026-09-04.
 
