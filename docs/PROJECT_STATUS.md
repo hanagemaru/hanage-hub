@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-05
+Last updated: 2026-09-06
 
 ## Current state
 
@@ -14,6 +14,7 @@ Last updated: 2026-09-05
 - Cloudflare deployment: Repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are registered, and `CLOUDFLARE_DEPLOY=true`
 - Status: the catalog lists Multicolor Sweeper and Putt. The hub is live on Cloudflare and was verified on the root, `www`, and `workers.dev` URLs on 2026-09-05
 - Multicolor Sweeper is live at `https://mcsweeper.hanage.app/`; the custom domain was added to its Cloudflare Worker and verified on iPhone on 2026-09-05. hanage-hub PR #10 switched `GAME_URLS.multicolorSweeper` to this URL.
+- Putt is live at `https://putt.hanage.app/`; its Cloudflare Worker (`putt.jibunnha.workers.dev`) was deployed and the custom domain verified on iPhone on 2026-09-06. `GAME_URLS.putt` now points at this URL. The Putt repository still deploys to GitHub Pages (`https://hanagemaru.github.io/putt/`) in parallel as a fallback; that workflow is retired only after a settling period.
 
 ### Domain and DNS (updated 2026-09-05)
 
@@ -75,8 +76,9 @@ Phase B (hosting)
 3. ~~Serve the hub from Cloudflare Workers Static Assets and attach `hanage.app`.~~ Done on 2026-09-05.
    `www.hanage.app` is also attached to the same Worker.
 4. ~~Attach `mcsweeper.hanage.app` to the Multicolor Sweeper Worker and switch the hub link to it.~~ Done on 2026-09-05.
-5. Move Putt off GitHub Pages to `putt.hanage.app`.
-6. Update Putt's `GAME_URLS` entry when its custom domain is ready, then retire the Netlify deployment after the rollback period.
+5. ~~Move Putt off GitHub Pages to `putt.hanage.app`.~~ Done on 2026-09-06.
+6. ~~Update Putt's `GAME_URLS` entry when its custom domain is ready.~~ Done on 2026-09-06.
+   Still pending: stop Putt's GitHub Pages workflow after its settling period, and retire the Netlify deployment after the rollback period.
 
 Phase C (hub content) — done on 2026-09-04
 

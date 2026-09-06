@@ -24,13 +24,13 @@ export type Game = {
 /**
  * ゲーム本体の公開URL。
  *
- * hanage.app を Cloudflare のゾーンにしてカスタムドメインを割り当てたら、
- * ここだけを mcsweeper.hanage.app / putt.hanage.app へ差し替える。
+ * どちらも hanage.app のサブドメイン（Cloudflare Workers のカスタムドメイン）。
+ * 配信先を変えるときはここだけを差し替える。
  * ハブ側の他のファイルは URL を直接持たない。
  */
 export const GAME_URLS = {
   multicolorSweeper: "https://mcsweeper.hanage.app/",
-  putt: "https://hanagemaru.github.io/putt/",
+  putt: "https://putt.hanage.app/",
 } as const;
 
 export const multicolorSweeper: Game = {
