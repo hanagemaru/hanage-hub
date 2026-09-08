@@ -104,6 +104,6 @@ Phase D (advertising)
 8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review, and becomes false the moment an ad unit renders.
 9. Decide the contact SNS handle, then fill `OWNER.social` in `src/lib/site.ts`. While it is `null` the contact page shows only the GitHub Issues links.
 10. Re-capture Putt screenshots once its UI settles, then fill `putt.shots` in `src/lib/site.ts`. The screenshot strip is hidden while the list is empty.
-11. Redraw the Multicolor Sweeper PWA icon on a 64 grid so one cell can hold four clue numbers, and add a webmanifest; the icon set exists but the manifest does not.
+11. Review the redrawn Multicolor Sweeper and Putt PWA icons on a device home screen. Both are on `claude/hub-site-design-proposal-g2yfjt` in their own repositories.
 
 Update this file whenever a major task is completed or a decision changes.
