@@ -97,9 +97,13 @@ Phase D (advertising)
 1. Set repository variable `HUB_SMOKE_URL` to `https://hanage.app/` so future deployments verify the public URL.
 2. Confirm that Cloudflare Web Analytics is recording page views for `hanage.app` (allow up to about 30 minutes after the first visit).
 3. Verify the hub and Multicolor Sweeper on iPhone/iPad and confirm the PWA install/startup flow before public-release QA is closed.
-4. Add a Putt deletion path to the privacy policy's 保存期間・削除 section once Putt ships online rankings; today that section names only Multicolor Sweeper.
+4. ~~Add a Putt deletion path to the privacy policy's 保存期間・削除 section once Putt ships online rankings.~~ Done on 2026-09-08: the section now describes ranking-bearing titles in general instead of naming Multicolor Sweeper, so no edit is needed when Putt ships rankings.
 5. After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature.
 6. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
 7. Define Multicolor Sweeper's ad timing before any ad implementation.
+8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review, and becomes false the moment an ad unit renders.
+9. Decide the contact SNS handle, then fill `OWNER.social` in `src/lib/site.ts`. While it is `null` the contact page shows only the GitHub Issues links.
+10. Re-capture Putt screenshots once its UI settles, then fill `putt.shots` in `src/lib/site.ts`. The screenshot strip is hidden while the list is empty.
+11. Redraw the Multicolor Sweeper PWA icon on a 64 grid so one cell can hold four clue numbers, and add a webmanifest; the icon set exists but the manifest does not.
 
 Update this file whenever a major task is completed or a decision changes.

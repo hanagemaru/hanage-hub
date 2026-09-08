@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <main>
-      <PageHero kicker="TERMS" title="利用規約" description="hanage.appおよび掲載作品をご利用いただく際の条件です。" />
+      <PageHero title="利用規約" description="hanage.appおよび掲載作品をご利用いただく際の条件です。" />
       <section className="contentSection pageWidth">
         <article className="contentCard">
           <p>制定日：2026年8月13日／最終更新：2026年9月4日</p>

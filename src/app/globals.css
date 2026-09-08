@@ -9,6 +9,8 @@
   --cyan: #57d8dc;
   --pink: #ef648d;
   --yellow: #f6c84e;
+  --mark-bg: #1b2340;
+  --mark-ink: #f6f8f4;
   --radius: 18px;
   --shadow: 0 12px 30px rgba(26, 42, 76, 0.1);
 }
@@ -67,22 +69,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 .brandMark {
-  display: grid;
-  grid-template-columns: repeat(2, 7px);
-  grid-template-rows: repeat(2, 7px);
-  gap: 2px;
+  display: block;
+  flex: none;
   width: 22px;
   height: 22px;
-  padding: 2px;
-  border-radius: 6px;
-  background: var(--navy);
 }
-
-.brandMark i { display: block; border-radius: 1px; }
-.brandMark i:nth-child(1) { background: var(--cyan); }
-.brandMark i:nth-child(2) { background: var(--pink); }
-.brandMark i:nth-child(3) { background: var(--yellow); }
-.brandMark i:nth-child(4) { background: var(--blue); }
 
 .mainNav {
   display: flex;
@@ -96,27 +87,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .mainNav a { padding-block: 9px; }
 .mainNav a:hover { color: var(--blue); }
 
-.hero { padding-block: 76px 58px; }
-
-.eyebrow,
-.sectionKicker {
-  color: var(--blue);
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.18em;
-}
+.hero { padding-block: 54px 40px; }
 
 .hero h1 {
   max-width: 760px;
-  margin-top: 12px;
-  font-size: clamp(2.6rem, 8vw, 5.7rem);
-  line-height: 1.05;
-  letter-spacing: -0.075em;
+  font-size: clamp(2rem, 6.5vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
 }
 
 .heroCopy {
   max-width: 660px;
-  margin-top: 28px;
+  margin-top: 16px;
   color: #526078;
   font-size: clamp(0.98rem, 2vw, 1.08rem);
 }
@@ -430,4 +412,34 @@ button, a { -webkit-tap-highlight-color: transparent; }
   margin-top: 18px;
   color: var(--muted);
   font-size: 0.84rem;
+}
+
+/* 実画面。グリッドの子は min-width:auto で min-content まで広がるので 0 に落とす */
+.shotStrip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(150px, 58%);
+  min-width: 0;
+  gap: 12px;
+  margin-top: 26px;
+  padding-bottom: 8px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.shotStrip img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #0f1120;
+  scroll-snap-align: start;
+}
+
+.gameIntroCopy,
+.gameIntro > * { min-width: 0; }
+
+@media (min-width: 720px) {
+  .shotStrip { grid-auto-columns: minmax(150px, 240px); }
 }

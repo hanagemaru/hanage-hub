@@ -1,23 +1,58 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
+import { OWNER } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
-  description: "hanage.appについてご案内します。",
+  description: "hanage.appの運営者と公開内容について。",
   alternates: { canonical: "/about/" },
 };
 
 export default function AboutPage() {
   return (
     <main>
-      <PageHero kicker="ABOUT" title="このサイトについて" description="hanage.appは、個人で制作したゲームやWebアプリを公開するサイトです。" />
+      <PageHero
+        title="このサイトについて"
+        description="個人で制作したブラウザゲームとWebアプリを公開しているサイト。"
+      />
       <section className="contentSection pageWidth">
         <article className="contentCard">
-          <h2>小さくても、少し新しい体験を。</h2>
-          <p>思いついた仕組みや遊びを、ブラウザですぐに触れられる形にして公開しています。</p>
-          <p>短い時間でも遊べるゲームを中心に、今後は便利なWebアプリや実験的な作品も追加していく予定です。</p>
-          <h3>掲載している作品について</h3>
-          <p>各作品は個人で企画・開発しています。開発中の作品は、予告なく仕様やデザインを変更する場合があります。</p>
+          <h2>運営者</h2>
+          <p>{OWNER.name}（企画・開発・運営）</p>
+          <p>
+            連絡先は
+            <Link className="textLink" href="/contact/">
+              お問い合わせ
+            </Link>
+            ページに記載。
+          </p>
+
+          <h3>公開しているもの</h3>
+          <p>
+            hanage.app と、そのサブドメインで各作品を公開。ブラウザだけで動き、インストールもアカウント登録も不要。
+          </p>
+          <p>
+            公開中の作品は
+            <Link className="textLink" href="/games/">
+              ゲーム
+            </Link>
+            ページに掲載。
+          </p>
+
+          <h3>制作について</h3>
+          <p>
+            既製のゲームエンジンやテンプレートは使わず、盤面の生成やボールの転がりといった中心の仕組みから自作。
+          </p>
+
+          <h3>料金</h3>
+          <p>
+            すべて無料。アプリ内購入や有料プランはなし。運営費用のため広告を掲載することがある。取り扱いは
+            <Link className="textLink" href="/privacy/">
+              プライバシーポリシー
+            </Link>
+            に記載。
+          </p>
         </article>
       </section>
     </main>
