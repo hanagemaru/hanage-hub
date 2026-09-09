@@ -20,6 +20,9 @@ export type GameSpecs = {
 export type Screenshot = {
   src: string;
   alt: string;
+  /** 読み込み前に場所を確保するための実寸。縦横比がずれると表示が飛ぶ */
+  width: number;
+  height: number;
 };
 
 export type Game = {
@@ -81,9 +84,9 @@ export const multicolorSweeper: Game = {
     devices: "スマホ・PC",
   },
   shots: [
-    { src: "/shots/mcs-board.jpg", alt: "色ごとに分かれた数字が並ぶ9×9の盤面" },
-    { src: "/shots/mcs-blast.jpg", alt: "爆弾を開いた瞬間、マスが吹き飛ぶ画面" },
-    { src: "/shots/mcs-review.jpg", alt: "決着後、爆弾の位置がすべて見える盤面" },
+    { src: "/shots/mcs-board.jpg", alt: "色ごとに分かれた数字が並ぶ9×9の盤面", width: 720, height: 722 },
+    { src: "/shots/mcs-blast.jpg", alt: "爆弾を開いた瞬間、マスが吹き飛ぶ画面", width: 720, height: 720 },
+    { src: "/shots/mcs-review.jpg", alt: "決着後、爆弾の位置がすべて見える盤面", width: 720, height: 722 },
   ],
   artwork: "sweeper",
   issuesUrl: "https://github.com/hanagemaru/multicolor-sweeper/issues",
@@ -105,8 +108,11 @@ export const putt: Game = {
     content: "3コース × 9ホール",
     devices: "スマホ専用",
   },
-  // UI調整中のため、実画面は撮り直してから載せる
-  shots: [],
+  shots: [
+    { src: "/shots/putt-aim.jpg", alt: "ボール後方から見たグリーンとカップ", width: 333, height: 720 },
+    { src: "/shots/putt-low.jpg", alt: "低い視点から傾斜を読む画面", width: 333, height: 720 },
+    { src: "/shots/putt-map.jpg", alt: "真上から見たコースマップ", width: 333, height: 720 },
+  ],
   artwork: "putt",
   issuesUrl: "https://github.com/hanagemaru/putt/issues",
 };

@@ -414,12 +414,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-size: 0.84rem;
 }
 
-/* 実画面。グリッドの子は min-width:auto で min-content まで広がるので 0 に落とす */
+/* 実画面。正方形と縦長が混ざるので、高さを揃えて横に流す */
 .shotStrip {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(150px, 58%);
-  min-width: 0;
+  display: flex;
   gap: 12px;
   margin-top: 26px;
   padding-bottom: 8px;
@@ -429,17 +426,19 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .shotStrip img {
   display: block;
-  width: 100%;
-  height: auto;
+  flex: none;
+  width: auto;
+  height: 260px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: #0f1120;
   scroll-snap-align: start;
 }
 
+/* グリッドの子は min-width:auto で min-content まで広がるので 0 に落とす */
 .gameIntroCopy,
 .gameIntro > * { min-width: 0; }
 
 @media (min-width: 720px) {
-  .shotStrip { grid-auto-columns: minmax(150px, 240px); }
+  .shotStrip img { height: 300px; }
 }
