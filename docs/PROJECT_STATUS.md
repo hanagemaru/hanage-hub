@@ -107,9 +107,10 @@ Phase D (advertising)
 11. ~~Review the redrawn Multicolor Sweeper and Putt PWA icons on a device home screen.~~ Merged to `main` in both repositories on 2026-09-09; still worth a look on a real home screen.
 12. The hub is bilingual as of 2026-09-09. English pages are under `/en/`; Japanese paths are unchanged. See the Languages section under URL structure in `docs/SITE_PLAN.md`.
 13. Both games already ship Japanese and English in-game (`src/i18n.ts` in each). Two follow-ups once the hub's English pages are live:
-    - Putt's `HOW_TO_URL` and `PRIVACY_URL` (`src/entry.ts`) and Multicolor Sweeper's privacy link (`src/App.tsx`) point at the Japanese hub pages regardless of the in-game language. They should follow the language, and Putt's `externalPageNote: '(Japanese)'` can then go.
+    - ~~Putt's `HOW_TO_URL` and `PRIVACY_URL` (`src/entry.ts`) and Multicolor Sweeper's privacy link (`src/App.tsx`) point at the Japanese hub pages regardless of the in-game language.~~ Done on 2026-09-09: both games now build hub URLs from the in-game language through a single `hubUrl()` helper, so English sends players to `/en/`. Putt's `externalPageNote: '(Japanese)'` is gone.
     - ~~The three Putt screenshots in `putt.shots` predate PR #70.~~ Re-captured on 2026-09-09 from the current build (風の丘 HOLE 1/9, seed 553).
-14. Putt names the overhead view two ways: the button says 「マップ」/`MAP` while the notice says 「ホールマップ」/`Hole map`. The hub now follows the button. Worth settling on one word in the game.
-15. `putt.specs.content` is 「3コース × 9ホール」. The 9 is the scale of one round, but the 3 is inventory and goes stale the moment a fourth tour set is added to `TOUR_SETS`.
+14. ~~Putt names the overhead view two ways: the button says 「マップ」/`MAP` while the notice says 「ホールマップ」/`Hole map`.~~ Settled on 2026-09-09: Putt uses 「マップ」/`MAP` everywhere, including source comments that said 「コースマップ」. The hub already used that word, so no hub copy changed.
+15. ~~`putt.specs.content` is 「3コース × 9ホール」.~~ Changed on 2026-09-09 to 「9ホール ストロークプレー」/`9-hole stroke play`: it states the scale of one round and how you compete, and stays true when a fourth tour set is added to `TOUR_SETS`.
+16. `howToPlay.putt` still says 「3つのコースから1つ選び、9ホールを回ります。」/"Pick one of three courses…". Same inventory count as item 15, in the how-to-play body rather than a spec tag. Left as-is for now; reword when a fourth tour set lands, or sooner if the sentence reads fine without the number.
 
 Update this file whenever a major task is completed or a decision changes.
