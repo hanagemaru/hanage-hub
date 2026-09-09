@@ -102,7 +102,7 @@ Phase D (advertising)
 6. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
 7. Define Multicolor Sweeper's ad timing before any ad implementation.
 8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review, and becomes false the moment an ad unit renders.
-9. Decide the contact SNS handle, then fill `OWNER.social` in `src/lib/site.ts`. While it is `null` the contact page shows only the GitHub Issues links.
+9. ~~Decide the contact SNS handle, then fill `OWNER.social` in `src/lib/site.ts`.~~ Done on 2026-09-09: X `@hanageapp` (https://x.com/hanageapp).
 10. Re-capture Putt screenshots once its UI settles, then fill `putt.shots` in `src/lib/site.ts`. The screenshot strip is hidden while the list is empty.
 11. Review the redrawn Multicolor Sweeper and Putt PWA icons on a device home screen. Both are on `claude/hub-site-design-proposal-g2yfjt` in their own repositories.
 

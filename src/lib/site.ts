@@ -59,9 +59,9 @@ export const GAME_URLS = {
 
 /** 運営者情報。about と contact はここを参照する */
 export const OWNER = {
-  name: "hanagemaru",
-  /** 連絡先のSNS。ハンドルが決まるまでは null にしておき、導線を出さない */
-  social: null as { label: string; handle: string; url: string } | null,
+  /** 表に出す名前。Xの表示名・ハンドルと揃える */
+  handle: "@hanageapp",
+  social: { label: "X", handle: "@hanageapp", url: "https://x.com/hanageapp" },
   siteIssuesUrl: "https://github.com/hanagemaru/hanage-hub/issues",
 } as const;
 

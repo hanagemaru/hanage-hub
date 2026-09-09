@@ -14,22 +14,13 @@ export default function ContactPage() {
       <PageHero title="お問い合わせ" description="作品とサイトについての連絡先。" />
       <section className="contentSection pageWidth">
         <article className="contentCard">
-          {OWNER.social ? (
-            <>
-              <h2>運営者に連絡する</h2>
-              <p>作品とサイトについての連絡は、{OWNER.social.label}のアカウントへ。</p>
-              <div className="buttonRow">
-                <a
-                  className="buttonPrimary"
-                  href={OWNER.social.url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {OWNER.social.handle} ↗
-                </a>
-              </div>
-            </>
-          ) : null}
+          <h2>運営者に連絡する</h2>
+          <p>作品とサイトについての連絡は、{OWNER.social.label}のアカウントへ。</p>
+          <div className="buttonRow">
+            <a className="buttonPrimary" href={OWNER.social.url} target="_blank" rel="noreferrer">
+              {OWNER.social.label} {OWNER.social.handle} ↗
+            </a>
+          </div>
 
           <h2>不具合を報告する</h2>
           <p>

@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@hanageapp",
+    creator: "@hanageapp",
     title: "hanage.app | Games & Web Apps",
     description: "個人制作のブラウザゲームとWebアプリ。インストール不要・無料。",
   },

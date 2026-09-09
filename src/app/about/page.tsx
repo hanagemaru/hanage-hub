@@ -19,9 +19,14 @@ export default function AboutPage() {
       <section className="contentSection pageWidth">
         <article className="contentCard">
           <h2>運営者</h2>
-          <p>{OWNER.name}（企画・開発・運営）</p>
+          <p>{OWNER.handle} ／ 企画・開発・運営</p>
+          <div className="buttonRow">
+            <a className="buttonSecondary" href={OWNER.social.url} target="_blank" rel="noreferrer">
+              {OWNER.social.label} {OWNER.social.handle} ↗
+            </a>
+          </div>
           <p>
-            連絡先は
+            その他の連絡先は
             <Link className="textLink" href="/contact/">
               お問い合わせ
             </Link>
