@@ -1,18 +1,28 @@
 import Link from "next/link";
+import { getContent } from "@/lib/content";
+import { localePath, type Locale } from "@/lib/i18n";
 import { BrandMark } from "./BrandMark";
+import { LocaleSwitch } from "./LocaleSwitch";
 
-export function SiteHeader() {
+export function SiteHeader({ locale }: { locale: Locale }) {
+  const t = getContent(locale);
+
   return (
     <header className="siteHeader">
       <div className="headerInner pageWidth">
-        <Link className="brand" href="/" aria-label="hanage.app トップページ">
+        <Link
+          className="brand"
+          href={localePath(locale, "/")}
+          aria-label={t.nav.brandHomeLabel}
+        >
           <BrandMark />
           <span>hanage.app</span>
         </Link>
-        <nav className="mainNav" aria-label="メインナビゲーション">
-          <Link href="/games/">ゲーム</Link>
-          <Link href="/updates/">更新情報</Link>
-          <Link href="/about/">このサイトについて</Link>
+        <nav className="mainNav" aria-label={t.nav.mainNavLabel}>
+          <Link href={localePath(locale, "/games/")}>{t.nav.games}</Link>
+          <Link href={localePath(locale, "/updates/")}>{t.nav.updates}</Link>
+          <Link href={localePath(locale, "/about/")}>{t.nav.about}</Link>
+          <LocaleSwitch label={t.nav.otherLocaleLabel} />
         </nav>
       </div>
     </header>

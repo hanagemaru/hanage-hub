@@ -87,6 +87,24 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .mainNav a { padding-block: 9px; }
 .mainNav a:hover { color: var(--blue); }
 
+/* 言語切替。並びの他とは役割が違うので、囲って押せる的に見せる */
+.localeSwitch {
+  padding: 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.82rem;
+}
+
+.localeSwitch:hover { border-color: var(--blue); }
+
+/* 訳した法務ページの冒頭に置く、原文がどちらかの断り */
+.translationNote {
+  padding: 12px 14px;
+  border-left: 3px solid var(--line);
+  color: #55617a;
+  font-size: 0.88rem;
+}
+
 .hero { padding-block: 54px 40px; }
 
 .hero h1 {
@@ -393,7 +411,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 @media (max-width: 719px) {
-  .mainNav a:not(:first-child) { display: none; }
+  /* 狭い画面ではナビを畳むが、言語切替は残す。
+     ここで消すと、スマホから英語版へ行く手段がなくなる */
+  .mainNav a:not(:first-child):not(.localeSwitch) { display: none; }
   .mainNav { gap: 0; }
   .hero { padding-block: 56px 38px; }
   .section { padding-bottom: 54px; }

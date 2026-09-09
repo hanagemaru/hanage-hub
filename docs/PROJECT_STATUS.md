@@ -104,6 +104,8 @@ Phase D (advertising)
 8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review, and becomes false the moment an ad unit renders.
 9. ~~Decide the contact SNS handle, then fill `OWNER.social` in `src/lib/site.ts`.~~ Done on 2026-09-09: X `@hanageapp` (https://x.com/hanageapp).
 10. Re-capture Putt screenshots after the next UI pass. The three now in `putt.shots` were taken on 2026-09-09 from the dot-art UI and are current, but Putt's UI is still being adjusted.
-11. Review the redrawn Multicolor Sweeper and Putt PWA icons on a device home screen. Both are on `claude/hub-site-design-proposal-g2yfjt` in their own repositories.
+11. ~~Review the redrawn Multicolor Sweeper and Putt PWA icons on a device home screen.~~ Merged to `main` in both repositories on 2026-09-09; still worth a look on a real home screen.
+12. The hub is bilingual as of 2026-09-09. English pages are under `/en/`; Japanese paths are unchanged. See the Languages section under URL structure in `docs/SITE_PLAN.md`.
+13. Both games are Japanese-only in-game, and the screenshots on the English pages show Japanese UI. Decide whether to localize the games, or to say plainly on the English pages that the games themselves are in Japanese.
 
 Update this file whenever a major task is completed or a decision changes.

@@ -1,15 +1,19 @@
 import Link from "next/link";
-import type { Game } from "@/lib/site";
+import { getContent } from "@/lib/content";
+import { localePath, type Locale } from "@/lib/i18n";
+import { gameTitle, type Game } from "@/lib/site";
 import { GameArtwork } from "./GameArtwork";
 
-export function GameTile({ game }: { game: Game }) {
+export function GameTile({ game, locale }: { game: Game; locale: Locale }) {
+  const text = getContent(locale).games[game.id];
+
   return (
     <article className="gameTile">
-      <Link className="gameTileLink" href={game.href}>
-        <GameArtwork kind={game.artwork} status={game.status} />
+      <Link className="gameTileLink" href={localePath(locale, game.route)}>
+        <GameArtwork kind={game.artwork} status={text.status} />
         <div className="tileMeta">
-          <h3>{game.title}</h3>
-          <p>{game.subtitle}</p>
+          <h3>{gameTitle(game)}</h3>
+          <p>{text.subtitle}</p>
         </div>
       </Link>
     </article>
