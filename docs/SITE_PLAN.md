@@ -26,6 +26,26 @@ Gradient Sweeper is **not** published on this hub. Its pages and links were remo
 
 All game URLs live in `src/lib/site.ts` (`GAME_URLS`) so moving a game to another host is a one-place change.
 
+### Languages
+
+Japanese pages keep the paths above with no prefix. English pages sit under `/en/`
+(`https://hanage.app/en/games/putt/`, and so on). The asymmetry is deliberate: the
+Japanese URLs were published first, and moving them to `/ja/` would throw away the
+links and search results they already have.
+
+`src/lib/i18n.ts` owns the mapping. Do not build a localized path anywhere else.
+
+Each language has its own root layout (`src/app/(ja)/layout.tsx` and
+`src/app/(en)/layout.tsx`) so that `<html lang>` is correct per language. Route
+groups do not appear in the URL, which is what keeps the Japanese paths unchanged.
+Switching language is a full page load, because it crosses root layouts.
+
+Page files under `src/app` hold only metadata and a locale; the markup lives in
+`src/components/pages/`, shared by both languages. All wording lives in
+`src/lib/content/ja.ts` and `src/lib/content/en.ts`, which must both satisfy the
+`Content` type — so a new page, game, or update entry does not build until it has
+text in both languages.
+
 Future products should normally use another subdomain such as `tool-name.hanage.app`, while their introduction and help pages live under `hanage.app`.
 
 ## Design direction

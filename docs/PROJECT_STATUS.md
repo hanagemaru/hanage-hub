@@ -103,7 +103,13 @@ Phase D (advertising)
 7. Define Multicolor Sweeper's ad timing before any ad implementation.
 8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review, and becomes false the moment an ad unit renders.
 9. ~~Decide the contact SNS handle, then fill `OWNER.social` in `src/lib/site.ts`.~~ Done on 2026-09-09: X `@hanageapp` (https://x.com/hanageapp).
-10. Re-capture Putt screenshots after the next UI pass. The three now in `putt.shots` were taken on 2026-09-09 from the dot-art UI and are current, but Putt's UI is still being adjusted.
-11. Review the redrawn Multicolor Sweeper and Putt PWA icons on a device home screen. Both are on `claude/hub-site-design-proposal-g2yfjt` in their own repositories.
+10. Re-capture Putt screenshots after the next UI pass. The three now in `putt.shots` were re-taken on 2026-09-09 against `abf77d6` and are current, but Putt's UI is still being adjusted.
+11. ~~Review the redrawn Multicolor Sweeper and Putt PWA icons on a device home screen.~~ Merged to `main` in both repositories on 2026-09-09; still worth a look on a real home screen.
+12. The hub is bilingual as of 2026-09-09. English pages are under `/en/`; Japanese paths are unchanged. See the Languages section under URL structure in `docs/SITE_PLAN.md`.
+13. Both games already ship Japanese and English in-game (`src/i18n.ts` in each). Two follow-ups once the hub's English pages are live:
+    - Putt's `HOW_TO_URL` and `PRIVACY_URL` (`src/entry.ts`) and Multicolor Sweeper's privacy link (`src/App.tsx`) point at the Japanese hub pages regardless of the in-game language. They should follow the language, and Putt's `externalPageNote: '(Japanese)'` can then go.
+    - ~~The three Putt screenshots in `putt.shots` predate PR #70.~~ Re-captured on 2026-09-09 from the current build (風の丘 HOLE 1/9, seed 553).
+14. Putt names the overhead view two ways: the button says 「マップ」/`MAP` while the notice says 「ホールマップ」/`Hole map`. The hub now follows the button. Worth settling on one word in the game.
+15. `putt.specs.content` is 「3コース × 9ホール」. The 9 is the scale of one round, but the 3 is inventory and goes stale the moment a fourth tour set is added to `TOUR_SETS`.
 
 Update this file whenever a major task is completed or a decision changes.
