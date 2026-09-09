@@ -106,6 +106,10 @@ Phase D (advertising)
 10. Re-capture Putt screenshots after the next UI pass. The three now in `putt.shots` were taken on 2026-09-09 from the dot-art UI and are current, but Putt's UI is still being adjusted.
 11. ~~Review the redrawn Multicolor Sweeper and Putt PWA icons on a device home screen.~~ Merged to `main` in both repositories on 2026-09-09; still worth a look on a real home screen.
 12. The hub is bilingual as of 2026-09-09. English pages are under `/en/`; Japanese paths are unchanged. See the Languages section under URL structure in `docs/SITE_PLAN.md`.
-13. Both games are Japanese-only in-game, and the screenshots on the English pages show Japanese UI. Decide whether to localize the games, or to say plainly on the English pages that the games themselves are in Japanese.
+13. Both games already ship Japanese and English in-game (`src/i18n.ts` in each). Two follow-ups once the hub's English pages are live:
+    - Putt's `HOW_TO_URL` and `PRIVACY_URL` (`src/entry.ts`) and Multicolor Sweeper's privacy link (`src/App.tsx`) point at the Japanese hub pages regardless of the in-game language. They should follow the language, and Putt's `externalPageNote: '(Japanese)'` can then go.
+    - The three Putt screenshots in `putt.shots` predate PR #70: they still show the button labelled 「コースマップ」 and the notice 「コースマップ ・ タップで戻る」, both since renamed. Re-capture them.
+14. Putt names the overhead view two ways: the button says 「マップ」/`MAP` while the notice says 「ホールマップ」/`Hole map`. The hub now follows the button. Worth settling on one word in the game.
+15. `putt.specs.content` is 「3コース × 9ホール」. The 9 is the scale of one round, but the 3 is inventory and goes stale the moment a fourth tour set is added to `TOUR_SETS`.
 
 Update this file whenever a major task is completed or a decision changes.

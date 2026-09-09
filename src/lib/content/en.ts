@@ -238,7 +238,7 @@ export const en: Content = {
       shotAlts: [
         "The green and the cup, seen from behind the ball",
         "Reading the slope from a low viewpoint",
-        "The course map seen from directly above",
+        "The map seen from directly above",
       ],
       shotsLabel: "Putt screenshots",
       metaDescription:
@@ -311,7 +311,10 @@ export const en: Content = {
           kind: "defs",
           items: [
             { term: "Tour:", body: "pick one of three courses and play nine holes." },
-            { term: "Practice:", body: "replay a single hole as many times as you like." },
+            {
+              term: "Practice:",
+              body: "replay a single hole as many times as you like. NEW HOLE swaps in a different one.",
+            },
           ],
         },
         {
@@ -320,11 +323,11 @@ export const en: Content = {
           steps: [
             {
               title: "Look at the hole",
-              body: "Use the viewpoint buttons and the course map to see the slope and the shape of the line to the cup.",
+              body: "Use the view buttons and the map to see the slope and the shape of the line to the cup.",
             },
             {
               title: "Set your aim",
-              body: "From behind the ball and from the low viewpoint, swipe left or right to adjust your aim.",
+              body: "In the ball and low views, swipe left or right to adjust your aim.",
             },
             { title: "Address the ball", body: "Tap the screen to take your stance." },
             {
@@ -334,12 +337,17 @@ export const en: Content = {
           ],
         },
         {
+          heading: "Putters",
+          kind: "prose",
+          body: "CHOOSE PUTTER on the top menu offers a pin, a blade, a mallet, and a fang. The shape is cosmetic — all four play exactly the same.",
+        },
+        {
           heading: "Rules",
           kind: "list",
           items: [
-            "You are scored on total strokes. The ball will not roll off the grass.",
+            "You are scored on total strokes. The ball rolls heavily once it is in the rough or the second cut.",
             "Water and out of bounds cost one stroke. You replay from where you last hit.",
-            "If you stop mid-round, you resume from the start of that hole.",
+            "On tour, if you stop mid-round you resume from the start of that hole. Practice keeps nothing.",
           ],
         },
       ],
