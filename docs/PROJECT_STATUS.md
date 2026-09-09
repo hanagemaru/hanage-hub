@@ -88,7 +88,7 @@ Phase C (hub content) — done on 2026-09-04
 Phase D (advertising)
 
 8. Apply for AdSense once `hanage.app` serves the finished hub and the published games are in a stable, playable state.
-9. Add visible `https://hanage.app/privacy/` links to each game. Multicolor Sweeper is complete as of 2026-09-05; Putt remains pending.
+9. ~~Add visible `https://hanage.app/privacy/` links to each game.~~ Done: Multicolor Sweeper on 2026-09-05, Putt on 2026-09-09 (`src/entry.ts` links to `https://hanage.app/privacy/`).
 10. Set up a certified consent management platform and publish `ads.txt`.
 11. Define Multicolor Sweeper's game-specific ad timing, then implement H5 Games Ads in Multicolor Sweeper and Putt after the required approvals.
 
@@ -97,9 +97,13 @@ Phase D (advertising)
 1. Set repository variable `HUB_SMOKE_URL` to `https://hanage.app/` so future deployments verify the public URL.
 2. Confirm that Cloudflare Web Analytics is recording page views for `hanage.app` (allow up to about 30 minutes after the first visit).
 3. Verify the hub and Multicolor Sweeper on iPhone/iPad and confirm the PWA install/startup flow before public-release QA is closed.
-4. Add a Putt deletion path to the privacy policy's 保存期間・削除 section once Putt ships online rankings; today that section names only Multicolor Sweeper.
+4. ~~Add a Putt deletion path to the privacy policy's 保存期間・削除 section once Putt ships online rankings.~~ Done on 2026-09-08: the section now describes ranking-bearing titles in general instead of naming Multicolor Sweeper, so no edit is needed when Putt ships rankings.
 5. After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature.
 6. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
 7. Define Multicolor Sweeper's ad timing before any ad implementation.
+8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review, and becomes false the moment an ad unit renders.
+9. ~~Decide the contact SNS handle, then fill `OWNER.social` in `src/lib/site.ts`.~~ Done on 2026-09-09: X `@hanageapp` (https://x.com/hanageapp).
+10. Re-capture Putt screenshots after the next UI pass. The three now in `putt.shots` were taken on 2026-09-09 from the dot-art UI and are current, but Putt's UI is still being adjusted.
+11. Review the redrawn Multicolor Sweeper and Putt PWA icons on a device home screen. Both are on `claude/hub-site-design-proposal-g2yfjt` in their own repositories.
 
 Update this file whenever a major task is completed or a decision changes.

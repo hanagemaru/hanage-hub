@@ -11,12 +11,12 @@ export const metadata: Metadata = {
     template: "%s | hanage.app",
   },
   description:
-    "個人制作のブラウザゲームやWebアプリを公開しています。インストールなしですぐに遊べます。",
+    "個人制作のブラウザゲームとWebアプリを公開しています。インストール不要・無料。",
   applicationName: "hanage.app",
   alternates: { canonical: "/" },
   openGraph: {
     title: "hanage.app | Games & Web Apps",
-    description: "ちょっと変わった、すぐ遊べる。個人制作ゲームとWebアプリのハブサイト。",
+    description: "個人制作のブラウザゲームとWebアプリ。インストール不要・無料。",
     url: "https://hanage.app",
     siteName: "hanage.app",
     locale: "ja_JP",
@@ -24,8 +24,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@hanageapp",
+    creator: "@hanageapp",
     title: "hanage.app | Games & Web Apps",
-    description: "ちょっと変わった、すぐ遊べる。",
+    description: "個人制作のブラウザゲームとWebアプリ。インストール不要・無料。",
   },
 };
 

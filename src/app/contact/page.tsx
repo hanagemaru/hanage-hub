@@ -1,26 +1,30 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
-import { games } from "@/lib/site";
+import { OWNER, games } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "お問い合わせ",
+  description: "hanage.appと公開作品についての連絡先。",
   alternates: { canonical: "/contact/" },
 };
 
 export default function ContactPage() {
   return (
     <main>
-      <PageHero
-        kicker="CONTACT"
-        title="お問い合わせ"
-        description="不具合の報告や作品に関するご連絡はこちらからお願いします。"
-      />
+      <PageHero title="お問い合わせ" description="作品とサイトについての連絡先。" />
       <section className="contentSection pageWidth">
         <article className="contentCard">
-          <h2>GitHubからお問い合わせください</h2>
+          <h2>運営者に連絡する</h2>
+          <p>作品とサイトについての連絡は、{OWNER.social.label}のアカウントへ。</p>
+          <div className="buttonRow">
+            <a className="buttonPrimary" href={OWNER.social.url} target="_blank" rel="noreferrer">
+              {OWNER.social.label} {OWNER.social.handle} ↗
+            </a>
+          </div>
+
+          <h2>不具合を報告する</h2>
           <p>
-            不具合の報告やご意見は、各作品のGitHub
-            Issuesで受け付けています。公開されて困る個人情報は記載しないでください。
+            再現手順を添えて報告する場合は、GitHubのIssuesが確実。公開される場所なので、知られて困る情報は書かないこと。
           </p>
           <div className="buttonRow">
             {games.map((game) => (
@@ -31,20 +35,16 @@ export default function ContactPage() {
                 target="_blank"
                 rel="noreferrer"
               >
-                {game.title}の報告 ↗
+                {game.title} ↗
               </a>
             ))}
-          </div>
-          <h3>サイトについて</h3>
-          <p>ページの表示崩れやリンク切れなど、サイト自体に関するご連絡はこちらへお願いします。</p>
-          <div className="buttonRow">
             <a
-              className="buttonPrimary"
-              href="https://github.com/hanagemaru/hanage-hub/issues"
+              className="buttonSecondary"
+              href={OWNER.siteIssuesUrl}
               target="_blank"
               rel="noreferrer"
             >
-              サイトの報告 ↗
+              サイト ↗
             </a>
           </div>
         </article>

@@ -13,7 +13,6 @@ export default function HowToPlayPage() {
   return (
     <main>
       <PageHero
-        kicker="HOW TO PLAY"
         title="遊び方"
         description="基本はマインスイーパー。ただし爆弾に色があり、数字も色ごとに分かれています。"
       />

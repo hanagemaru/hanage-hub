@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandMark } from "./BrandMark";
 
 export function SiteFooter() {
   return (
@@ -6,10 +7,10 @@ export function SiteFooter() {
       <div className="footerInner pageWidth">
         <div className="footerIntro">
           <Link className="brand" href="/">
-            <span className="brandMark" aria-hidden="true"><i /><i /><i /><i /></span>
+            <BrandMark />
             <span>hanage.app</span>
           </Link>
-          <p>個人制作のゲームとWebアプリを公開しています。</p>
+          <p>個人制作のゲームとWebアプリ。</p>
         </div>
         <nav className="footerLinks" aria-label="フッターナビゲーション">
           <Link href="/about/">このサイトについて</Link>

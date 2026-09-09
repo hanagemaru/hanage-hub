@@ -13,7 +13,6 @@ export default function HowToPlayPage() {
   return (
     <main>
       <PageHero
-        kicker="HOW TO PLAY"
         title="遊び方"
         description="スマホを縦に持って、少ない打数でカップに沈めます。"
       />
