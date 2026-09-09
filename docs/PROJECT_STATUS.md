@@ -88,7 +88,7 @@ Phase C (hub content) — done on 2026-09-04
 Phase D (advertising)
 
 8. Apply for AdSense once `hanage.app` serves the finished hub and the published games are in a stable, playable state.
-9. Add visible `https://hanage.app/privacy/` links to each game. Multicolor Sweeper is complete as of 2026-09-05; Putt remains pending.
+9. ~~Add visible `https://hanage.app/privacy/` links to each game.~~ Done: Multicolor Sweeper on 2026-09-05, Putt on 2026-09-09 (`src/entry.ts` links to `https://hanage.app/privacy/`).
 10. Set up a certified consent management platform and publish `ads.txt`.
 11. Define Multicolor Sweeper's game-specific ad timing, then implement H5 Games Ads in Multicolor Sweeper and Putt after the required approvals.
 
