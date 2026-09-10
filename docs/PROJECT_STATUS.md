@@ -101,7 +101,8 @@ Phase D (advertising)
 5. After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature. Putt's own review-readiness QA passed on 2026-09-10.
 6. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
 7. Define Multicolor Sweeper's ad timing before any ad implementation.
-8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review, and becomes false the moment an ad unit renders.
+8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review — the AdSense script has loaded on every page since 2026-09-10, but no ad unit renders — and becomes false the moment one does.
+    Write the replacement so it does not need dating. The current wording is of the form 「as of now we do not do X, but we plan to」, which is guaranteed to go stale at an unpredictable moment and is why this item exists; `docs/ADVERTISING_POLICY.md` only ever required disclosure at introduction time, so the promise was never needed. Describe what the site does in terms that stay true whether or not an ad is currently rendering, and this item can be closed for good rather than re-armed.
 9. ~~Decide the contact SNS handle, then fill `OWNER.social` in `src/lib/site.ts`.~~ Done on 2026-09-09: X `@hanageapp` (https://x.com/hanageapp).
 10. Re-capture Putt screenshots after the next UI pass. The three now in `putt.shots` were re-taken on 2026-09-09 against `abf77d6` and are current, but Putt's UI is still being adjusted.
 11. ~~Review the redrawn Multicolor Sweeper and Putt PWA icons on a device home screen.~~ Merged to `main` in both repositories on 2026-09-09; still worth a look on a real home screen.
