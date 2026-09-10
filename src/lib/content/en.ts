@@ -234,7 +234,7 @@ export const en: Content = {
         "Read the slope, pick your line, and swing the putter with a swipe. How fast you swing is how hard the ball rolls.",
       status: "Play now",
       playLabel: "Open the game ↗",
-      specs: { price: "Free", content: "3 courses × 9 holes", devices: "Phone only" },
+      specs: { price: "Free", content: "9-hole stroke play", devices: "Phone only" },
       shotAlts: [
         "The green and the cup, seen from behind the ball",
         "Reading the slope from a low viewpoint",

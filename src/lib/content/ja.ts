@@ -221,7 +221,7 @@ export const ja: Content = {
         "傾斜を読んでラインを決め、スワイプでパターを振る。振った速さが、そのまま球の強さになる。",
       status: "公開中",
       playLabel: "ゲームを開く ↗",
-      specs: { price: "無料", content: "3コース × 9ホール", devices: "スマホ専用" },
+      specs: { price: "無料", content: "9ホール ストロークプレー", devices: "スマホ専用" },
       shotAlts: [
         "ボール後方から見たグリーンとカップ",
         "低い視点から傾斜を読む画面",
