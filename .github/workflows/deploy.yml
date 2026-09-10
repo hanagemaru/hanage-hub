@@ -21,9 +21,11 @@ jobs:
       - run: npm run lint
       # リポジトリ変数 CF_BEACON_TOKEN を設定すると Cloudflare Web Analytics のビーコンが入る。
       # 未設定ならビーコンは出力されない。
+      # 同様に ADSENSE_CLIENT_ID を設定すると AdSense のスクリプトが入る。
       - run: npm run build
         env:
           NEXT_PUBLIC_CF_BEACON_TOKEN: ${{ vars.CF_BEACON_TOKEN }}
+          NEXT_PUBLIC_ADSENSE_CLIENT_ID: ${{ vars.ADSENSE_CLIENT_ID }}
       - name: Deploy to Cloudflare Workers
         run: npx wrangler deploy
         env:

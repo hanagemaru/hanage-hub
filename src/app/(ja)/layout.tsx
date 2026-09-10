@@ -1,3 +1,4 @@
+import { AdSenseScript } from "@/components/AdSenseScript";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { WebAnalytics } from "@/components/WebAnalytics";
@@ -23,6 +24,7 @@ export default function JapaneseLayout({ children }: LayoutProps<"/">) {
         {children}
         <SiteFooter locale={locale} />
         <WebAnalytics />
+        <AdSenseScript />
       </body>
     </html>
   );
