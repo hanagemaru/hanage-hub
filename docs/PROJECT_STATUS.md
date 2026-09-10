@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-06
+Last updated: 2026-09-10
 
 ## Current state
 
@@ -87,8 +87,8 @@ Phase C (hub content) — done on 2026-09-04
 
 Phase D (advertising)
 
-8. Apply for AdSense once `hanage.app` serves the finished hub and the published games are in a stable, playable state.
-9. ~~Add visible `https://hanage.app/privacy/` links to each game.~~ Done: Multicolor Sweeper on 2026-09-05, Putt on 2026-09-09 (`src/entry.ts` links to `https://hanage.app/privacy/`).
+8. Apply for AdSense once `hanage.app` serves the finished hub and the published games are in a stable, playable state. **Putt cleared its own side on 2026-09-10**: its review-readiness milestone (P0-1 to P0-3 in the Putt repository's `RELEASE_PLAN.md` and `PROJECT_STATUS.md`) is met and device-verified, so nothing in Putt blocks listing it. This says nothing about the hub's remaining steps — track those here.
+9. ~~Add visible `https://hanage.app/privacy/` links to each game.~~ Done: Multicolor Sweeper on 2026-09-05, Putt on 2026-09-09. Since 2026-09-10 both games build the URL from the in-game language (see item 13), so English players reach `/en/privacy/`.
 10. Set up a certified consent management platform and publish `ads.txt`.
 11. Define Multicolor Sweeper's game-specific ad timing, then implement H5 Games Ads in Multicolor Sweeper and Putt after the required approvals.
 
@@ -98,7 +98,7 @@ Phase D (advertising)
 2. Confirm that Cloudflare Web Analytics is recording page views for `hanage.app` (allow up to about 30 minutes after the first visit).
 3. Verify the hub and Multicolor Sweeper on iPhone/iPad and confirm the PWA install/startup flow before public-release QA is closed.
 4. ~~Add a Putt deletion path to the privacy policy's 保存期間・削除 section once Putt ships online rankings.~~ Done on 2026-09-08: the section now describes ranking-bearing titles in general instead of naming Multicolor Sweeper, so no edit is needed when Putt ships rankings.
-5. After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature.
+5. After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature. Putt's own review-readiness QA passed on 2026-09-10.
 6. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
 7. Define Multicolor Sweeper's ad timing before any ad implementation.
 8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review, and becomes false the moment an ad unit renders.
