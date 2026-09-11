@@ -29,8 +29,14 @@ export type GameText = {
   subtitle: string;
   /** 紹介ページのリード */
   description: string;
-  /** タイル左上のバッジ。空文字なら出さない */
-  status: string;
+  /**
+   * タイル左上のバッジ。
+   *
+   * 公開できていないときにだけ文言を入れる（「準備中」など）。公開が既定なので、
+   * 出せているものには何も付けない。全部に付くバッジは何も言っていないのと同じ。
+   * null を明示させているのは、片方の言語だけ書き換える事故を防ぐため。
+   */
+  status: string | null;
   /** 本体を開くボタンの文言 */
   playLabel: string;
   specs: GameSpecs;

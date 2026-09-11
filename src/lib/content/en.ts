@@ -216,7 +216,7 @@ export const en: Content = {
       subtitle: "Minesweeper where the bombs have colors",
       description:
         "A 9×9 minesweeper where every bomb has a color, and the clue numbers are split by color too.",
-      status: "Play now",
+      status: null,
       playLabel: "Open the game ↗",
       specs: { price: "Free", content: "9×9 time attack", devices: "Phone and desktop" },
       shotAlts: [
@@ -232,7 +232,7 @@ export const en: Content = {
       subtitle: "Putting, read off the slope",
       description:
         "Read the slope, pick your line, and swing the putter with a swipe. How fast you swing is how hard the ball rolls.",
-      status: "Play now",
+      status: null,
       playLabel: "Open the game ↗",
       specs: { price: "Free", content: "9-hole stroke play", devices: "Phone only" },
       shotAlts: [

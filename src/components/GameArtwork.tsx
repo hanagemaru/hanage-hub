@@ -175,7 +175,7 @@ export function GameArtwork({
 }: {
   kind: GameArtworkKind;
   detail?: boolean;
-  status?: string;
+  status?: string | null;
 }) {
   return (
     <div className={`${detail ? "detailArtwork" : "tileArtwork"} art-${kind}`}>
