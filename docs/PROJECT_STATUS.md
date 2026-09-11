@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-10
+Last updated: 2026-09-11
 
 ## Current state
 
@@ -87,9 +87,11 @@ Phase C (hub content) — done on 2026-09-04
 
 Phase D (advertising)
 
-8. Apply for AdSense once `hanage.app` serves the finished hub and the published games are in a stable, playable state. **Putt cleared its own side on 2026-09-10**: its review-readiness milestone (P0-1 to P0-3 in the Putt repository's `RELEASE_PLAN.md` and `PROJECT_STATUS.md`) is met and device-verified, so nothing in Putt blocks listing it. This says nothing about the hub's remaining steps — track those here.
+8. ~~Apply for AdSense once `hanage.app` serves the finished hub and the published games are in a stable, playable state.~~ **Review requested on 2026-09-10; awaiting the result.** The AdSense account existed from an earlier attempt and had been deactivated for inactivity, so it was reactivated rather than replaced — Google allows only one account per person, and a second one risks losing both. The site registered at the time was `gradient-minesweeper.web.app` (Gradient Sweeper, which this project decided not to publish); it was removed and `hanage.app` added in its place. Ownership was verified by Google on 2026-09-10 against the live site, which is the only end-to-end confirmation that PR #19's script is serving — the agent environment's egress policy blocks `hanage.app`, so no session can check production directly. **Putt cleared its own side on 2026-09-10**: its review-readiness milestone (P0-1 to P0-3 in the Putt repository's `RELEASE_PLAN.md` and `PROJECT_STATUS.md`) is met and device-verified, so nothing in Putt blocks listing it.
+    If the result is a rejection, the likeliest ground is thin content: the reviewed property is `hanage.app`, whose pages are a catalog, while the games themselves live on `putt.hanage.app` and `mcsweeper.hanage.app` and are not part of what is reviewed. The English pages are translations of the Japanese ones, so 22 pages read closer to 11 to a reviewer. Thickening `/updates/` and the how-to-play bodies is the response.
+    If the result is approval, check whether **auto ads** are on before anything else. Left on, Google inserts ads on its own — ignoring the placement rules in `docs/ADVERTISING_POLICY.md` and each game's spec, and making the privacy policy's advertising paragraph false the moment one renders (item 8 under Next likely tasks). Turn it off, then place ads deliberately.
 9. ~~Add visible `https://hanage.app/privacy/` links to each game.~~ Done: Multicolor Sweeper on 2026-09-05, Putt on 2026-09-09. Since 2026-09-10 both games build the URL from the in-game language (see item 13), so English players reach `/en/privacy/`.
-10. Set up a certified consent management platform and publish `ads.txt`.
+10. Set up a certified consent management platform and publish `ads.txt`. Both wait on approval: `ads.txt` carries the publisher ID (place it at `public/ads.txt`, served at `/ads.txt`), and Funding Choices only lets an approved account author a message.
 11. Define Multicolor Sweeper's game-specific ad timing, then implement H5 Games Ads in Multicolor Sweeper and Putt after the required approvals.
 
 ## Next likely tasks
@@ -98,7 +100,7 @@ Phase D (advertising)
 2. Confirm that Cloudflare Web Analytics is recording page views for `hanage.app` (allow up to about 30 minutes after the first visit).
 3. Verify the hub and Multicolor Sweeper on iPhone/iPad and confirm the PWA install/startup flow before public-release QA is closed.
 4. ~~Add a Putt deletion path to the privacy policy's 保存期間・削除 section once Putt ships online rankings.~~ Done on 2026-09-08: the section now describes ranking-bearing titles in general instead of naming Multicolor Sweeper, so no edit is needed when Putt ships rankings.
-5. After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature. Putt's own review-readiness QA passed on 2026-09-10.
+5. ~~After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature.~~ Done on 2026-09-10: review requested, result pending. See Phase D item 8.
 6. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
 7. Define Multicolor Sweeper's ad timing before any ad implementation.
 8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review — the AdSense script has loaded on every page since 2026-09-10, but no ad unit renders — and becomes false the moment one does.
