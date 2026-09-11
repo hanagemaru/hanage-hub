@@ -54,6 +54,7 @@ Future products should normally use another subdomain such as `tool-name.hanage.
 - Only released or genuinely in-development products are shown; the grid is not padded with placeholder tiles.
 - Each product has an introduction page on the hub before opening the separate app.
 - The first release prioritizes fast loading, touch targets, readable Japanese text, and a simple storefront-like browse experience.
+- Corners are square. Tiles, cards, buttons, badges, and tags carry no border radius, and depth comes from offset solid shadows and 1–2px rules rather than blur. This keeps the hub away from a generic phone-OS look and matches the pixel artwork, whose square edges the old 18px radius was clipping.
 
 ## Deployment
 

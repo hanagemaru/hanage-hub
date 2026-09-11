@@ -11,8 +11,9 @@
   --yellow: #f6c84e;
   --mark-bg: #1b2340;
   --mark-ink: #f6f8f4;
-  --radius: 18px;
-  --shadow: 0 12px 30px rgba(26, 42, 76, 0.1);
+  /* 角丸は使わない。輪郭は直角と線で出すので --radius は持たない。
+     ぼかした影ではなく、ずらした実体の影。ボタンの 0 5px 0 と同じ語彙 */
+  --shadow: 5px 5px 0 rgba(26, 42, 76, 0.14);
 }
 
 * {
@@ -46,9 +47,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   position: sticky;
   top: 0;
   z-index: 20;
-  border-bottom: 1px solid rgba(219, 225, 235, 0.9);
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(14px);
+  border-bottom: 2px solid var(--ink);
+  background: var(--surface);
 }
 
 .headerInner {
@@ -90,8 +90,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 /* 言語切替。並びの他とは役割が違うので、囲って押せる的に見せる */
 .localeSwitch {
   padding: 5px 11px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  border: 1px solid var(--ink);
   font-size: 0.82rem;
 }
 
@@ -100,7 +99,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 /* 訳した法務ページの冒頭に置く、原文がどちらかの断り */
 .translationNote {
   padding: 12px 14px;
-  border-left: 3px solid var(--line);
+  border-left: 4px solid var(--ink);
   color: #55617a;
   font-size: 0.88rem;
 }
@@ -159,7 +158,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   position: relative;
   overflow: hidden;
   aspect-ratio: 1;
-  border-radius: var(--radius);
   background: var(--navy);
   box-shadow: var(--shadow);
 }
@@ -176,8 +174,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .tileArtwork { transition: transform 180ms ease, box-shadow 180ms ease; }
 
 .gameTileLink:hover .tileArtwork {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 36px rgba(26, 42, 76, 0.16);
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 rgba(26, 42, 76, 0.2);
 }
 
 .tileMeta { padding: 12px 3px 4px; }
@@ -203,7 +201,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
   font-size: 0.7rem;
   font-weight: 900;
   letter-spacing: 0.05em;
@@ -227,7 +224,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   gap: 16px;
   padding: 20px 22px;
   border: 1px solid var(--line);
-  border-radius: 14px;
   background: var(--surface);
   transition: border-color 160ms ease, transform 160ms ease;
 }
@@ -265,7 +261,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .contentCard {
   padding: clamp(22px, 5vw, 42px);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
   background: var(--surface);
 }
 
@@ -323,7 +318,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   align-items: center;
   justify-content: center;
   padding: 11px 20px;
-  border-radius: 12px;
   font-weight: 900;
 }
 
@@ -336,7 +330,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .featureCard {
   padding: 22px;
   border: 1px solid var(--line);
-  border-radius: 15px;
   background: var(--surface);
 }
 
@@ -363,7 +356,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: 34px;
   height: 34px;
   place-items: center;
-  border-radius: 10px;
   color: white;
   background: var(--navy);
   font-weight: 900;
@@ -374,7 +366,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .updateItem {
   padding: 22px;
   border: 1px solid var(--line);
-  border-radius: 14px;
   background: white;
 }
 
@@ -384,7 +375,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .siteFooter {
   margin-top: 40px;
-  border-top: 1px solid var(--line);
+  border-top: 2px solid var(--ink);
   background: #edf1f7;
 }
 
@@ -414,7 +405,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   /* 狭い画面ではナビを畳むが、言語切替は残す。
      ここで消すと、スマホから英語版へ行く手段がなくなる */
   .mainNav a:not(:first-child):not(.localeSwitch) { display: none; }
-  .mainNav { gap: 0; }
+  /* 角丸をやめて言語切替が角ばった箱になったぶん、隣の「ゲーム」と詰まって見える */
+  .mainNav { gap: 14px; }
   .hero { padding-block: 56px 38px; }
   .section { padding-bottom: 54px; }
   .newsRow { grid-template-columns: auto auto 1fr; gap: 8px 10px; padding: 17px; }
@@ -450,7 +442,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: auto;
   height: 260px;
   border: 1px solid var(--line);
-  border-radius: var(--radius);
   background: #0f1120;
   scroll-snap-align: start;
 }
