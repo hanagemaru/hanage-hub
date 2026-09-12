@@ -5,7 +5,7 @@ export const ja: Content = {
   ogLocale: "ja_JP",
 
   siteTagline: "ゲームやアプリを公開しています",
-  footerTagline: "個人制作のゲームとWebアプリ。",
+  footerTagline: "ゲームやアプリを公開しています",
   siteDescription: "個人制作のブラウザゲームとWebアプリを公開しています。インストール不要・無料。",
 
   nav: {
