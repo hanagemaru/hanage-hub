@@ -10,8 +10,8 @@ export const en: Content = {
   htmlLang: "en",
   ogLocale: "en_US",
 
-  siteTagline: "Browser games and web apps, made solo. Free, nothing to install.",
-  footerTagline: "Games and web apps, made solo.",
+  siteTagline: "Games and apps.",
+  footerTagline: "Games and apps.",
   siteDescription:
     "Browser games and web apps made by one person. Free to play, nothing to install.",
 
