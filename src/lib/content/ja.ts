@@ -204,7 +204,7 @@ export const ja: Content = {
     multicolorSweeper: {
       subtitle: "色つき爆弾のマインスイーパー",
       description: "爆弾に色がある9×9のマインスイーパー。数字も色ごとに分かれる。",
-      status: "公開中",
+      status: null,
       playLabel: "ゲームを開く ↗",
       specs: { price: "無料", content: "9×9 タイムアタック", devices: "スマホ・PC" },
       shotAlts: [
@@ -219,7 +219,7 @@ export const ja: Content = {
       subtitle: "傾斜を読むパッティング",
       description:
         "傾斜を読んでラインを決め、スワイプでパターを振る。振った速さが、そのまま球の強さになる。",
-      status: "公開中",
+      status: null,
       playLabel: "ゲームを開く ↗",
       specs: { price: "無料", content: "9ホール ストロークプレー", devices: "スマホ専用" },
       shotAlts: [

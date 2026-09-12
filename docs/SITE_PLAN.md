@@ -54,6 +54,16 @@ Future products should normally use another subdomain such as `tool-name.hanage.
 - Only released or genuinely in-development products are shown; the grid is not padded with placeholder tiles.
 - Each product has an introduction page on the hub before opening the separate app.
 - The first release prioritizes fast loading, touch targets, readable Japanese text, and a simple storefront-like browse experience.
+- Corners are square. Tiles, cards, buttons, badges, and tags carry no border radius. This keeps the hub away from a generic phone-OS look and matches the pixel artwork, whose square edges the old 18px radius was clipping.
+- Depth comes from lines, never from shadows or blur — there is no `--shadow` and no `--radius`; do not reintroduce either. Line weight carries meaning, so keep the three tiers apart:
+  - `--frame` (3px ink) marks the work itself: the game artwork on tiles and detail pages, and nothing else. Spending it elsewhere is what made an earlier build read as all frame and no content.
+  - `--rule` (1px, muted) marks a container that merely holds text: cards, the updates row, the screenshot strip, the footer edge.
+  - Controls get no border at all. Pressable things are shown with colour: the primary button is a solid blue block, the secondary button a blue tint (never white — it disappears against the white cards), and the language switch a light block on the dark header bar. A white or transparent control with only a border reads as a label, not a button.
+- Tags and the update kind are labels, not controls, so they stay neutral grey. Giving them a colour or a heavy border makes them look pressable.
+- The tile badge marks an exception only. Anything published carries no badge — a badge on every tile states nothing. `GameText.status` is `string | null` and both languages must write `null` explicitly, so a game cannot be marked in one language and not the other. Keep the badge yellow: darker fills are unreadable over the dark Sweeper artwork.
+- The header is a solid ink bar with a light wordmark. The footer is separated by `--rule`, like any other container.
+- The site is set in M PLUS 1p at weights 400, 700 and 900 — those three only, so `font-weight` values in between do not silently round to a face that is not shipped. Its squared-off letterforms share a skeleton with the pixel artwork. Japanese and English pages use the same family, so switching language does not change the site's voice.
+- Fonts are self-hosted as subsets under `public/fonts/`, never loaded from Google Fonts: no third-party request, and nothing to disclose in the privacy notice. See README.md for how to rebuild the subsets after adding text.
 
 ## Deployment
 

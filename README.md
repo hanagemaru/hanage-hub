@@ -30,6 +30,26 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Fonts
+
+The site is set in M PLUS 1p (SIL Open Font License, see `public/fonts/OFL.txt`). The
+files in `public/fonts/` are subsets holding only the characters the site actually
+uses, plus all kana and ASCII, so each weight is about 65KB instead of about 670KB.
+They are served from this domain — the site makes no request to Google Fonts.
+
+**A kanji that is not in the subset falls back to the system font, so one sentence
+can end up mixing two typefaces.** After adding or rewriting body text, rebuild the
+subsets:
+
+```bash
+npm run build          # scripts/build-fonts.sh reads out/
+bash scripts/build-fonts.sh
+npm run build          # rebuild with the new subsets
+```
+
+The script needs `pyftsubset` (`pip install fonttools brotli`) and downloads the
+original faces from the google/fonts repository.
+
 ## Checks
 
 Run both checks before merging:

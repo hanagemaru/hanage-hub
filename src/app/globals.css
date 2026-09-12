@@ -1,9 +1,36 @@
+/* M PLUS 1p。角が立った字面がドット絵のアートワークと骨格が揃う。
+   Google Fonts から読むのではなく、サブセットを public/fonts/ に置いて自前で配る。
+   外部ドメインへのリクエストが増えず、プライバシーポリシーに書き足す必要もない。
+   文章を足したら scripts/build-fonts.sh でサブセットを作り直すこと。 */
+@font-face {
+  font-family: "M PLUS 1p";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/m-plus-1p-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "M PLUS 1p";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/m-plus-1p-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "M PLUS 1p";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/m-plus-1p-900.woff2") format("woff2");
+}
+
 :root {
   --ink: #172238;
   --muted: #667085;
-  --paper: #f5f7fb;
+  --paper: #f1f4f9;
   --surface: #ffffff;
-  --line: #dbe1eb;
   --navy: #202e55;
   --blue: #3878f2;
   --cyan: #57d8dc;
@@ -11,8 +38,13 @@
   --yellow: #f6c84e;
   --mark-bg: #1b2340;
   --mark-ink: #f6f8f4;
-  --radius: 18px;
-  --shadow: 0 12px 30px rgba(26, 42, 76, 0.1);
+  /* 角丸も影も使わない。輪郭は直角の線だけで出すので --radius と --shadow は持たない。
+     線の太さはそのまま「そのモノの重さ」を表す。
+       --frame 作品そのもの（ゲームのアートワーク）
+       --rule  ただの文章の器（カード、更新情報、実画面）
+     押せるものは線ではなく色で示すので、どちらも使わない */
+  --frame: 3px solid var(--ink);
+  --rule: 1px solid #c3cbdb;
 }
 
 * {
@@ -27,8 +59,10 @@ body {
   min-height: 100vh;
   color: var(--ink);
   background: var(--paper);
-  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI",
-    "Yu Gothic", Meiryo, sans-serif;
+  /* 和文も欧文も M PLUS 1p で通す。英語ページも同じ書体にして、
+     言語を切り替えても同じサイトに見えるようにする */
+  font-family: "M PLUS 1p", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic",
+    Meiryo, sans-serif;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
@@ -46,9 +80,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   position: sticky;
   top: 0;
   z-index: 20;
-  border-bottom: 1px solid rgba(219, 225, 235, 0.9);
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(14px);
+  background: var(--ink);
 }
 
 .headerInner {
@@ -68,6 +100,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
   letter-spacing: -0.03em;
 }
 
+/* 濃い帯の上に置くので、マークは地を抜いて白一色にする */
+.siteHeader .brand { color: #f6f8f4; }
+.siteHeader .brandMark { --mark-bg: transparent; --mark-ink: #f6f8f4; }
+
 .brandMark {
   display: block;
   flex: none;
@@ -79,28 +115,29 @@ button, a { -webkit-tap-highlight-color: transparent; }
   display: flex;
   align-items: center;
   gap: 28px;
-  color: #3d4960;
+  color: #c9d2e4;
   font-size: 0.9rem;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .mainNav a { padding-block: 9px; }
-.mainNav a:hover { color: var(--blue); }
+.mainNav a:hover { color: var(--yellow); }
 
 /* 言語切替。並びの他とは役割が違うので、囲って押せる的に見せる */
 .localeSwitch {
   padding: 5px 11px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  color: #f6f8f4;
   font-size: 0.82rem;
+  background: rgba(246, 248, 244, 0.16);
+  transition: background-color 160ms ease;
 }
 
-.localeSwitch:hover { border-color: var(--blue); }
+.localeSwitch:hover { color: var(--yellow); background: rgba(246, 248, 244, 0.28); }
 
 /* 訳した法務ページの冒頭に置く、原文がどちらかの断り */
 .translationNote {
   padding: 12px 14px;
-  border-left: 3px solid var(--line);
+  border-left: 5px solid var(--ink);
   color: #55617a;
   font-size: 0.88rem;
 }
@@ -142,7 +179,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   flex: none;
   color: var(--blue);
   font-size: 0.9rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .tileGrid {
@@ -159,9 +196,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   position: relative;
   overflow: hidden;
   aspect-ratio: 1;
-  border-radius: var(--radius);
+  border: var(--frame);
   background: var(--navy);
-  box-shadow: var(--shadow);
 }
 
 /* ドット絵は各ゲーム本体と同じ描き方（SVGの矩形）で、拡大しても粒が保たれる */
@@ -173,12 +209,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   height: 100%;
 }
 
-.tileArtwork { transition: transform 180ms ease, box-shadow 180ms ease; }
-
-.gameTileLink:hover .tileArtwork {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 36px rgba(26, 42, 76, 0.16);
-}
+.tileArtwork { transition: border-color 160ms ease; }
+.gameTileLink:hover .tileArtwork { border-color: var(--blue); }
 
 .tileMeta { padding: 12px 3px 4px; }
 
@@ -197,27 +229,33 @@ button, a { -webkit-tap-highlight-color: transparent; }
   line-height: 1.4;
 }
 
+/* タグと分類は押せない。押せるものと取り違えられないよう、色は持たせず灰色で置く */
+.newsTag,
+.tag { color: #46536c; background: #dde2ec; }
+
 .statusBadge,
 .newsTag,
 .tag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
   font-size: 0.7rem;
   font-weight: 900;
   letter-spacing: 0.05em;
 }
 
+/* 公開できていないものにだけ出る。数が少ないぶん、いちばん強い色を当てる。
+   濃い色だと Sweeper の暗いアートワークの上で読めない */
 .statusBadge {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 0;
+  left: 0;
   z-index: 2;
-  padding: 5px 8px;
+  padding: 6px 10px;
+  border-right: var(--frame);
+  border-bottom: var(--frame);
   color: #18213a;
   background: var(--yellow);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
 }
 
 .newsRow {
@@ -226,20 +264,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
   align-items: center;
   gap: 16px;
   padding: 20px 22px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  border: var(--rule);
   background: var(--surface);
-  transition: border-color 160ms ease, transform 160ms ease;
+  transition: border-color 160ms ease, background-color 160ms ease;
 }
 
-.newsRow:hover { border-color: #aebbd1; transform: translateY(-2px); }
+/* 行はボタンではないので、色は下地の変化だけで示す */
+.newsRow:hover { border-color: #b3c0d6; background: #eef3fd; }
 .newsRow time { color: var(--muted); font-size: 0.8rem; font-weight: 700; }
 
 .newsTag {
   min-width: 48px;
   padding: 3px 8px;
-  color: #1c4ca7;
-  background: #e6eeff;
 }
 
 .newsRow strong { font-size: 0.92rem; }
@@ -264,8 +300,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .contentCard {
   padding: clamp(22px, 5vw, 42px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: var(--rule);
   background: var(--surface);
 }
 
@@ -307,7 +342,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   margin-top: 20px;
 }
 
-.tag { padding: 5px 10px; color: #35425b; background: #e7ebf3; }
+.tag { padding: 5px 10px; }
 
 .buttonRow {
   display: flex;
@@ -323,24 +358,28 @@ button, a { -webkit-tap-highlight-color: transparent; }
   align-items: center;
   justify-content: center;
   padding: 11px 20px;
-  border-radius: 12px;
   font-weight: 900;
 }
 
-.buttonPrimary { color: white; background: var(--blue); box-shadow: 0 5px 0 #2053b6; }
-.buttonPrimary:hover { transform: translateY(2px); box-shadow: 0 3px 0 #2053b6; }
-.buttonSecondary { border: 1px solid var(--line); background: white; }
+/* 押せるものは色のベタで示す。第二ボタンを白にすると、白いカードの上で
+   背景と同化してただの太字に見えるので、淡くても必ず色を持たせる */
+.buttonPrimary,
+.buttonSecondary { transition: background-color 160ms ease; }
+
+.buttonPrimary { color: white; background: var(--blue); }
+.buttonPrimary:hover { background: #2a63d4; }
+.buttonSecondary { color: #14459e; background: #d8e3f9; }
+.buttonSecondary:hover { background: #c8d8f6; }
 
 .featureGrid { display: grid; gap: 14px; margin-top: 20px; }
 
 .featureCard {
   padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: 15px;
+  border: var(--rule);
   background: var(--surface);
 }
 
-.featureNumber { color: var(--blue); font-size: 0.75rem; font-weight: 950; letter-spacing: 0.12em; }
+.featureNumber { color: var(--blue); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.12em; }
 .featureCard h3 { margin-top: 5px; font-size: 1.1rem; }
 .featureCard p { margin-top: 8px; color: #657086; font-size: 0.9rem; }
 
@@ -363,7 +402,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: 34px;
   height: 34px;
   place-items: center;
-  border-radius: 10px;
   color: white;
   background: var(--navy);
   font-weight: 900;
@@ -373,19 +411,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .updateItem {
   padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  border: var(--rule);
   background: white;
 }
 
-.updateItem time { color: var(--blue); font-size: 0.8rem; font-weight: 850; }
+.updateItem time { color: var(--blue); font-size: 0.8rem; font-weight: 700; }
 .updateItem h2 { margin-top: 5px; font-size: 1.15rem; }
 .updateItem p { margin-top: 7px; color: var(--muted); font-size: 0.9rem; }
 
 .siteFooter {
   margin-top: 40px;
-  border-top: 1px solid var(--line);
-  background: #edf1f7;
+  border-top: var(--rule);
+  background: #e6eaf2;
 }
 
 .footerInner { display: grid; gap: 24px; padding-block: 36px; }
@@ -414,7 +451,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   /* 狭い画面ではナビを畳むが、言語切替は残す。
      ここで消すと、スマホから英語版へ行く手段がなくなる */
   .mainNav a:not(:first-child):not(.localeSwitch) { display: none; }
-  .mainNav { gap: 0; }
+  /* 角丸をやめて言語切替が角ばった箱になったぶん、隣の「ゲーム」と詰まって見える */
+  .mainNav { gap: 14px; }
   .hero { padding-block: 56px 38px; }
   .section { padding-bottom: 54px; }
   .newsRow { grid-template-columns: auto auto 1fr; gap: 8px 10px; padding: 17px; }
@@ -449,8 +487,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   flex: none;
   width: auto;
   height: 260px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: var(--rule);
   background: #0f1120;
   scroll-snap-align: start;
 }
