@@ -32,7 +32,7 @@
   --paper: #f1f4f9;
   --surface: #ffffff;
   --navy: #202e55;
-  --blue: #3878f2;
+  --blue: #2b64d8;
   --cyan: #57d8dc;
   --pink: #ef648d;
   --yellow: #f6c84e;
@@ -123,16 +123,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .mainNav a { padding-block: 9px; }
 .mainNav a:hover { color: var(--yellow); }
 
-/* 言語切替。並びの他とは役割が違うので、囲って押せる的に見せる */
+/* 言語切替。並びの他とは役割が違うので、押せるものとして色のベタで示す。
+   透かした面はヘッダーの紺に沈んで面として立たないので、地の色を持たせる */
 .localeSwitch {
   padding: 5px 11px;
-  color: #f6f8f4;
+  color: var(--ink);
   font-size: 0.82rem;
-  background: rgba(246, 248, 244, 0.16);
+  background: var(--mark-ink);
   transition: background-color 160ms ease;
 }
 
-.localeSwitch:hover { color: var(--yellow); background: rgba(246, 248, 244, 0.28); }
+.localeSwitch:hover { color: var(--ink); background: var(--yellow); }
 
 /* 訳した法務ページの冒頭に置く、原文がどちらかの断り */
 .translationNote {
@@ -227,6 +228,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
   color: var(--muted);
   font-size: 0.78rem;
   line-height: 1.4;
+  /* 禁則を効かせて長音符を行頭に落とさない。あわせて行長を揃え、
+     最終行に一文字だけ残る折り返しを避ける */
+  line-break: strict;
+  text-wrap: balance;
 }
 
 /* タグと分類は押せない。押せるものと取り違えられないよう、色は持たせず灰色で置く */
@@ -367,7 +372,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .buttonSecondary { transition: background-color 160ms ease; }
 
 .buttonPrimary { color: white; background: var(--blue); }
-.buttonPrimary:hover { background: #2a63d4; }
+.buttonPrimary:hover { background: #1f51bb; }
 .buttonSecondary { color: #14459e; background: #d8e3f9; }
 .buttonSecondary:hover { background: #c8d8f6; }
 
