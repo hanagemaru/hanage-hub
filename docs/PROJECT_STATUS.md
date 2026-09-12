@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-11
+Last updated: 2026-09-12
 
 ## Current state
 
@@ -16,6 +16,24 @@ Last updated: 2026-09-11
 - Status: the catalog lists Multicolor Sweeper and Putt. The hub is live on Cloudflare and was verified on the root, `www`, and `workers.dev` URLs on 2026-09-05
 - Multicolor Sweeper is live at `https://mcsweeper.hanage.app/`; the custom domain was added to its Cloudflare Worker and verified on iPhone on 2026-09-05. hanage-hub PR #10 switched `GAME_URLS.multicolorSweeper` to this URL.
 - Putt is live at `https://putt.hanage.app/`; its Cloudflare Worker (`putt.jibunnha.workers.dev`) was deployed and the custom domain verified on iPhone on 2026-09-06. `GAME_URLS.putt` now points at this URL. The Putt repository still deploys to GitHub Pages (`https://hanagemaru.github.io/putt/`) in parallel as a fallback; that workflow is retired only after a settling period.
+
+### Visual design refresh (in production since 2026-09-12)
+
+PR #23 (merge commit `9dcdde5`) landed the exterior change described under Design direction in `docs/SITE_PLAN.md`, and it was verified against the live site on 2026-09-12:
+
+- Rounded corners and shadows are gone; `--radius` and `--shadow` no longer exist. The production stylesheet contains no `border-radius` and no `box-shadow`.
+- Line weight carries meaning in three steps: `--frame` (3px) only on game artwork, `--rule` (1px) on containers for text, and nothing on pressable things, which are shown by colour alone.
+- Body type is M PLUS 1p, self-hosted as subsets at `public/fonts/m-plus-1p-{400,700,900}.woff2`. No Google Fonts request is made. All three weights serve as `font/woff2` and are byte-identical to the files in the repository.
+- The yellow 「公開中」 badge is gone. `GameText.status` is `string | null`, and a label is set only for something that is *not* published; both current games carry `null`.
+- The subsets cover 821 codepoints against the 493 distinct characters the 20 published pages actually render, so no character falls back to another face mid-sentence. Re-check this headroom when adding page copy.
+
+Three defects found during that verification were fixed the same day:
+
+- The primary button and the blue link text failed WCAG AA. `--blue` was `#3878f2`, giving 4.09:1 for white on the button (16px/900, so the 4.5:1 threshold applies) and 3.71:1 for link text on `--paper`. It is now `#2b64d8`: 5.36:1 and 4.86:1.
+- The language switch was a 16% white wash on the header, only 1.63:1 against it, so the control did not read as a surface. It is now a solid `--mark-ink` chip with `--ink` text at 14.86:1, which is also what "pressable things are shown by colour" asks for.
+- Tile descriptions could drop a lone `ー` onto the last line at narrow widths. `.tileMeta p` now sets `line-break: strict` and `text-wrap: balance`.
+
+Verification note: screenshots were taken against a local build of the same commit, because Chromium could not complete a TLS handshake through the session's egress proxy even after `hanage.app` itself became reachable by `curl`. That substitution is sound only because the production stylesheet hashed identically to the local build's, the font files matched by checksum, and the served HTML differed only by the AdSense and Cloudflare Analytics script tags. Check those three things before trusting the same shortcut again.
 
 ### Domain and DNS (updated 2026-09-05)
 
@@ -87,7 +105,7 @@ Phase C (hub content) — done on 2026-09-04
 
 Phase D (advertising)
 
-8. ~~Apply for AdSense once `hanage.app` serves the finished hub and the published games are in a stable, playable state.~~ **Review requested on 2026-09-10; awaiting the result.** The AdSense account existed from an earlier attempt and had been deactivated for inactivity, so it was reactivated rather than replaced — Google allows only one account per person, and a second one risks losing both. The site registered at the time was `gradient-minesweeper.web.app` (Gradient Sweeper, which this project decided not to publish); it was removed and `hanage.app` added in its place. Ownership was verified by Google on 2026-09-10 against the live site, which is the only end-to-end confirmation that PR #19's script is serving — the agent environment's egress policy blocks `hanage.app`, so no session can check production directly. **Putt cleared its own side on 2026-09-10**: its review-readiness milestone (P0-1 to P0-3 in the Putt repository's `RELEASE_PLAN.md` and `PROJECT_STATUS.md`) is met and device-verified, so nothing in Putt blocks listing it.
+8. ~~Apply for AdSense once `hanage.app` serves the finished hub and the published games are in a stable, playable state.~~ **Review requested on 2026-09-10; awaiting the result.** The AdSense account existed from an earlier attempt and had been deactivated for inactivity, so it was reactivated rather than replaced — Google allows only one account per person, and a second one risks losing both. The site registered at the time was `gradient-minesweeper.web.app` (Gradient Sweeper, which this project decided not to publish); it was removed and `hanage.app` added in its place. Ownership was verified by Google on 2026-09-10 against the live site, which is the only end-to-end confirmation that PR #19's script is serving — at the time, the agent environment's egress policy blocked `hanage.app`; that restriction was lifted and production was checked directly on 2026-09-12 (see the design refresh section under Current state). **Putt cleared its own side on 2026-09-10**: its review-readiness milestone (P0-1 to P0-3 in the Putt repository's `RELEASE_PLAN.md` and `PROJECT_STATUS.md`) is met and device-verified, so nothing in Putt blocks listing it.
     If the result is a rejection, the likeliest ground is thin content: the reviewed property is `hanage.app`, whose pages are a catalog, while the games themselves live on `putt.hanage.app` and `mcsweeper.hanage.app` and are not part of what is reviewed. The English pages are translations of the Japanese ones, so 22 pages read closer to 11 to a reviewer. Thickening `/updates/` and the how-to-play bodies is the response.
     If the result is approval, check whether **auto ads** are on before anything else. Left on, Google inserts ads on its own — ignoring the placement rules in `docs/ADVERTISING_POLICY.md` and each game's spec, and making the privacy policy's advertising paragraph false the moment one renders (item 8 under Next likely tasks). Turn it off, then place ads deliberately.
 9. ~~Add visible `https://hanage.app/privacy/` links to each game.~~ Done: Multicolor Sweeper on 2026-09-05, Putt on 2026-09-09. Since 2026-09-10 both games build the URL from the in-game language (see item 13), so English players reach `/en/privacy/`.
@@ -115,5 +133,7 @@ Phase D (advertising)
 14. ~~Putt names the overhead view two ways: the button says 「マップ」/`MAP` while the notice says 「ホールマップ」/`Hole map`.~~ Settled on 2026-09-09: Putt uses 「マップ」/`MAP` everywhere, including source comments that said 「コースマップ」. The hub already used that word, so no hub copy changed.
 15. ~~`putt.specs.content` is 「3コース × 9ホール」.~~ Changed on 2026-09-09 to 「9ホール ストロークプレー」/`9-hole stroke play`: it states the scale of one round and how you compete, and stays true when a fourth tour set is added to `TOUR_SETS`.
 16. `howToPlay.putt` still says 「3つのコースから1つ選び、9ホールを回ります。」/"Pick one of three courses…". Same inventory count as item 15, in the how-to-play body rather than a spec tag. Left as-is for now; reword when a fourth tour set lands, or sooner if the sentence reads fine without the number.
+
+17. The self-hosted fonts are served with `cache-control: public, max-age=0, must-revalidate`, so every page load revalidates them, and no `<link rel="preload">` is emitted for them. Neither is a regression and both are cheap to live with, but a long `max-age` on these immutable files plus a preload would remove the brief fallback flash that `font-display: swap` allows. Both are hosting-configuration changes and need the owner's approval first.
 
 Update this file whenever a major task is completed or a decision changes.
