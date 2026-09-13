@@ -281,7 +281,7 @@ export const ja: Content = {
             { term: "iPhone：", body: "Safariの共有ボタンから「ホーム画面に追加」。" },
             { term: "Android：", body: "Chromeのメニューから「アプリをインストール」。" },
           ],
-          note: "ランキングへの登録には通信が要ります。",
+          note: "ランキングへの登録には通信が要ります。iPhoneでは、Safariで遊んだ記録は引き継がれず、ランキングにも別の人として載ります。",
         },
       ],
     },
@@ -338,11 +338,13 @@ export const ja: Content = {
         {
           heading: "ホーム画面に追加する",
           kind: "defs",
-          intro: "アイコンから直接開けます。ブラウザのバーが消えて、画面が縦に広がります。",
+          intro:
+            "アイコンから直接開けます。ブラウザのバーが消えて画面が縦に広がり、電波がなくても遊べます。",
           items: [
             { term: "iPhone：", body: "Safariの共有ボタンから「ホーム画面に追加」。" },
-            { term: "Android：", body: "Chromeのメニューから「ホーム画面に追加」。" },
+            { term: "Android：", body: "Chromeのメニューから「アプリをインストール」。" },
           ],
+          note: "iPhoneでは、Safariで遊んだ記録は引き継がれません。",
         },
       ],
     },

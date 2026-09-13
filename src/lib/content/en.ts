@@ -305,7 +305,7 @@ export const en: Content = {
             { term: "iPhone:", body: "the Share button in Safari, then Add to Home Screen." },
             { term: "Android:", body: "the Chrome menu, then Install app." },
           ],
-          note: "Submitting a time to the rankings still needs a connection.",
+          note: "Submitting a time to the rankings still needs a connection. On iPhone, anything you played in Safari does not carry over, and the rankings treat you as a new player.",
         },
       ],
     },
@@ -363,11 +363,13 @@ export const en: Content = {
         {
           heading: "Add it to your home screen",
           kind: "defs",
-          intro: "Open it straight from the icon. The browser bar goes away and the screen gets taller.",
+          intro:
+            "Open it straight from the icon. The browser bar goes away, the screen gets taller, and it plays without a connection.",
           items: [
             { term: "iPhone:", body: "the Share button in Safari, then Add to Home Screen." },
-            { term: "Android:", body: "the Chrome menu, then Add to Home screen." },
+            { term: "Android:", body: "the Chrome menu, then Install app." },
           ],
+          note: "On iPhone, anything you played in Safari does not carry over.",
         },
       ],
     },
