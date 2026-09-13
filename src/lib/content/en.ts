@@ -301,12 +301,12 @@ export const en: Content = {
           heading: "Add it to your home screen",
           kind: "defs",
           intro:
-            "Open it from your home screen like any other app. Losing the address bar gives the screen more room, and it works offline.",
+            "Open it from your home screen like any other app. You get more screen, and it works offline.",
           items: [
-            { term: "iPhone:", body: "use the Share button and choose Add to Home Screen." },
-            { term: "Android:", body: "open the browser menu and choose Install app." },
+            { term: "iPhone:", body: "use the Share button, then Add to Home Screen." },
+            { term: "Android:", body: "open the browser menu, then Install app." },
           ],
-          note: "Submitting a time to the rankings needs an internet connection. On iPhone the app keeps its records separately from the browser, so earlier records do not carry over.",
+          note: "Submitting a time to the rankings needs a connection. On iPhone the app keeps records separately from the browser, so earlier ones do not carry over.",
         },
       ],
     },
@@ -365,12 +365,12 @@ export const en: Content = {
           heading: "Add it to your home screen",
           kind: "defs",
           intro:
-            "Open it from your home screen like any other app. Losing the address bar gives the screen more room, and it works offline.",
+            "Open it from your home screen like any other app. You get more screen, and it works offline.",
           items: [
-            { term: "iPhone:", body: "use the Share button and choose Add to Home Screen." },
-            { term: "Android:", body: "open the browser menu and choose Install app." },
+            { term: "iPhone:", body: "use the Share button, then Add to Home Screen." },
+            { term: "Android:", body: "open the browser menu, then Install app." },
           ],
-          note: "On iPhone the app keeps its records separately from the browser, so earlier records do not carry over.",
+          note: "On iPhone the app keeps records separately from the browser, so earlier ones do not carry over.",
         },
       ],
     },
