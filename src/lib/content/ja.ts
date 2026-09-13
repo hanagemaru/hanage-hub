@@ -278,10 +278,10 @@ export const ja: Content = {
           kind: "defs",
           intro: "アイコンから直接開けます。ブラウザのバーが消えて画面が広がり、電波がなくても遊べます。",
           items: [
-            { term: "iPhone：", body: "Safariの共有ボタンから「ホーム画面に追加」。" },
-            { term: "Android：", body: "Chromeのメニューから「アプリをインストール」。" },
+            { term: "iPhone：", body: "共有ボタンから「ホーム画面に追加」。" },
+            { term: "Android：", body: "ブラウザのメニューから「アプリをインストール」。" },
           ],
-          note: "ランキングへの登録には通信が要ります。iPhoneでは、Safariで遊んだ記録は引き継がれず、ランキングにも別の人として載ります。",
+          note: "ランキングへの登録には通信が要ります。iPhoneでは、ブラウザで遊んだ記録は引き継がれません。",
         },
       ],
     },
@@ -341,10 +341,10 @@ export const ja: Content = {
           intro:
             "アイコンから直接開けます。ブラウザのバーが消えて画面が縦に広がり、電波がなくても遊べます。",
           items: [
-            { term: "iPhone：", body: "Safariの共有ボタンから「ホーム画面に追加」。" },
-            { term: "Android：", body: "Chromeのメニューから「アプリをインストール」。" },
+            { term: "iPhone：", body: "共有ボタンから「ホーム画面に追加」。" },
+            { term: "Android：", body: "ブラウザのメニューから「アプリをインストール」。" },
           ],
-          note: "iPhoneでは、Safariで遊んだ記録は引き継がれません。",
+          note: "iPhoneでは、ブラウザで遊んだ記録は引き継がれません。",
         },
       ],
     },

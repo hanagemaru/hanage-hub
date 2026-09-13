@@ -302,10 +302,10 @@ export const en: Content = {
           kind: "defs",
           intro: "Open it straight from the icon. The browser bar goes away, and it plays without a connection.",
           items: [
-            { term: "iPhone:", body: "the Share button in Safari, then Add to Home Screen." },
-            { term: "Android:", body: "the Chrome menu, then Install app." },
+            { term: "iPhone:", body: "the Share button, then Add to Home Screen." },
+            { term: "Android:", body: "the browser menu, then Install app." },
           ],
-          note: "Submitting a time to the rankings still needs a connection. On iPhone, anything you played in Safari does not carry over, and the rankings treat you as a new player.",
+          note: "Submitting a time to the rankings still needs a connection. On iPhone, records made in the browser do not carry over.",
         },
       ],
     },
@@ -366,10 +366,10 @@ export const en: Content = {
           intro:
             "Open it straight from the icon. The browser bar goes away, the screen gets taller, and it plays without a connection.",
           items: [
-            { term: "iPhone:", body: "the Share button in Safari, then Add to Home Screen." },
-            { term: "Android:", body: "the Chrome menu, then Install app." },
+            { term: "iPhone:", body: "the Share button, then Add to Home Screen." },
+            { term: "Android:", body: "the browser menu, then Install app." },
           ],
-          note: "On iPhone, anything you played in Safari does not carry over.",
+          note: "On iPhone, records made in the browser do not carry over.",
         },
       ],
     },
