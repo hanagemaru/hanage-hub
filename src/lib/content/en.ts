@@ -297,6 +297,16 @@ export const en: Content = {
           kind: "prose",
           body: "Clear times are ranked in three brackets: 15, 20, and 25 bombs. You choose a name when you submit a personal best.",
         },
+        {
+          heading: "Add it to your home screen",
+          kind: "defs",
+          intro: "Open it straight from the icon. The browser bar goes away, and it plays without a connection.",
+          items: [
+            { term: "iPhone:", body: "the Share button in Safari, then Add to Home Screen." },
+            { term: "Android:", body: "the Chrome menu, then Install app." },
+          ],
+          note: "Submitting a time to the rankings still needs a connection.",
+        },
       ],
     },
     putt: {
@@ -348,6 +358,15 @@ export const en: Content = {
             "You are scored on total strokes. The ball rolls heavily once it is in the rough or the second cut.",
             "Water and out of bounds cost one stroke. You replay from where you last hit.",
             "On tour, if you stop mid-round you resume from the start of that hole. Practice keeps nothing.",
+          ],
+        },
+        {
+          heading: "Add it to your home screen",
+          kind: "defs",
+          intro: "Open it straight from the icon. The browser bar goes away and the screen gets taller.",
+          items: [
+            { term: "iPhone:", body: "the Share button in Safari, then Add to Home Screen." },
+            { term: "Android:", body: "the Chrome menu, then Add to Home screen." },
           ],
         },
       ],
