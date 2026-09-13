@@ -300,12 +300,13 @@ export const en: Content = {
         {
           heading: "Add it to your home screen",
           kind: "defs",
-          intro: "Open it straight from the icon. The browser bar goes away, and it plays without a connection.",
+          intro:
+            "Open it from your home screen like any other app. You get more screen, and it works offline.",
           items: [
-            { term: "iPhone:", body: "the Share button in Safari, then Add to Home Screen." },
-            { term: "Android:", body: "the Chrome menu, then Install app." },
+            { term: "iPhone:", body: "use the Share button, then Add to Home Screen." },
+            { term: "Android:", body: "open the browser menu, then Install app." },
           ],
-          note: "Submitting a time to the rankings still needs a connection.",
+          note: "Submitting a time to the rankings needs a connection. On iPhone the app keeps records separately from the browser, so earlier ones do not carry over.",
         },
       ],
     },
@@ -363,11 +364,13 @@ export const en: Content = {
         {
           heading: "Add it to your home screen",
           kind: "defs",
-          intro: "Open it straight from the icon. The browser bar goes away and the screen gets taller.",
+          intro:
+            "Open it from your home screen like any other app. You get more screen, and it works offline.",
           items: [
-            { term: "iPhone:", body: "the Share button in Safari, then Add to Home Screen." },
-            { term: "Android:", body: "the Chrome menu, then Add to Home screen." },
+            { term: "iPhone:", body: "use the Share button, then Add to Home Screen." },
+            { term: "Android:", body: "open the browser menu, then Install app." },
           ],
+          note: "On iPhone the app keeps records separately from the browser, so earlier ones do not carry over.",
         },
       ],
     },
