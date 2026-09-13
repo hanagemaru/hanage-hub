@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-12
+Last updated: 2026-09-13
 
 ## Current state
 
@@ -10,12 +10,18 @@ Last updated: 2026-09-12
 - Primary public URL: https://hanage.app/
 - Additional custom domain: https://www.hanage.app/
 - Worker URL: https://hanage-hub.jibunnha.workers.dev/
-- Netlify project: `hanage-hub` remains available at https://hanage-hub.netlify.app/ for rollback; its custom domains are detached
+- Netlify: no longer used. Its custom domains were detached on 2026-09-05; stopping the build, deleting the project, and removing `netlify.toml` are what remain
 - Cloudflare deployment: Repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are registered, and `CLOUDFLARE_DEPLOY=true`
 - Access analytics: Cloudflare Web Analytics (cookie-less), live since 2026-09-06. The site was added with **Manual setup** — automatic injection does not apply because the hub is served through a Workers custom domain. The beacon is rendered by `src/components/WebAnalytics.tsx` only when the build-time variable `NEXT_PUBLIC_CF_BEACON_TOKEN` is set, which `deploy.yml` fills from the repository variable `CF_BEACON_TOKEN`. That variable is set, and the first build carrying the beacon was the manual `Deploy` run on 2026-09-06. No token is stored in the repository.
 - Status: the catalog lists Multicolor Sweeper and Putt. The hub is live on Cloudflare and was verified on the root, `www`, and `workers.dev` URLs on 2026-09-05
 - Multicolor Sweeper is live at `https://mcsweeper.hanage.app/`; the custom domain was added to its Cloudflare Worker and verified on iPhone on 2026-09-05. hanage-hub PR #10 switched `GAME_URLS.multicolorSweeper` to this URL.
-- Putt is live at `https://putt.hanage.app/`; its Cloudflare Worker (`putt.jibunnha.workers.dev`) was deployed and the custom domain verified on iPhone on 2026-09-06. `GAME_URLS.putt` now points at this URL. The Putt repository still deploys to GitHub Pages (`https://hanagemaru.github.io/putt/`) in parallel as a fallback; that workflow is retired only after a settling period.
+- Putt is live at `https://putt.hanage.app/`; its Cloudflare Worker (`putt.jibunnha.workers.dev`) was deployed and the custom domain verified on iPhone on 2026-09-06. `GAME_URLS.putt` now points at this URL. The Putt repository also deploys to GitHub Pages (`https://hanagemaru.github.io/putt/`) in parallel. **Decided on 2026-09-13: leave that parallel deployment as it is.** It costs nothing and affects nothing here, so no date is set for stopping it.
+
+### Both games work offline (recorded 2026-09-13)
+
+- Multicolor Sweeper and Putt each ship a service worker, so once a game has been opened it keeps working without a network. Putt's was added on 2026-09-13 and verified on a device; Sweeper's was already in place.
+- PR #27 and #28 added a 「ホーム画面に追加する」/"Add to the home screen" section to both how-to-play pages, in Japanese and English. That is the first place the hub tells players to install a game, and it states that they can then play offline. It is live.
+- What the pages claim is what the games do, so the claim and the code have to move together: if a game ever stops precaching, this copy has to change in the same PR.
 
 ### Visual design refresh (in production since 2026-09-12)
 
@@ -66,7 +72,7 @@ Verification note: screenshots were taken against a local build of the same comm
   - Multicolor Sweeper: `mcsweeper.hanage.app` (live)
   - Putt: `putt.hanage.app` (live)
   - `sweeper.hanage.app` (earlier Gradient Sweeper plan) was retired on 2026-09-05 and no longer resolves
-- Use GitHub pull requests for review. Netlify Deploy Previews may remain available until Netlify is retired.
+- Use GitHub pull requests for review. Netlify Deploy Previews are no longer part of that flow.
 - Continue supporting both Codex and Claude Code through shared repository instructions.
 
 ## Implemented foundation
@@ -97,7 +103,7 @@ Phase B (hosting)
 4. ~~Attach `mcsweeper.hanage.app` to the Multicolor Sweeper Worker and switch the hub link to it.~~ Done on 2026-09-05.
 5. ~~Move Putt off GitHub Pages to `putt.hanage.app`.~~ Done on 2026-09-06.
 6. ~~Update Putt's `GAME_URLS` entry when its custom domain is ready.~~ Done on 2026-09-06.
-   Still pending: stop Putt's GitHub Pages workflow after its settling period, and retire the Netlify deployment after the rollback period.
+   Still pending: retire the Netlify deployment. Putt's parallel GitHub Pages workflow is deliberately left running (see Current state).
 
 Phase C (hub content) — done on 2026-09-04
 
@@ -105,7 +111,7 @@ Phase C (hub content) — done on 2026-09-04
 
 Phase D (advertising)
 
-8. ~~Apply for AdSense once `hanage.app` serves the finished hub and the published games are in a stable, playable state.~~ **Review requested on 2026-09-10; awaiting the result.** The AdSense account existed from an earlier attempt and had been deactivated for inactivity, so it was reactivated rather than replaced — Google allows only one account per person, and a second one risks losing both. The site registered at the time was `gradient-minesweeper.web.app` (Gradient Sweeper, which this project decided not to publish); it was removed and `hanage.app` added in its place. Ownership was verified by Google on 2026-09-10 against the live site, which is the only end-to-end confirmation that PR #19's script is serving — at the time, the agent environment's egress policy blocked `hanage.app`; that restriction was lifted and production was checked directly on 2026-09-12 (see the design refresh section under Current state). **Putt cleared its own side on 2026-09-10**: its review-readiness milestone (P0-1 to P0-3 in the Putt repository's `RELEASE_PLAN.md` and `PROJECT_STATUS.md`) is met and device-verified, so nothing in Putt blocks listing it.
+8. ~~Apply for AdSense once `hanage.app` serves the finished hub and the published games are in a stable, playable state.~~ **Review requested on 2026-09-10; still awaiting the result as of 2026-09-13.** The AdSense account existed from an earlier attempt and had been deactivated for inactivity, so it was reactivated rather than replaced — Google allows only one account per person, and a second one risks losing both. The site registered at the time was `gradient-minesweeper.web.app` (Gradient Sweeper, which this project decided not to publish); it was removed and `hanage.app` added in its place. Ownership was verified by Google on 2026-09-10 against the live site, which is the only end-to-end confirmation that PR #19's script is serving — at the time, the agent environment's egress policy blocked `hanage.app`; that restriction was lifted and production was checked directly on 2026-09-12 (see the design refresh section under Current state). **Putt cleared its own side on 2026-09-10**: its review-readiness milestone (P0-1 to P0-3 in the Putt repository's `RELEASE_PLAN.md` and `PROJECT_STATUS.md`) is met and device-verified, so nothing in Putt blocks listing it.
     If the result is a rejection, the likeliest ground is thin content: the reviewed property is `hanage.app`, whose pages are a catalog, while the games themselves live on `putt.hanage.app` and `mcsweeper.hanage.app` and are not part of what is reviewed. The English pages are translations of the Japanese ones, so 22 pages read closer to 11 to a reviewer. Thickening `/updates/` and the how-to-play bodies is the response.
     If the result is approval, check whether **auto ads** are on before anything else. Left on, Google inserts ads on its own — ignoring the placement rules in `docs/ADVERTISING_POLICY.md` and each game's spec, and making the privacy policy's advertising paragraph false the moment one renders (item 8 under Next likely tasks). Turn it off, then place ads deliberately.
 9. ~~Add visible `https://hanage.app/privacy/` links to each game.~~ Done: Multicolor Sweeper on 2026-09-05, Putt on 2026-09-09. Since 2026-09-10 both games build the URL from the in-game language (see item 13), so English players reach `/en/privacy/`.
@@ -116,10 +122,10 @@ Phase D (advertising)
 
 1. Set repository variable `HUB_SMOKE_URL` to `https://hanage.app/` so future deployments verify the public URL.
 2. Confirm that Cloudflare Web Analytics is recording page views for `hanage.app` (allow up to about 30 minutes after the first visit).
-3. Verify the hub and Multicolor Sweeper on iPhone/iPad and confirm the PWA install/startup flow before public-release QA is closed.
+3. Verify the hub and Multicolor Sweeper on iPhone/iPad and confirm the PWA install/startup flow before public-release QA is closed. Putt's install and offline flow were verified on a device on 2026-09-13; Multicolor Sweeper's has not been re-checked since the how-to pages started recommending it.
 4. ~~Add a Putt deletion path to the privacy policy's 保存期間・削除 section once Putt ships online rankings.~~ Done on 2026-09-08: the section now describes ranking-bearing titles in general instead of naming Multicolor Sweeper, so no edit is needed when Putt ships rankings.
 5. ~~After the hub and published games pass release QA, apply for AdSense without waiting for every planned Putt feature.~~ Done on 2026-09-10: review requested, result pending. See Phase D item 8.
-6. After a short rollback period, stop the Netlify build; remove `netlify.toml` in a separate PR once rollback is no longer needed.
+6. Netlify is finished with (decided 2026-09-13): stop the build, delete the project, and remove `netlify.toml` in its own PR. `docs/DEPLOY.md` no longer describes a Netlify rollback — the Cloudflare-side rollback steps are written there as unconfirmed, and should be tried once and then recorded.
 7. Define Multicolor Sweeper's ad timing before any ad implementation.
 8. On the day ads first serve, replace the privacy policy's 「本ページの最終更新時点で……広告を配信していません」 paragraph with the services actually in use. The sentence is accurate today and during review — the AdSense script has loaded on every page since 2026-09-10, but no ad unit renders — and becomes false the moment one does.
     Write the replacement so it does not need dating. The current wording is of the form 「as of now we do not do X, but we plan to」, which is guaranteed to go stale at an unpredictable moment and is why this item exists; `docs/ADVERTISING_POLICY.md` only ever required disclosure at introduction time, so the promise was never needed. Describe what the site does in terms that stay true whether or not an ad is currently rendering, and this item can be closed for good rather than re-armed.

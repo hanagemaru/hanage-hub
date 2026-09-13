@@ -9,14 +9,14 @@
 - Primary URL: https://hanage.app/
 - Additional custom domain: https://www.hanage.app/
 - Worker URL: https://hanage-hub.jibunnha.workers.dev/
-- Netlify fallback: https://hanage-hub.netlify.app/ (custom domains detached; retirement pending)
+- Netlify: no longer used. Its custom domains were detached on 2026-09-05 and the project is being retired
 - Multicolor Sweeper: https://mcsweeper.hanage.app/
 - Putt: https://putt.hanage.app/
 
 Game URLs are defined once in `src/lib/site.ts` (`GAME_URLS`). Update them there if a game moves to another host.
 
 Changes merged into `main` are deployed automatically to Cloudflare when the repository variable `CLOUDFLARE_DEPLOY` is `true`.
-Netlify remains temporarily available for rollback and may continue to provide Deploy Previews until it is retired.
+Netlify is no longer part of the hosting or review flow. `netlify.toml` is still in the repository and is removed in its own PR.
 
 Cloudflare Workers deployment is configured in `wrangler.jsonc` and `.github/workflows/deploy.yml`.
 Operational details and remaining cleanup are in [docs/DEPLOY.md](./docs/DEPLOY.md).

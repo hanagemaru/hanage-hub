@@ -73,14 +73,17 @@ The hub deploys from `main` to Cloudflare Workers Static Assets. The Next.js sta
 - Alias: `https://www.hanage.app/`
 - Worker URL: `https://hanage-hub.jibunnha.workers.dev/`
 - Multicolor Sweeper already runs on Cloudflare Workers with a D1 ranking database.
-- Putt remains on GitHub Pages until its Cloudflare migration is completed.
-- The former Netlify project is kept only as a temporary rollback target; its custom domains are detached.
+- Putt moved to Cloudflare Workers at `https://putt.hanage.app/` on 2026-09-06. GitHub Pages (`https://hanagemaru.github.io/putt/`) stays alongside it as a fallback; `main` deploys to both.
+- Both games ship a service worker, so each one keeps working offline once it has been opened.
+- Netlify is no longer used. Its custom domains were detached on 2026-09-05 and the project is being retired.
 
 ## Advertising and privacy
 
 The shared implementation policy is [`docs/ADVERTISING_POLICY.md`](./ADVERTISING_POLICY.md). It is the source of truth for rules shared by the hub and all first-party games. Each game specification keeps only its game-specific display timing and transitions.
 
 - Planned providers: Google AdSense and H5 Games Ads.
-- No advertising or external analytics script is present today.
+- The hub has loaded the AdSense script on every page since 2026-09-10, for the review requested that day. No ad unit renders yet, and the review result is still pending as of 2026-09-13.
+- The hub also carries the cookie-less Cloudflare Web Analytics beacon (since 2026-09-06). It is disclosed in the privacy notice.
+- The games carry neither script: no advertising and no analytics on `putt.hanage.app` or `mcsweeper.hanage.app`.
 - The public privacy notice is maintained at `https://hanage.app/privacy/`; each game must provide a visible link to it before advertising is enabled.
 - AdSense approval, required consent management, `ads.txt`, privacy disclosure, and real-device QA are release gates for advertising.

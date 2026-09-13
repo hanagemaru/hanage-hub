@@ -19,7 +19,7 @@ Hanage Hub is the public hub for independently developed games and web apps. The
 - Next.js 16 App Router, React 19, and TypeScript.
 - Static export is enabled in `next.config.ts`.
 - Cloudflare Workers (Static Assets) is the live production host. It is configured in `wrangler.jsonc` and deployed by `.github/workflows/deploy.yml` when the repository variable `CLOUDFLARE_DEPLOY` is `true`.
-- Netlify is retained temporarily for rollback and Deploy Previews; its custom-domain DNS records have been removed.
+- Netlify is no longer used, for hosting or for Deploy Previews. Its custom-domain DNS records were removed on 2026-09-05 and the project is being retired.
 - `main` is the production branch.
 - Primary production URL: https://hanage.app/
 - Additional production URL: https://www.hanage.app/
