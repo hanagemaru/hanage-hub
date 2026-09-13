@@ -300,7 +300,7 @@ export const en: Content = {
         {
           heading: "Add it to your home screen",
           kind: "defs",
-          intro: "Open it straight from the icon, with or without a connection.",
+          intro: "Open it straight from the icon. The browser bar goes away, and it plays without a connection.",
           items: [
             { term: "iPhone:", body: "the Share button in Safari, then Add to Home Screen." },
             { term: "Android:", body: "the Chrome menu, then Install app." },

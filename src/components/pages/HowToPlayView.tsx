@@ -24,7 +24,7 @@ function SectionBody({ section }: { section: HowToSection }) {
       return (
         <>
           {section.intro ? <p>{section.intro}</p> : null}
-          <ul>
+          <ul className="defList">
             {section.items.map((item) => (
               <li key={item.term}>
                 <strong>{item.term}</strong>

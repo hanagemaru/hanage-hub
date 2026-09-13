@@ -276,7 +276,7 @@ export const ja: Content = {
         {
           heading: "ホーム画面に追加する",
           kind: "defs",
-          intro: "アイコンから直接開けます。電波がなくても遊べます。",
+          intro: "アイコンから直接開けます。ブラウザのバーが消えて画面が広がり、電波がなくても遊べます。",
           items: [
             { term: "iPhone：", body: "Safariの共有ボタンから「ホーム画面に追加」。" },
             { term: "Android：", body: "Chromeのメニューから「アプリをインストール」。" },

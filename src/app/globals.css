@@ -322,6 +322,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .contentCard ul, .contentCard ol { margin: 12px 0 0 1.35em; }
 .contentCard li + li { margin-top: 8px; }
 
+/* 見出しつきの箇条書きは「見出し：本文」と続ける。和文は全角コロンが間を持つが、
+   英文の半角コロンは本文に詰まって見えるので、英語ページにだけ空きを足す */
+:lang(en) .defList strong { margin-right: 0.3em; }
+
 .gameIntro {
   display: grid;
   gap: 28px;
