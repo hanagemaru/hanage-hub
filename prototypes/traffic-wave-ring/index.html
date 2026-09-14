@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Ring Traffic Wave Prototype</title>
+<style>
+:root{--paper:#f3f0e7;--ink:#171717;--muted:#6c6961;--panel:#fffdfa;--road:#363a40;--blue:#2b64d8;--red:#d84836;--amber:#e4a02b;--green:#2f8b57;--rule:#c9c3b7}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif}
+body{display:flex;justify-content:center}
+#app{width:min(100%,680px);min-height:100dvh;padding:14px 10px calc(18px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:8px}
+h1{margin:0;font-size:20px;line-height:1;font-weight:900;letter-spacing:.035em}.sub{font-size:11px;color:var(--muted);margin-top:5px}.time{font-size:18px;font-weight:900;font-variant-numeric:tabular-nums}
+.note{font-size:12px;line-height:1.5;margin:0 0 9px;color:#3b3934}
+.hud{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:var(--panel);border:1px solid var(--rule);padding:7px 8px;min-width:0}.stat strong{display:block;font-size:17px;line-height:1.15;font-variant-numeric:tabular-nums}.stat span{display:block;font-size:9.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#stage{position:relative;background:#d9ddcf;border:3px solid var(--ink);aspect-ratio:1/1;max-height:540px}
+#track{display:block;width:100%;height:100%}
+.badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:35%;text-align:center;pointer-events:none}.badge b{display:block;font-size:14px;line-height:1.25}.badge small{display:block;margin-top:5px;color:#5d5a53;font-size:9.5px;line-height:1.35}
+.statusline{display:flex;align-items:center;gap:8px;margin:8px 0 6px;font-size:12px;font-weight:800}.lamp{width:11px;height:11px;background:var(--red);display:inline-block}.lamp.good{background:var(--green)}
+.bar{height:8px;background:#d9d4ca;margin:0 0 9px;overflow:hidden}.bar>i{display:block;height:100%;width:75%;background:var(--red);transition:width .18s linear,background-color .18s linear}
+.controls{display:grid;grid-template-columns:1.25fr .75fr;gap:7px}.controls button{border:0;min-height:52px;font-weight:900;font-size:14px}.control{background:#d9e4ff;color:#173b8e}.control.on{background:var(--blue);color:white}.reset{background:#ddd8cd;color:#26231f}
+.explain{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.box{border:1px solid var(--rule);background:var(--panel);padding:8px;font-size:10.5px;line-height:1.45}.box b{display:block;margin-bottom:2px;font-size:11px}.legend{display:flex;gap:11px;flex-wrap:wrap;margin-top:8px;font-size:9.5px;color:var(--muted)}.dot{display:inline-block;width:9px;height:9px;margin-right:4px;vertical-align:-1px}
+@media(max-width:420px){h1{font-size:18px}.hud{gap:4px}.stat{padding:6px}.stat strong{font-size:15px}.badge b{font-size:12px}.controls button{min-height:50px}.explain{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app">
+<header><div><h1>RING TRAFFIC LAB</h1><div class="sub">1台の車間制御で stop-and-go 波を消せるか</div></div><div class="time" id="time">00:00</div></header>
+<p class="note">最初は制御OFFです。赤い低速域が車とは逆向きに周回します。少し観察したら、青い1台の「車間制御」をONにしてください。</p>
+<div class="hud">
+  <div class="stat"><strong id="jamCars">0</strong><span>低速車 / 22台</span></div>
+  <div class="stat"><strong id="spread">0.0</strong><span>速度ばらつき km/h</span></div>
+  <div class="stat"><strong id="gap">0.0m</strong><span>青車の前方車間</span></div>
+</div>
+<div id="stage">
+  <canvas id="track"></canvas>
+  <div class="badge"><b id="centerTitle">渋滞波 発生中</b><small id="centerSub">車は時計回り<br>波は反時計回り</small></div>
+</div>
+<div class="statusline"><i id="lamp" class="lamp"></i><span id="status">制御OFF：渋滞波が維持されています</span></div>
+<div class="bar"><i id="spreadBar"></i></div>
+<div class="controls">
+  <button id="control" class="control">1台の車間制御　OFF</button>
+  <button id="reset" class="reset">渋滞を再生成</button>
+</div>
+<div class="explain">
+  <div class="box"><b>OFF</b>各車は前の車との距離だけを見て加減速します。小さな減速が増幅され、stop-and-go の波が残ります。</div>
+  <div class="box"><b>ON</b>青い1台だけが少し速度を抑え、前に大きな車間を作ります。その空白が渋滞波を吸収し、速度差を小さくします。</div>
+</div>
+<div class="legend"><span><i class="dot" style="background:#2b64d8"></i>制御車</span><span><i class="dot" style="background:#d84836"></i>低速</span><span><i class="dot" style="background:#e4a02b"></i>減速中</span><span><i class="dot" style="background:#f0ece2;border:1px solid #777"></i>通常</span><span>シミュレーション速度 ×1.5</span></div>
+</div>
+<script>
+(() => {
+  'use strict';
+  const N=22,L=230,CAR=4.5,VMAX=9,HC=5,W=2,ALPHA=1.2,SIM_SPEED=1.5;
+  const CONTROL_BASE=4.0,TARGET_GAP=35,GAP_GAIN=0.005;
+  const canvas=document.getElementById('track'),ctx=canvas.getContext('2d');
+  const timeEl=document.getElementById('time'),jamEl=document.getElementById('jamCars'),spreadEl=document.getElementById('spread'),gapEl=document.getElementById('gap');
+  const controlBtn=document.getElementById('control'),resetBtn=document.getElementById('reset'),statusEl=document.getElementById('status'),lamp=document.getElementById('lamp'),spreadBar=document.getElementById('spreadBar'),centerTitle=document.getElementById('centerTitle'),centerSub=document.getElementById('centerSub');
+  let h=new Float64Array(N),v=new Float64Array(N),a=new Float64Array(N),x0=0,elapsed=0,controlOn=false,last=0,acc=0;
+  let calmSince=null;
+  const avgSpacing=L/N;
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  function ov(g){return VMAX*(Math.tanh((g-HC)/W)+Math.tanh(HC/W))/(1+Math.tanh(HC/W));}
+  function reset(){
+    elapsed=0;x0=0;controlOn=false;calmSince=null;
+    let sum=0;
+    for(let i=0;i<N;i++){h[i]=avgSpacing+0.7*Math.sin(i/N*Math.PI*2);sum+=h[i];}
+    const scale=L/sum;for(let i=0;i<N;i++)h[i]*=scale;
+    for(let i=0;i<N;i++)v[i]=ov(Math.max(0.2,h[i]-CAR));
+    v[7]*=0.72;v[8]*=0.42;v[9]*=0.18;v[10]*=0.32;v[11]*=0.62;
+    syncButton();updateHud();draw();
+  }
+  function syncButton(){controlBtn.classList.toggle('on',controlOn);controlBtn.textContent=`1台の車間制御　${controlOn?'ON':'OFF'}`;}
+  function step(dt){
+    elapsed+=dt;
+    for(let i=0;i<N;i++){
+      const gap=Math.max(0.05,h[i]-CAR);
+      a[i]=ALPHA*(ov(gap)-v[i]);
+      if(gap<0.8)a[i]=Math.min(a[i],-4);
+    }
+    if(controlOn){
+      const frontGap=Math.max(0.05,h[0]-CAR);
+      const target=clamp(CONTROL_BASE+GAP_GAIN*(frontGap-TARGET_GAP),0,7);
+      a[0]=clamp(1.2*(target-v[0]),-2.5,1.5);
+    }
+    for(let i=0;i<N;i++){
+      a[i]=clamp(a[i],-4,2);
+      v[i]=clamp(v[i]+a[i]*dt,0,12);
+    }
+    const oldV=Array.from(v);
+    for(let i=0;i<N;i++)h[i]+=(oldV[(i+1)%N]-oldV[i])*dt;
+    for(let i=0;i<N;i++){
+      if(h[i]<CAR+0.3){h[i]=CAR+0.3;v[i]=Math.min(v[i],v[(i+1)%N]);}
+    }
+    let s=0;for(let i=0;i<N;i++)s+=h[i];
+    const corr=(L-s)/N;for(let i=0;i<N;i++)h[i]+=corr;
+    x0=(x0+v[0]*dt)%L;
+  }
+  function metrics(){
+    let mean=0;for(let i=0;i<N;i++)mean+=v[i];mean/=N;
+    let q=0,jam=0;for(let i=0;i<N;i++){q+=(v[i]-mean)*(v[i]-mean);if(v[i]<2.5)jam++;}
+    const sd=Math.sqrt(q/N)*3.6;
+    return {mean:mean*3.6,sd,jam,gap:Math.max(0,h[0]-CAR)};
+  }
+  function updateHud(){
+    const m=metrics();
+    const sec=Math.floor(elapsed),mm=String(Math.floor(sec/60)).padStart(2,'0'),ss=String(sec%60).padStart(2,'0');timeEl.textContent=`${mm}:${ss}`;
+    jamEl.textContent=m.jam;spreadEl.textContent=m.sd.toFixed(1);gapEl.textContent=`${m.gap.toFixed(1)}m`;
+    const pct=clamp(m.sd/14*100,2,100);spreadBar.style.width=pct+'%';
+    spreadBar.style.background=m.sd<2?'#2f8b57':m.sd<6?'#e4a02b':'#d84836';
+    if(controlOn&&m.sd<2.0&&m.jam===0){if(calmSince===null)calmSince=elapsed;}else calmSince=null;
+    const cleared=calmSince!==null&&elapsed-calmSince>2;
+    lamp.classList.toggle('good',cleared);
+    if(cleared){statusEl.textContent='渋滞波はほぼ消滅：全車が近い速度で流れています';centerTitle.textContent='WAVE DAMPED';centerSub.innerHTML='1台の制御で<br>stop-and-go が減衰';}
+    else if(controlOn){statusEl.textContent='制御ON：青い車が前方に空白を作り、波を吸収中';centerTitle.textContent='車間を生成中';centerSub.innerHTML='青い車の前に<br>大きな空白を作る';}
+    else{statusEl.textContent='制御OFF：渋滞波が維持されています';centerTitle.textContent='渋滞波 発生中';centerSub.innerHTML='車は時計回り<br>波は反時計回り';}
+  }
+  function resize(){
+    const r=canvas.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.max(1,Math.round(r.width*dpr));canvas.height=Math.max(1,Math.round(r.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0);draw();
+  }
+  function positions(){
+    const p=new Float64Array(N);p[0]=x0;let cur=x0;for(let i=1;i<N;i++){cur=(cur+h[i-1])%L;p[i]=cur;}return p;
+  }
+  function drawArrow(cx,cy,r,theta,color,reverse=false){
+    const dir=reverse?-1:1,span=0.26,start=theta-dir*span/2,end=theta+dir*span/2;
+    ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,r,start,end,reverse);ctx.stroke();
+    const ex=cx+r*Math.cos(end),ey=cy+r*Math.sin(end),t=end+(reverse?-Math.PI/2:Math.PI/2);
+    ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(ex-8*Math.cos(t-.6),ey-8*Math.sin(t-.6));ctx.lineTo(ex-8*Math.cos(t+.6),ey-8*Math.sin(t+.6));ctx.closePath();ctx.fill();
+  }
+  function draw(){
+    if(!ctx)return;const rect=canvas.getBoundingClientRect(),Wc=rect.width,Hc=rect.height;if(!Wc||!Hc)return;
+    ctx.clearRect(0,0,Wc,Hc);ctx.fillStyle='#d9ddcf';ctx.fillRect(0,0,Wc,Hc);
+    const cx=Wc/2,cy=Hc/2,r=Math.min(Wc,Hc)*0.36,roadW=Math.min(Wc,Hc)*0.17;
+    ctx.strokeStyle='#363a40';ctx.lineWidth=roadW;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='#eee8d4';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,r-roadW/2+5,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(cx,cy,r+roadW/2-5,0,Math.PI*2);ctx.stroke();
+    ctx.save();ctx.setLineDash([10,10]);ctx.strokeStyle='#c9c5b8';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();ctx.restore();
+    drawArrow(cx,cy,r,-Math.PI/2,'rgba(255,255,255,.8)',false);drawArrow(cx,cy,r,Math.PI/6,'rgba(255,255,255,.8)',false);
+    const p=positions();
+    const slow=[];for(let i=0;i<N;i++)if(v[i]<2.5)slow.push(p[i]/L*Math.PI*2);
+    if(slow.length){
+      let sx=0,sy=0;for(const th of slow){sx+=Math.cos(th);sy+=Math.sin(th);}const th=Math.atan2(sy,sx);
+      ctx.strokeStyle='rgba(216,72,54,.28)';ctx.lineWidth=roadW+12;ctx.beginPath();ctx.arc(cx,cy,r,th-.22,th+.22);ctx.stroke();
+      drawArrow(cx,cy,r+roadW*.64,th,'#d84836',true);
+      const tx=cx+(r+roadW*.88)*Math.cos(th),ty=cy+(r+roadW*.88)*Math.sin(th);ctx.fillStyle='#b63023';ctx.font='800 10px system-ui';ctx.textAlign='center';ctx.fillText('渋滞波',tx,ty);
+    }
+    for(let i=0;i<N;i++){
+      const th=p[i]/L*Math.PI*2,x=cx+r*Math.cos(th),y=cy+r*Math.sin(th),kmh=v[i]*3.6;
+      ctx.save();ctx.translate(x,y);ctx.rotate(th+Math.PI/2);
+      const cw=13,ch=7;ctx.fillStyle=i===0?'#2b64d8':kmh<9?'#d84836':kmh<15?'#e4a02b':'#f0ece2';ctx.strokeStyle=i===0?'#fff':'rgba(0,0,0,.62)';ctx.lineWidth=i===0?2:1;ctx.fillRect(-cw/2,-ch/2,cw,ch);ctx.strokeRect(-cw/2,-ch/2,cw,ch);ctx.restore();
+      if(i===0){ctx.fillStyle='#173b8e';ctx.font='900 9px system-ui';ctx.textAlign='center';ctx.fillText('CONTROL',cx+(r+16)*Math.cos(th),cy+(r+16)*Math.sin(th));}
+    }
+    ctx.fillStyle='#4f514d';ctx.font='700 9px system-ui';ctx.textAlign='center';ctx.fillText('車の進行：時計回り →',cx,cy+r+roadW*.83);
+  }
+  function frame(ts){
+    if(!last)last=ts;let dt=Math.min(.05,(ts-last)/1000);last=ts;acc+=dt*SIM_SPEED;
+    const fixed=.02;while(acc>=fixed){step(fixed);acc-=fixed;}updateHud();draw();requestAnimationFrame(frame);
+  }
+  controlBtn.addEventListener('click',()=>{controlOn=!controlOn;calmSince=null;syncButton();});
+  resetBtn.addEventListener('click',reset);window.addEventListener('resize',resize);
+  reset();resize();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
