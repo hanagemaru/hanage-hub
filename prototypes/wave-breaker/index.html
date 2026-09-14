@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Traffic Wave Game Prototype</title>
+<style>
+:root{--paper:#f3f0e7;--ink:#181818;--muted:#6d6a62;--road:#34383d;--road2:#545a5d;--blue:#2b64d8;--red:#d84735;--amber:#e7a226;--green:#2f8b57;--panel:#fffdfa;--rule:#cbc6ba}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif}body{display:flex;justify-content:center}button{font:inherit;-webkit-tap-highlight-color:transparent}#app{width:min(100%,720px);min-height:100dvh;padding:12px 10px calc(18px + env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:8px}h1{margin:0;font-size:20px;line-height:1;font-weight:900;letter-spacing:.035em}.sub{font-size:11px;color:var(--muted);margin-top:5px}.timer{font-weight:900;font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
+.hud{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:7px}.stat{background:var(--panel);border:1px solid var(--rule);padding:7px 8px}.stat b{display:block;font-size:17px;font-variant-numeric:tabular-nums}.stat span{font-size:10px;color:var(--muted)}
+.stage{position:relative;background:#c9d0c5;border:3px solid var(--ink);aspect-ratio:1/1;overflow:hidden}svg{display:block;width:100%;height:100%;touch-action:none}.centerPanel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:39%;text-align:center;pointer-events:none}.wavePct{font-size:34px;font-weight:950;line-height:1}.centerLabel{font-size:10px;font-weight:800;color:#4e504b;margin-top:3px}.flowScore{font-size:12px;font-weight:800;margin-top:9px}.mini{font-size:10px;color:#5d605b;margin-top:3px}.event{position:absolute;left:50%;top:18%;transform:translate(-50%,-50%);font-size:14px;font-weight:950;opacity:0;transition:opacity .18s,transform .25s;pointer-events:none;text-align:center;text-shadow:0 1px 0 white}.event.show{opacity:1;transform:translate(-50%,-65%)}
+#message{min-height:53px;padding:8px 2px 0;font-size:13px;font-weight:850;line-height:1.4}#hint{margin-top:2px;font-size:11px;font-weight:500;color:var(--muted)}
+.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:6px}.speed{border:0;min-height:54px;background:#dfe4ed;color:#1b2943;font-size:18px;font-weight:950}.speed small{display:block;font-size:9px;margin-top:5px;font-weight:750}.speed.active{background:var(--blue);color:white}.actions{display:flex;gap:7px;margin-top:8px}.actions button{flex:1;border:0;min-height:41px;background:#ddd8cc;font-weight:850}.actions #restart{background:var(--ink);color:white}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;color:var(--muted);margin-top:8px}.dot{display:inline-block;width:9px;height:9px;vertical-align:-1px;margin-right:4px}.overlay{position:absolute;inset:0;z-index:10;background:rgba(24,24,24,.84);color:white;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}.overlay.hidden{display:none}.overlayCard{max-width:430px}.overlay h2{margin:0 0 8px;font-size:24px}.overlay p{margin:7px 0;font-size:13px;line-height:1.55}.overlay button{border:0;background:white;color:#111;padding:12px 25px;font-weight:900;margin-top:8px}.good{color:#b7ffd5}.bad{color:#ffd0c8}
+@media(max-width:480px){#app{padding-left:8px;padding-right:8px}.hud{gap:4px}.stat{padding:6px}.stat b{font-size:15px}.wavePct{font-size:29px}.centerPanel{width:42%}}
+</style>
+</head>
+<body>
+<div id="app">
+<header><div><h1>WAVE BREAKER</h1><div class="sub">1台の車間で、渋滞波を消せ</div></div><div class="timer"><span id="time">50.0</span>s</div></header>
+<div class="hud">
+  <div class="stat"><b id="gap">-- m</b><span>青車の前方車間</span></div>
+  <div class="stat"><b id="rear">0%</b><span>後方渋滞リスク</span></div>
+  <div class="stat"><b id="score">0</b><span>SCORE</span></div>
+</div>
+<div class="stage" id="stage">
+<svg id="svg" viewBox="0 0 600 600" aria-label="円形コースの交通シミュレーション">
+  <circle cx="300" cy="300" r="222" fill="none" stroke="#5e6467" stroke-width="86"/>
+  <circle cx="300" cy="300" r="222" fill="none" stroke="#30343a" stroke-width="70"/>
+  <circle cx="300" cy="300" r="222" fill="none" stroke="#d8d3c1" stroke-width="3" stroke-dasharray="25 22" opacity=".75"/>
+  <circle id="waveArc" cx="300" cy="300" r="222" fill="none" stroke="#d84735" stroke-width="80" stroke-linecap="round" opacity=".28" transform="rotate(-90 300 300)"/>
+  <circle id="gapArc" cx="300" cy="300" r="222" fill="none" stroke="#2b64d8" stroke-width="82" stroke-linecap="round" opacity=".20" transform="rotate(-90 300 300)"/>
+  <g id="cars"></g>
+  <path d="M300 69 l-9 18 h18z" fill="#202224" opacity=".65"/>
+</svg>
+<div class="centerPanel"><div id="wavePct" class="wavePct">100%</div><div class="centerLabel">JAM WAVE</div><div id="flowScore" class="flowScore">FLOW 80 km/h</div><div id="encounter" class="mini">次の波まで --</div></div>
+<div id="event" class="event"></div>
+<div id="overlay" class="overlay"><div class="overlayCard"><h2>赤い波を、青い空白で受け止める</h2><p>車は時計回り、渋滞波は反時計回りです。</p><p><b>波が来る前に60/40km/hへ落として前方車間を広げる → 波が青い空白を通ったら80km/hへ戻す。</b></p><p>低速を続けすぎると、今度は自分の後ろに渋滞ができます。</p><button id="start">START</button></div></div>
+</div>
+<div id="message">波が来る前に車間を作ります。<div id="hint">最初は80km/h。赤い波が近づいたら60km/hへ。</div></div>
+<div class="controls"><button class="speed" data-speed="40">40<small>大きく車間を作る</small></button><button class="speed" data-speed="60">60<small>少し車間を作る</small></button><button class="speed active" data-speed="80">80<small>流れを戻す</small></button></div>
+<div class="actions"><button id="restart">RESTART</button><button id="pause">PAUSE</button></div>
+<div class="legend"><span><i class="dot" style="background:#2b64d8"></i>操作車</span><span><i class="dot" style="background:#d84735"></i>低速車 / 渋滞波</span><span><i class="dot" style="background:#e7a226"></i>減速中</span><span>青い帯＝実際の前方車間</span></div>
+</div>
+<script>
+(() => {
+"use strict";
+const L=360, N=22, CAR=4.5, BASE=80/3.6, WAVE_BACK=5.0, DURATION=50;
+const cx=300, cy=300, R=222, CIRC=2*Math.PI*R;
+const carsLayer=document.getElementById('cars'), waveArc=document.getElementById('waveArc'), gapArc=document.getElementById('gapArc');
+const overlay=document.getElementById('overlay'), startBtn=document.getElementById('start'), restartBtn=document.getElementById('restart'), pauseBtn=document.getElementById('pause');
+const timeEl=document.getElementById('time'), gapEl=document.getElementById('gap'), rearEl=document.getElementById('rear'), scoreEl=document.getElementById('score'), wavePctEl=document.getElementById('wavePct'), flowScoreEl=document.getElementById('flowScore'), encounterEl=document.getElementById('encounter');
+const msgEl=document.getElementById('message'), eventEl=document.getElementById('event'), speedBtns=[...document.querySelectorAll('.speed')];
+let cars=[], player, selected=80, wave=1, waveS=245, elapsed=0, running=false, paused=false, lastTs=0, rearRisk=0, score=0, flowIntegral=0, eventTimer=0, encounterArmed=true, bestGap=0, resultShown=false;
+function fd(a,b){let d=b-a;while(d<0)d+=L;while(d>=L)d-=L;return d}
+function sd(a,b){let d=b-a;while(d<-L/2)d+=L;while(d>L/2)d-=L;return d}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function setSpeed(k){selected=k;speedBtns.forEach(b=>b.classList.toggle('active',Number(b.dataset.speed)===k))}
+function makeCar(i,s){const g=document.createElementNS('http://www.w3.org/2000/svg','g');const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');rect.setAttribute('x','-9');rect.setAttribute('y','-5');rect.setAttribute('width','18');rect.setAttribute('height','10');rect.setAttribute('rx','2');g.appendChild(rect);const win=document.createElementNS('http://www.w3.org/2000/svg','rect');win.setAttribute('x','-4');win.setAttribute('y','-3');win.setAttribute('width','8');win.setAttribute('height','6');win.setAttribute('fill','rgba(255,255,255,.55)');g.appendChild(win);carsLayer.appendChild(g);return {i,s,v:BASE,el:g,rect,player:i===0}}
+function reset(){carsLayer.innerHTML='';cars=[];for(let i=0;i<N;i++){const s=(i*L/N)%L;cars.push(makeCar(i,s))}player=cars[0];player.v=BASE;wave=1;waveS=245;elapsed=0;rearRisk=0;score=0;flowIntegral=0;eventTimer=0;encounterArmed=true;bestGap=0;resultShown=false;paused=false;running=true;pauseBtn.textContent='PAUSE';setSpeed(80);overlay.classList.add('hidden');say('赤い波が反時計回りに近づいてきます。','近づいたら60km/hへ落として、青い車の前に空白を作ります。');render()}
+function say(a,b){msgEl.innerHTML=`${a}<div id="hint">${b}</div>`}
+function flash(text,color='#181818'){eventEl.textContent=text;eventEl.style.color=color;eventEl.classList.add('show');eventTimer=1.1}
+function waveSlowAt(s){const d=Math.abs(sd(waveS,s));const width=25+20*wave;const x=Math.max(0,1-d/width);return 15.5*wave*x*x}
+function sortCars(){cars.sort((a,b)=>a.s-b.s)}
+function leaderOf(c){sortCars();const idx=cars.indexOf(c);return cars[(idx+1)%cars.length]}
+function frontGap(c){const l=leaderOf(c);return Math.max(0,fd(c.s,l.s)-CAR)}
+function update(dt){elapsed+=dt;waveS=(waveS-WAVE_BACK*dt+L)%L;sortCars();
+  const desired=[];for(let i=0;i<cars.length;i++){const c=cars[i], leader=cars[(i+1)%cars.length];const gap=Math.max(.1,fd(c.s,leader.s)-CAR);let target=c.player?selected/3.6:BASE-waveSlowAt(c.s);target=Math.min(target,Math.max(0,(gap-3.0)/1.0));desired.push(target)}
+  for(let i=0;i<cars.length;i++){const c=cars[i],t=desired[i];const dv=t-c.v;const lim=dv<0?3.8:1.8;c.v+=clamp(dv,-lim*dt,lim*dt);c.v=clamp(c.v,0,BASE+.5)}
+  for(const c of cars)c.s=(c.s+c.v*dt)%L;
+  const gap=frontGap(player);bestGap=Math.max(bestGap,gap);const playerK=player.v*3.6;
+  if(playerK<50)rearRisk+=12*dt;else if(playerK<67)rearRisk+=3.2*dt;else rearRisk-=8*dt;rearRisk=clamp(rearRisk,0,100);
+  const dWave=fd(player.s,waveS);const waveInGap=dWave<=gap+7;const approaching=dWave<70||dWave>330;
+  if(waveInGap&&gap>14&&wave>0){const rate=(0.11+0.016*Math.min(45,gap-14))*dt;wave=Math.max(0,wave-rate);score+=rate*1500;encounterArmed=false}
+  if(dWave<4||dWave>L-4){if(encounterArmed){if(gap>=18){const hit=clamp((gap-16)*1.5,10,34);wave=Math.max(0,wave-hit/100);score+=hit*18;flash(`ABSORB -${Math.round(hit)}%`,'#2b64d8')}else{wave=Math.min(1,wave+.05);score=Math.max(0,score-120);rearRisk=Math.min(100,rearRisk+12);flash('WAVE HIT','#d84735')}}encounterArmed=false}else if(dWave>25&&dWave<L-25){encounterArmed=true}
+  flowIntegral+=playerK*dt;score=Math.max(0,score-(80-playerK)*0.018*dt-rearRisk*.004*dt);
+  if(rearRisk>72)say('後ろが詰まりかけています。','80km/hへ戻して流れを回復してください。');else if(wave<=0.02)say('渋滞波を消しました。','全車の速度差がなくなるまで少し流れを戻します。');else if(approaching&&gap<18)say('波が近いのに車間が足りません。','60または40km/hで前の車との距離を広げます。');else if(gap>=25&&approaching)say('十分な空白ができています。','この青い空白に赤い波を通します。通過後は80km/hへ。');else if(gap>=25&&!approaching)say('空白はできています。','低速を続けすぎず、波が遠い間は80km/hへ戻してもOKです。');
+  if(eventTimer>0){eventTimer-=dt;if(eventTimer<=0)eventEl.classList.remove('show')}
+  if(wave<=0.005&&elapsed>8){finish(true);return}if(elapsed>=DURATION){finish(false);return}render()}
+function finish(cleared){if(resultShown)return;running=false;resultShown=true;const avg=flowIntegral/Math.max(.1,elapsed);let grade='C';if(cleared&&avg>=65&&rearRisk<45)grade='A';else if(cleared)grade='B';overlay.innerHTML=`<div class="overlayCard"><h2 class="${cleared?'good':'bad'}">${cleared?'WAVE CLEARED':'TIME UP'}</h2><p>評価 <b style="font-size:28px">${grade}</b></p><p>渋滞波 ${Math.round(wave*100)}%<br>平均自車速度 ${Math.round(avg)} km/h<br>最大車間 ${Math.round(bestGap)} m<br>SCORE ${Math.round(score)}</p><p>${cleared?'必要なときだけ車間を作って、渋滞波を吸収しました。':'次の波が来る前に車間を作り、通過後は80km/hへ戻すのがコツです。'}</p><button id="again">RETRY</button></div>`;overlay.classList.remove('hidden');document.getElementById('again').addEventListener('click',reset)}
+function polar(s){const a=-Math.PI/2+2*Math.PI*(s/L);return {a,x:cx+R*Math.cos(a),y:cy+R*Math.sin(a)}}
+function render(){const gap=frontGap(player);const avgSpeed=cars.reduce((s,c)=>s+c.v,0)/cars.length*3.6;for(const c of cars){const p=polar(c.s),deg=p.a*180/Math.PI+90;c.el.setAttribute('transform',`translate(${p.x} ${p.y}) rotate(${deg})`);const km=c.v*3.6;let fill='#e9e3d6';if(c.player)fill='#2b64d8';else if(km<38)fill='#d84735';else if(km<60)fill='#e7a226';c.rect.setAttribute('fill',fill);if(c.player){c.rect.setAttribute('stroke','white');c.rect.setAttribute('stroke-width','2')}else{c.rect.removeAttribute('stroke')}}
+  const waveLen=(0.07+0.12*wave)*CIRC;waveArc.setAttribute('stroke-dasharray',`${waveLen} ${CIRC-waveLen}`);const waveOff=-(waveS/L)*CIRC+waveLen/2;waveArc.setAttribute('stroke-dashoffset',waveOff);waveArc.setAttribute('opacity',String(.08+.28*wave));
+  const gapLen=clamp(gap/L*CIRC,0,CIRC*.23);gapArc.setAttribute('stroke-dasharray',`${gapLen} ${CIRC-gapLen}`);gapArc.setAttribute('stroke-dashoffset',-((player.s+CAR)/L)*CIRC);gapArc.setAttribute('opacity',String(clamp((gap-8)/40,.04,.26)));
+  const dWave=fd(player.s,waveS);const rel=Math.max(.1,player.v+WAVE_BACK);const eta=dWave/rel;timeEl.textContent=Math.max(0,DURATION-elapsed).toFixed(1);gapEl.textContent=`${Math.round(gap)} m`;rearEl.textContent=`${Math.round(rearRisk)}%`;scoreEl.textContent=Math.round(score);wavePctEl.textContent=`${Math.round(wave*100)}%`;flowScoreEl.textContent=`FLOW ${Math.round(avgSpeed)} km/h`;encounterEl.textContent=wave>0?`次の波まで 約${Math.min(99,eta).toFixed(1)}秒`:'渋滞波なし'}
+function frame(ts){if(!lastTs)lastTs=ts;const dt=Math.min(.05,(ts-lastTs)/1000);lastTs=ts;if(running&&!paused)update(dt);requestAnimationFrame(frame)}
+speedBtns.forEach(b=>b.addEventListener('click',()=>setSpeed(Number(b.dataset.speed))));startBtn.addEventListener('click',reset);restartBtn.addEventListener('click',reset);pauseBtn.addEventListener('click',()=>{if(!running)return;paused=!paused;pauseBtn.textContent=paused?'RESUME':'PAUSE'});render();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
