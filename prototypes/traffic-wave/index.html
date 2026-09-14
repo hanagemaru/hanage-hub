@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Traffic Wave Prototype</title>
+<style>
+:root{
+  --paper:#f3f0e7;--ink:#181818;--muted:#6d6a62;--road:#30343a;--road-edge:#5d635e;
+  --line:#eee7cc;--blue:#2b64d8;--red:#d84735;--amber:#e7a226;--green:#2f8b57;--panel:#fffdfa;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);
+  font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif}
+body{display:flex;justify-content:center}
+#app{width:min(100%,760px);min-height:100dvh;padding:14px 12px calc(18px + env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:10px}
+h1{margin:0;font-size:20px;line-height:1;font-weight:900;letter-spacing:.04em}
+.subtitle{margin-top:5px;font-size:12px;color:var(--muted)}
+.timer{font-size:29px;line-height:1;font-weight:900;font-variant-numeric:tabular-nums}
+.hud{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+.stat{background:var(--panel);border:1px solid #c9c4b8;padding:8px}
+.stat strong{display:block;font-size:18px;font-variant-numeric:tabular-nums}
+.stat span{display:block;margin-top:2px;font-size:10px;color:var(--muted)}
+#roadWrap{position:relative;height:308px;overflow:hidden;background:var(--road);border:3px solid var(--ink)}
+.shoulder{position:absolute;left:0;right:0;height:44px;background:var(--road-edge)}
+.shoulder.top{top:0}.shoulder.bottom{bottom:0}
+.edge{position:absolute;left:0;right:0;height:4px;background:var(--line)}
+.edge.top{top:50px}.edge.bottom{bottom:50px}
+#laneDash{position:absolute;left:-100px;right:-100px;top:151px;height:4px;
+  background:repeating-linear-gradient(90deg,transparent 0 28px,#d8d3c1 28px 60px,transparent 60px 88px)}
+.flow{position:absolute;right:12px;top:70px;color:white;font-size:11px;font-weight:800;opacity:.82}
+#bufferBand{position:absolute;height:30px;top:137px;background:rgba(43,100,216,.19);pointer-events:none}
+.car{position:absolute;width:29px;height:17px;transform:translate(-50%,-50%);border:2px solid rgba(0,0,0,.56)}
+.car::after{content:"";position:absolute;left:4px;right:4px;top:2px;bottom:2px;
+  border-left:4px solid rgba(255,255,255,.5);border-right:4px solid rgba(255,255,255,.5)}
+.car.normal{background:#e9e3d6}.car.medium{background:var(--amber)}.car.slow{background:var(--red)}
+.car.player{width:35px;height:21px;background:var(--blue);border:3px solid white;z-index:8}
+.car.player::before{content:"YOU";position:absolute;left:50%;top:-18px;transform:translateX(-50%);
+  color:white;font-size:9px;font-weight:900}
+#waveLabel{position:absolute;top:211px;transform:translateX(-50%);background:var(--red);color:white;
+  padding:3px 6px;font-size:11px;font-weight:900;white-space:nowrap}
+#waveLabel::after{content:"  ←";font-size:15px}
+#distanceLabel{position:absolute;top:238px;transform:translateX(-50%);color:white;font-size:10px;font-weight:700;opacity:.82}
+.overlay{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:rgba(24,24,24,.84);color:white;text-align:center}
+.overlay.hidden{display:none}
+.overlayCard{max-width:430px}
+.overlay h2{margin:0 0 8px;font-size:25px}
+.overlay p{margin:7px 0;font-size:14px;line-height:1.55}
+.overlay button{border:0;margin-top:8px;padding:12px 25px;background:white;color:#111;font-weight:900;font-size:15px}
+#message{min-height:57px;padding:9px 2px 0;font-size:14px;font-weight:800;line-height:1.4}
+#hint{margin-top:2px;font-size:11px;font-weight:500;color:var(--muted)}
+.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:6px}
+.speed{min-height:53px;border:0;background:#dfe4ed;color:#1b2943;font:900 18px/1 system-ui}
+.speed small{display:block;margin-top:5px;font-size:10px;font-weight:700}
+.speed.active{background:var(--blue);color:white}
+.actions{display:flex;gap:7px;margin-top:8px}
+.actions button{flex:1;min-height:42px;border:0;background:#ddd8cc;font-weight:850;color:#222}
+#restart{background:var(--ink);color:white}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px;font-size:10px;color:var(--muted)}
+.dot{display:inline-block;width:10px;height:10px;margin-right:4px;vertical-align:-1px}
+.good{color:#b7ffd5}.bad{color:#ffd0c8}
+@media(max-width:480px){
+  #app{padding-left:10px;padding-right:10px}
+  #roadWrap{height:292px}
+  #laneDash{top:143px}
+  #bufferBand{top:129px}
+  #waveLabel{top:199px}
+  #distanceLabel{top:225px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div>
+      <h1>TRAFFIC WAVE</h1>
+      <div class="subtitle">渋滞の波を、1台の速度だけで消す</div>
+    </div>
+    <div class="timer"><span id="time">30.0</span>s</div>
+  </header>
+
+  <div class="hud">
+    <div class="stat"><strong id="jamCount">9</strong><span>前方の渋滞車</span></div>
+    <div class="stat"><strong id="speedNow">80</strong><span>自車 km/h</span></div>
+    <div class="stat"><strong id="rearCount">0</strong><span>後方の詰まり</span></div>
+  </div>
+
+  <div id="roadWrap">
+    <div class="shoulder top"></div><div class="shoulder bottom"></div>
+    <div class="edge top"></div><div class="edge bottom"></div>
+    <div id="laneDash"></div>
+    <div class="flow">進行方向 →</div>
+    <div id="bufferBand"></div>
+    <div id="cars"></div>
+    <div id="waveLabel">渋滞波</div>
+    <div id="distanceLabel"></div>
+
+    <div id="overlay" class="overlay">
+      <div class="overlayCard">
+        <h2>30秒で渋滞を消せ</h2>
+        <p>車は右へ走り、赤い渋滞波は後ろへ伝わります。</p>
+        <p><b>早めに減速して自分の前に空白を作る</b>と、渋滞への流入が減って波が小さくなります。</p>
+        <p>ただし40km/hを続けすぎると、今度は自分の後ろが渋滞します。</p>
+        <button id="startOverlay">START</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="message">
+    前方に渋滞波があります。
+    <div id="hint">近づきすぎる前に60km/hへ。必要なら短時間だけ40km/hを使います。</div>
+  </div>
+
+  <div class="controls">
+    <button class="speed" data-speed="40">40<small>km/h</small></button>
+    <button class="speed" data-speed="60">60<small>km/h</small></button>
+    <button class="speed active" data-speed="80">80<small>km/h</small></button>
+  </div>
+
+  <div class="actions">
+    <button id="restart">RESTART</button>
+    <button id="pause">PAUSE</button>
+  </div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:#2b64d8"></i>自車</span>
+    <span><i class="dot" style="background:#d84735"></i>渋滞</span>
+    <span><i class="dot" style="background:#e7a226"></i>減速車</span>
+    <span>青い帯＝作った車間</span>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const DURATION = 30;
+  const MAX_V = 80 / 3.6;
+  const WAVE_BACK_SPEED = 4.0;
+  const JAM_DECAY_GAIN = 0.75;
+  const REAR_FAIL = 6.0;
+
+  const roadWrap = document.getElementById("roadWrap");
+  const carsLayer = document.getElementById("cars");
+  const laneDash = document.getElementById("laneDash");
+  const bufferBand = document.getElementById("bufferBand");
+  const waveLabel = document.getElementById("waveLabel");
+  const distanceLabel = document.getElementById("distanceLabel");
+  const overlay = document.getElementById("overlay");
+  const startOverlay = document.getElementById("startOverlay");
+  const timeEl = document.getElementById("time");
+  const jamEl = document.getElementById("jamCount");
+  const speedEl = document.getElementById("speedNow");
+  const rearEl = document.getElementById("rearCount");
+  const messageEl = document.getElementById("message");
+  const restartBtn = document.getElementById("restart");
+  const pauseBtn = document.getElementById("pause");
+  const speedButtons = [...document.querySelectorAll(".speed")];
+
+  const carEls = [];
+  for (let i = 0; i < 28; i++) {
+    const el = document.createElement("div");
+    el.className = "car normal";
+    carsLayer.appendChild(el);
+    carEls.push(el);
+  }
+  const playerEl = document.createElement("div");
+  playerEl.className = "car player";
+  carsLayer.appendChild(playerEl);
+
+  let running = false;
+  let paused = false;
+  let resultShown = false;
+  let elapsed = 0;
+  let selected = 80;
+  let playerV = MAX_V;
+  let bufferM = 0;
+  let jam = 9.0;
+  let jamDistance = 420;
+  let rearPressure = 0;
+  let maxRearPressure = 0;
+  let clearAt = null;
+  let hitJam = false;
+  let roadPhase = 0;
+  let lastTs = 0;
+
+  function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+
+  function reset(){
+    running = true;
+    paused = false;
+    resultShown = false;
+    elapsed = 0;
+    selected = 80;
+    playerV = MAX_V;
+    bufferM = 0;
+    jam = 9.0;
+    jamDistance = 420;
+    rearPressure = 0;
+    maxRearPressure = 0;
+    clearAt = null;
+    hitJam = false;
+    roadPhase = 0;
+    overlay.classList.add("hidden");
+    pauseBtn.textContent = "PAUSE";
+    setSelected(80);
+    say("前方に渋滞波があります。","近づきすぎる前に60km/hへ。必要なら短時間だけ40km/hを使います。");
+    render();
+  }
+
+  function setSelected(kmh){
+    selected = kmh;
+    speedButtons.forEach(b => b.classList.toggle("active", Number(b.dataset.speed) === kmh));
+  }
+
+  function update(dt){
+    elapsed += dt;
+
+    const target = selected / 3.6;
+    if (playerV < target) playerV = Math.min(target, playerV + 2.0 * dt);
+    else if (playerV > target) playerV = Math.max(target, playerV - 3.0 * dt);
+
+    bufferM = Math.min(180, bufferM + Math.max(0, MAX_V - playerV) * dt);
+
+    if (jam > 0.5) {
+      const metering = clamp((bufferM - 18) / 70, 0, 1);
+      jam = Math.max(0, jam - (0.05 + JAM_DECAY_GAIN * metering) * dt);
+      jamDistance -= (playerV + WAVE_BACK_SPEED) * dt;
+
+      if (jam <= 0.5 && clearAt === null) {
+        jam = 0;
+        clearAt = elapsed;
+        say("渋滞波を吸収しました。","残りは80km/hへ戻して後ろの流れも回復させます。");
+      } else if (jamDistance <= 0 && !hitJam) {
+        hitJam = true;
+        finish(false, "渋滞波に追いつかれました");
+        return;
+      }
+    }
+
+    const kmh = playerV * 3.6;
+    if (kmh < 50) rearPressure += 0.55 * dt;
+    else if (kmh < 67) rearPressure += 0.12 * dt;
+    else rearPressure = Math.max(0, rearPressure - 0.65 * dt);
+
+    maxRearPressure = Math.max(maxRearPressure, rearPressure);
+
+    if (rearPressure >= REAR_FAIL) {
+      finish(false, "自分の後ろに新しい渋滞を作りました");
+      return;
+    }
+
+    roadPhase = (roadPhase + playerV * dt * 7) % 88;
+
+    if (clearAt === null) {
+      if (jamDistance < 135 && jam > 3) {
+        say("渋滞波がかなり近いです。","まだ大きいなら40km/hを短く使って、車間を一気に作ります。");
+      } else if (bufferM > 35 && selected <= 60) {
+        say("前方に空白ができています。","赤い車列が減るまで維持。ただし後方の詰まりも見ます。");
+      } else if (elapsed > 5 && selected === 80) {
+        say("このままだと渋滞波に追いつきます。","60km/hへ落として、前方への流入を減らします。");
+      }
+    } else if (selected < 80 && elapsed - clearAt > 1) {
+      say("渋滞は消えています。","80km/hへ戻して後方の詰まりを解消します。");
+    }
+
+    if (elapsed >= DURATION) {
+      const success = clearAt !== null && maxRearPressure < REAR_FAIL;
+      finish(success, success ? "渋滞波を消しました" : "渋滞を消し切れませんでした");
+    }
+  }
+
+  function say(main, hint){
+    messageEl.innerHTML = `${main}<div id="hint">${hint}</div>`;
+  }
+
+  function finish(success, reason){
+    if (resultShown) return;
+    running = false;
+    resultShown = true;
+
+    const rearCars = Math.round(rearPressure * 1.35);
+    let grade = "C";
+    if (success && clearAt !== null && clearAt < 22 && maxRearPressure < 4.8) grade = "A";
+    else if (success) grade = "B";
+
+    overlay.innerHTML = `<div class="overlayCard">
+      <h2 class="${success ? "good" : "bad"}">${success ? "WAVE CLEARED" : "FAILED"}</h2>
+      <p>${reason}</p>
+      <p>評価 <b style="font-size:28px">${grade}</b><br>
+      前方の渋滞車 9 → <b>${Math.ceil(jam)}</b><br>
+      後方の詰まり <b>${rearCars}</b></p>
+      <p>${success ? "自分の前に作った空白で、渋滞への流入を一時的に減らせました。" :
+        "前方の波を消すことと、自分の後ろを詰まらせないことの両方が必要です。"}</p>
+      <button id="again">RETRY</button>
+    </div>`;
+    overlay.classList.remove("hidden");
+    document.getElementById("again").addEventListener("click", reset);
+  }
+
+  function placeCar(el, x, y, kind){
+    el.style.display = (x < -30 || x > roadWrap.clientWidth + 30) ? "none" : "block";
+    el.style.left = `${x}px`;
+    el.style.top = `${y}px`;
+    if (el !== playerEl) el.className = `car ${kind}`;
+  }
+
+  function render(){
+    const W = roadWrap.clientWidth;
+    const H = roadWrap.clientHeight;
+    const laneY = H * 0.5;
+    const px = W * 0.30;
+
+    playerEl.style.left = `${px}px`;
+    playerEl.style.top = `${laneY - 17}px`;
+
+    laneDash.style.backgroundPositionX = `${-roadPhase}px`;
+
+    const rearCars = Math.round(rearPressure * 1.35);
+    const rearSpacing = clamp(43 - rearPressure * 3.1, 21, 43);
+    let idx = 0;
+
+    for (let i = 1; i <= 8 && idx < carEls.length; i++, idx++) {
+      const x = px - i * rearSpacing;
+      let kind = "normal";
+      if (rearCars >= 5 && i <= rearCars) kind = "slow";
+      else if (rearCars >= 2 && i <= rearCars) kind = "medium";
+      placeCar(carEls[idx], x, laneY + (i % 2 ? 18 : -18), kind);
+    }
+
+    const bufferPx = clamp(bufferM * 0.95, 0, W * 0.34);
+    bufferBand.style.left = `${px + 19}px`;
+    bufferBand.style.width = `${Math.max(0, bufferPx)}px`;
+
+    const jamX = px + clamp((jamDistance / 420) * (W * 0.57), 18, W * 0.62);
+
+    let freeX = px + 48 + bufferPx;
+    let freeN = 0;
+    while (freeX < jamX - 34 && freeN < 5 && idx < carEls.length) {
+      placeCar(carEls[idx], freeX, laneY + (freeN % 2 ? 18 : -18), "normal");
+      idx++; freeN++; freeX += 45;
+    }
+
+    const jamCars = Math.ceil(jam);
+    for (let i = 0; i < jamCars && idx < carEls.length; i++, idx++) {
+      const x = jamX + i * 23;
+      const kind = (i === 0 || i >= jamCars - 2) ? "medium" : "slow";
+      placeCar(carEls[idx], x, laneY + (i % 2 ? 18 : -18), kind);
+    }
+
+    let outX = jamX + Math.max(48, jamCars * 23 + 35);
+    let outN = 0;
+    while (outX < W + 30 && idx < carEls.length) {
+      placeCar(carEls[idx], outX, laneY + (outN % 2 ? -18 : 18), "normal");
+      idx++; outN++; outX += 48;
+    }
+
+    while (idx < carEls.length) {
+      carEls[idx].style.display = "none";
+      idx++;
+    }
+
+    if (jam > 0) {
+      waveLabel.style.display = "block";
+      waveLabel.style.left = `${jamX + Math.min(65, jamCars * 9)}px`;
+      distanceLabel.style.display = "block";
+      distanceLabel.style.left = `${jamX + Math.min(65, jamCars * 9)}px`;
+      distanceLabel.textContent = `波まで 約${Math.max(0, Math.round(jamDistance))}m`;
+    } else {
+      waveLabel.style.display = "none";
+      distanceLabel.style.display = "none";
+    }
+
+    timeEl.textContent = Math.max(0, DURATION - elapsed).toFixed(1);
+    jamEl.textContent = Math.ceil(jam);
+    speedEl.textContent = Math.round(playerV * 3.6);
+    rearEl.textContent = Math.round(rearPressure * 1.35);
+  }
+
+  function frame(ts){
+    if (!lastTs) lastTs = ts;
+    const dt = Math.min(0.05, (ts - lastTs) / 1000);
+    lastTs = ts;
+    if (running && !paused) {
+      update(dt);
+      render();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  speedButtons.forEach(btn => {
+    btn.addEventListener("click", () => setSelected(Number(btn.dataset.speed)));
+  });
+  restartBtn.addEventListener("click", reset);
+  startOverlay.addEventListener("click", reset);
+  pauseBtn.addEventListener("click", () => {
+    if (!running) return;
+    paused = !paused;
+    pauseBtn.textContent = paused ? "RESUME" : "PAUSE";
+  });
+
+  render();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
