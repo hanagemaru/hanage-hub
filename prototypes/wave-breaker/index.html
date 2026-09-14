@@ -84,8 +84,9 @@ function render(){const gap=frontGap(player);const avgSpeed=cars.reduce((s,c)=>s
   const waveLen=(0.07+0.12*wave)*CIRC;waveArc.setAttribute('stroke-dasharray',`${waveLen} ${CIRC-waveLen}`);const waveOff=-(waveS/L)*CIRC+waveLen/2;waveArc.setAttribute('stroke-dashoffset',waveOff);waveArc.setAttribute('opacity',String(.08+.28*wave));
   const gapLen=clamp(gap/L*CIRC,0,CIRC*.23);gapArc.setAttribute('stroke-dasharray',`${gapLen} ${CIRC-gapLen}`);gapArc.setAttribute('stroke-dashoffset',-((player.s+CAR)/L)*CIRC);gapArc.setAttribute('opacity',String(clamp((gap-8)/40,.04,.26)));
   const dWave=fd(player.s,waveS);const rel=Math.max(.1,player.v+WAVE_BACK);const eta=dWave/rel;timeEl.textContent=Math.max(0,DURATION-elapsed).toFixed(1);gapEl.textContent=`${Math.round(gap)} m`;rearEl.textContent=`${Math.round(rearRisk)}%`;scoreEl.textContent=Math.round(score);wavePctEl.textContent=`${Math.round(wave*100)}%`;flowScoreEl.textContent=`FLOW ${Math.round(avgSpeed)} km/h`;encounterEl.textContent=wave>0?`次の波まで 約${Math.min(99,eta).toFixed(1)}秒`:'渋滞波なし'}
+}
 function frame(ts){if(!lastTs)lastTs=ts;const dt=Math.min(.05,(ts-lastTs)/1000);lastTs=ts;if(running&&!paused)update(dt);requestAnimationFrame(frame)}
-speedBtns.forEach(b=>b.addEventListener('click',()=>setSpeed(Number(b.dataset.speed))));startBtn.addEventListener('click',reset);restartBtn.addEventListener('click',reset);pauseBtn.addEventListener('click',()=>{if(!running)return;paused=!paused;pauseBtn.textContent=paused?'RESUME':'PAUSE'});render();requestAnimationFrame(frame);
+speedBtns.forEach(b=>b.addEventListener('click',()=>setSpeed(Number(b.dataset.speed))));startBtn.addEventListener('click',reset);restartBtn.addEventListener('click',reset);pauseBtn.addEventListener('click',()=>{if(!running)return;paused=!paused;pauseBtn.textContent=paused?'RESUME':'PAUSE'});reset();running=false;overlay.classList.remove('hidden');requestAnimationFrame(frame);
 })();
 </script>
 </body>
