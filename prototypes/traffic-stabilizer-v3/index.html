@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Traffic Stabilizer v3</title>
+<style>
+:root{--paper:#f3f0e7;--ink:#171717;--muted:#706c64;--panel:#fffdfa;--rule:#c9c4b8;--road:#30343a;--road2:#5b6164;--blue:#2b64d8;--red:#d84735;--amber:#e7a226;--green:#2f8b57}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif}body{display:flex;justify-content:center}button{font:inherit;-webkit-tap-highlight-color:transparent}
+#app{width:min(100%,720px);padding:12px 9px calc(18px + env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:8px}h1{margin:0;font-size:20px;line-height:1;font-weight:950}.sub{font-size:11px;color:var(--muted);margin-top:5px}.timer{font-size:28px;font-weight:950;line-height:1;font-variant-numeric:tabular-nums}
+.hud{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:7px}.stat{background:var(--panel);border:1px solid var(--rule);padding:7px}.stat b{display:block;font-size:16px;font-variant-numeric:tabular-nums}.stat span{font-size:10px;color:var(--muted)}
+.stage{position:relative;aspect-ratio:1/1;background:#cbd1c6;border:3px solid var(--ink);overflow:hidden}.stage canvas{display:block;width:100%;height:100%;touch-action:none}.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40%;text-align:center;pointer-events:none}.std{font-size:30px;font-weight:950;line-height:1}.label{font-size:10px;color:#555951;font-weight:800;margin-top:3px}.avg{font-size:13px;font-weight:900;margin-top:9px}.goal{font-size:10px;color:#5f625c;margin-top:5px;line-height:1.35}
+.notice{position:absolute;left:50%;top:13%;transform:translateX(-50%);background:rgba(255,253,250,.94);padding:5px 8px;font-size:11px;font-weight:850;border:1px solid #aaa49a;opacity:0;transition:opacity .15s;pointer-events:none}.notice.show{opacity:1}
+.overlay{position:absolute;inset:0;z-index:20;background:rgba(24,24,24,.85);display:flex;align-items:center;justify-content:center;padding:24px;color:white;text-align:center}.overlay.hidden{display:none}.overlayCard{max-width:430px}.overlay h2{margin:0 0 8px;font-size:24px}.overlay p{margin:7px 0;font-size:13px;line-height:1.55}.overlay button{border:0;background:white;color:#111;padding:12px 25px;font-weight:900;font-size:15px;margin-top:8px;position:relative;z-index:30}
+#message{min-height:52px;padding:8px 2px 0;font-size:13px;font-weight:850;line-height:1.4}#hint{font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+.controlsTitle{font-size:10px;color:var(--muted);font-weight:800;margin:5px 0 4px}.controls{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.speed{border:0;min-height:50px;background:#dfe4ed;color:#1b2943;font-weight:950;font-size:16px;padding:6px 1px}.speed small{display:block;font-size:8px;margin-top:4px;font-weight:700}.speed.active{background:var(--blue);color:white}.speed:disabled{opacity:.45}
+.actions{display:flex;gap:6px;margin-top:7px}.actions button{flex:1;border:0;min-height:40px;background:#ddd8cc;font-weight:850}.actions #restart{background:var(--ink);color:white}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;color:var(--muted);margin-top:8px}.dot{display:inline-block;width:9px;height:9px;margin-right:4px;vertical-align:-1px}.good{color:#b8ffd6}.bad{color:#ffd0c8}
+@media(max-width:480px){#app{padding-left:7px;padding-right:7px}.hud{gap:4px}.stat{padding:6px}.stat b{font-size:14px}.std{font-size:26px}.center{width:44%}.speed{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header><div><h1>TRAFFIC STABILIZER</h1><div class="sub">1台だけで stop-and-go を消せ</div></div><div class="timer"><span id="time">35.0</span>s</div></header>
+<div class="hud">
+  <div class="stat"><b id="gap">-- m</b><span>青車の前方車間</span></div>
+  <div class="stat"><b id="slow">0台</b><span>低速車</span></div>
+  <div class="stat"><b id="score">0</b><span>SCORE</span></div>
+</div>
+<div class="stage">
+  <canvas id="c" width="600" height="600"></canvas>
+  <div class="center">
+    <div id="std" class="std">0.0</div><div class="label">速度ばらつき km/h</div>
+    <div id="avg" class="avg">平均 28 km/h</div>
+    <div class="goal">目標：ばらつき 2.0未満<br>かつ平均 21km/h以上を維持</div>
+  </div>
+  <div id="notice" class="notice"></div>
+  <div id="overlay" class="overlay">
+    <div class="overlayCard">
+      <h2>渋滞は「作り物」ではありません</h2>
+      <p>全22台は、<b>前の車との車間と相対速度だけ</b>で加減速します。</p>
+      <p>開始後、1台が一瞬だけブレーキ。その小さな乱れが後ろへ伝わって stop-and-go に成長します。</p>
+      <p>青い1台の目標速度を調整し、<b>流れを遅くしすぎずに速度差を消してください。</b></p>
+      <button id="start" type="button">START</button>
+    </div>
+  </div>
+</div>
+<div id="message">まず小さなブレーキから渋滞が育つ様子を見ます。<div id="hint">赤い「ゾーン」はありません。赤くなるのは本当に速度が落ち、車間も詰まった車だけです。</div></div>
+<div class="controlsTitle">青い車の目標速度</div>
+<div class="controls">
+  <button class="speed" data-speed="20">20<small>かなり抑える</small></button>
+  <button class="speed" data-speed="22.5">22.5<small>ゆっくり</small></button>
+  <button class="speed" data-speed="25">25<small>中間</small></button>
+  <button class="speed" data-speed="27.5">27.5<small>速め</small></button>
+  <button class="speed active" data-speed="30">30<small>流れ優先</small></button>
+</div>
+<div class="actions"><button id="restart">RESTART</button><button id="pause">PAUSE</button></div>
+<div class="legend"><span><i class="dot" style="background:#2b64d8"></i>操作車</span><span><i class="dot" style="background:#d84735"></i>実際に詰まった低速車</span><span><i class="dot" style="background:#e7a226"></i>減速中</span><span>青い弧＝実際の前方車間</span></div>
+</div>
+<script>
+(() => {
+"use strict";
+const canvas=document.getElementById("c"),ctx=canvas.getContext("2d");
+const overlay=document.getElementById("overlay"),startBtn=document.getElementById("start"),restartBtn=document.getElementById("restart"),pauseBtn=document.getElementById("pause");
+const timeEl=document.getElementById("time"),gapEl=document.getElementById("gap"),slowEl=document.getElementById("slow"),scoreEl=document.getElementById("score"),stdEl=document.getElementById("std"),avgEl=document.getElementById("avg"),msgEl=document.getElementById("message"),notice=document.getElementById("notice");
+const speedBtns=[...document.querySelectorAll(".speed")];
+const N=22,L=360,CAR=4.5,V0=27.8,T=1.0,S0=2.0,A=0.5,B=1.2,DELTA=4,SIM_SPEED=2.0,REAL_DURATION=35;
+const R=220,CX=300,CY=300,AVG_GAP=L/N-CAR;
+let cars=[],player=null,targetK=30,running=false,paused=false,lastTs=0,realElapsed=0,simTime=0,score=0,stableHold=0,resultShown=false,noticeTimer=0;
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function forward(a,b){let d=b-a;while(d<0)d+=L;while(d>=L)d-=L;return d}
+function sortCars(){cars.sort((a,b)=>a.s-b.s)}
+function gaps(){sortCars();const g=new Map();for(let i=0;i<cars.length;i++){const c=cars[i],lead=cars[(i+1)%cars.length];g.set(c,Math.max(.05,forward(c.s,lead.s)-CAR))}return g}
+function leaderOf(c){sortCars();const i=cars.indexOf(c);return cars[(i+1)%cars.length]}
+function frontGap(c){return Math.max(0,forward(c.s,leaderOf(c).s)-CAR)}
+function setTarget(k){targetK=k;speedBtns.forEach(b=>b.classList.toggle("active",Math.abs(Number(b.dataset.speed)-k)<.01))}
+function resetState(){
+  cars=[];const initial=Math.min(V0*.8,((AVG_GAP-S0)/T)*.8);
+  for(let i=0;i<N;i++)cars.push({id:i,s:i*L/N,v:initial,player:i===0});
+  player=cars[0];targetK=30;setTarget(30);running=true;paused=false;realElapsed=0;simTime=0;score=0;stableHold=0;resultShown=false;noticeTimer=0;pauseBtn.textContent="PAUSE";
+  overlay.classList.add("hidden");speedBtns.forEach(b=>b.disabled=true);
+  say("まだ全車ほぼ同じ速度です。","まもなく1台が短くブレーキします。そこから波が自然に育ちます。");
+  render();
+}
+function say(a,b){msgEl.innerHTML=`${a}<div id="hint">${b}</div>`}
+function showNotice(t){notice.textContent=t;notice.classList.add("show");noticeTimer=1.8}
+function accelStep(dt){
+  sortCars();const gs=gaps(),acc=new Map();
+  for(let i=0;i<cars.length;i++){
+    const c=cars[i],lead=cars[(i+1)%cars.length],gap=gs.get(c),dv=c.v-lead.v;
+    const sStar=S0+Math.max(0,c.v*T+c.v*dv/(2*Math.sqrt(A*B)));
+    let ai=A*(1-Math.pow(c.v/V0,DELTA)-Math.pow(sStar/Math.max(.1,gap),2));
+    ai=clamp(ai,-5,2);
+    acc.set(c,ai);
+  }
+  if(simTime>4 && simTime<5.5){
+    const shock=cars.find(c=>c.id===5);
+    acc.set(shock,Math.min(acc.get(shock),-4.0));
+  }
+  if(simTime>=6){
+    const gap=gs.get(player),safe=Math.max(0,(gap-S0)/T),target=Math.min(targetK/3.6,safe);
+    acc.set(player,clamp((target-player.v)*.8,-2.5,1.2));
+  }
+  for(const c of cars)c.v=Math.max(0,c.v+acc.get(c)*dt);
+  for(const c of cars)c.s=(c.s+c.v*dt)%L;
+}
+function stats(){
+  sortCars();const gs=gaps(),speeds=cars.map(c=>c.v*3.6),avg=speeds.reduce((a,b)=>a+b,0)/N;
+  const std=Math.sqrt(speeds.reduce((s,v)=>s+(v-avg)*(v-avg),0)/N);
+  let slow=0;
+  for(const c of cars){
+    const km=c.v*3.6,g=gs.get(c);
+    if(km<avg-8 && g<AVG_GAP*1.08)slow++;
+  }
+  return {gs,speeds,avg,std,slow,gap:gs.get(player)};
+}
+function update(realDt){
+  realElapsed+=realDt;
+  let simRemain=realDt*SIM_SPEED;
+  while(simRemain>0){
+    const dt=Math.min(.04,simRemain);simTime+=dt;accelStep(dt);simRemain-=dt;
+  }
+  const s=stats();
+  if(simTime>4 && simTime<5.5 && noticeTimer<=0)showNotice("1台が少しだけブレーキ");
+  if(simTime>=6 && speedBtns[0].disabled){speedBtns.forEach(b=>b.disabled=false);say("ここから青い1台だけ操作できます。","速すぎると波が残り、遅すぎると全体の流れが落ちます。速度差を消せるポイントを探してください。")}
+  if(simTime>10){
+    if(s.std<2.0 && s.avg>=21){stableHold+=realDt;score+=realDt*(140+s.avg*2)}
+    else stableHold=Math.max(0,stableHold-realDt*.7);
+  }
+  score+=realDt*Math.max(0,50-s.std*3)+realDt*s.avg*.5;
+  if(noticeTimer>0){noticeTimer-=realDt;if(noticeTimer<=0)notice.classList.remove("show")}
+  if(stableHold>=4){finish(true);return}
+  if(realElapsed>=REAL_DURATION){finish(false);return}
+  render();
+}
+function finish(ok){
+  if(resultShown)return;running=false;resultShown=true;const s=stats();
+  let grade="C";if(ok&&s.avg>=22&&targetK>20)grade="A";else if(ok)grade="B";
+  overlay.innerHTML=`<div class="overlayCard"><h2 class="${ok?"good":"bad"}">${ok?"FLOW STABILIZED":"TIME UP"}</h2><p>評価 <b style="font-size:28px">${grade}</b></p><p>速度ばらつき <b>${s.std.toFixed(1)} km/h</b><br>平均速度 <b>${Math.round(s.avg)} km/h</b><br>低速車 <b>${s.slow}台</b><br>SCORE <b>${Math.round(score)}</b></p><p>${ok?"車間を広げる1台が、後続の急加減速を吸収して流れを均しました。":"速すぎると波が増幅し、遅すぎると平均速度が落ちます。安定と流量の両立が必要です。"}</p><button id="again" type="button">RETRY</button></div>`;
+  overlay.classList.remove("hidden");document.getElementById("again").onclick=resetState;
+}
+function carPoint(s){const a=-Math.PI/2+2*Math.PI*s/L;return {a,x:CX+R*Math.cos(a),y:CY+R*Math.sin(a)}}
+function drawRoad(){
+  ctx.clearRect(0,0,600,600);ctx.fillStyle="#cbd1c6";ctx.fillRect(0,0,600,600);
+  ctx.strokeStyle="#5b6164";ctx.lineWidth=88;ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.stroke();
+  ctx.strokeStyle="#30343a";ctx.lineWidth=70;ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.stroke();
+  ctx.save();ctx.setLineDash([20,18]);ctx.strokeStyle="#d8d3c1";ctx.lineWidth=3;ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.stroke();ctx.restore();
+}
+function drawGap(s){
+  const start=player.s+CAR,end=player.s+s.gap;const a0=-Math.PI/2+2*Math.PI*start/L,a1=-Math.PI/2+2*Math.PI*end/L;
+  ctx.strokeStyle="rgba(43,100,216,.28)";ctx.lineWidth=78;ctx.lineCap="round";ctx.beginPath();ctx.arc(CX,CY,R,a0,a1,false);ctx.stroke();ctx.lineCap="butt";
+}
+function drawCars(s){
+  for(const c of cars){
+    const p=carPoint(c.s),km=c.v*3.6,g=s.gs.get(c);let fill="#e9e3d6";
+    if(c.player)fill="#2b64d8";
+    else if(km<s.avg-8 && g<AVG_GAP*1.08)fill="#d84735";
+    else if(km<s.avg-3 || g<AVG_GAP*.82)fill="#e7a226";
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a+Math.PI/2);
+    ctx.fillStyle=fill;ctx.strokeStyle=c.player?"white":"rgba(0,0,0,.5)";ctx.lineWidth=c.player?2.5:1.4;
+    ctx.beginPath();ctx.rect(-10,-6,20,12);ctx.fill();ctx.stroke();
+    ctx.fillStyle="rgba(255,255,255,.55)";ctx.fillRect(-4,-4,8,8);
+    ctx.restore();
+  }
+}
+function render(){
+  if(!player)return;const s=stats();drawRoad();drawGap(s);drawCars(s);
+  const remain=Math.max(0,REAL_DURATION-realElapsed);timeEl.textContent=remain.toFixed(1);gapEl.textContent=`${s.gap.toFixed(1)} m`;slowEl.textContent=`${s.slow}台`;scoreEl.textContent=Math.round(score);stdEl.textContent=s.std.toFixed(1);avgEl.textContent=`平均 ${Math.round(s.avg)} km/h`;
+  if(simTime<4)say("全車ほぼ等速で走っています。","小さなブレーキが入ると、この状態が崩れ始めます。");
+  else if(simTime<6)say("1台の減速が、すぐ後ろの車へ伝わっています。","赤・橙は外から置いたゾーンではなく、実際に速度と車間が悪化した車です。");
+  else if(s.std>7)say("stop-and-go が大きくなっています。","青車を少し遅めにして前方車間を広げ、急加減速の波を吸収します。");
+  else if(s.std<3&&s.avg>=21)say("流れがかなり均一になっています。","この状態を維持できればクリアです。");
+}
+function frame(ts){
+  if(!lastTs)lastTs=ts;const dt=Math.min(.05,(ts-lastTs)/1000);lastTs=ts;if(running&&!paused)update(dt);requestAnimationFrame(frame);
+}
+speedBtns.forEach(b=>b.onclick=()=>setTarget(Number(b.dataset.speed)));
+startBtn.onclick=resetState;restartBtn.onclick=resetState;pauseBtn.onclick=()=>{if(!running)return;paused=!paused;pauseBtn.textContent=paused?"RESUME":"PAUSE"};
+resetState();running=false;overlay.classList.remove("hidden");requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
