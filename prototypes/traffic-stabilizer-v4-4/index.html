@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Traffic Stabilizer v4.4</title>
+<style>
+:root{--paper:#f3f0e7;--ink:#171717;--muted:#706c64;--panel:#fffdfa;--rule:#c9c4b8;--road:#30343a;--blue:#2b64d8;--red:#d84735;--amber:#e7a226;--green:#2f8b57}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;overflow:hidden}body{display:flex;justify-content:center}button,input{font:inherit;-webkit-tap-highlight-color:transparent}
+#app{width:min(100%,720px);height:100dvh;min-height:0;padding:max(6px,env(safe-area-inset-top)) 8px max(6px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:5px;overflow:hidden}
+header{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:30px}h1{margin:0;font-size:17px;line-height:1;font-weight:950}.sub{font-size:9px;color:var(--muted);margin-top:2px}.stageTag{font-size:11px;font-weight:950;text-align:right}.phase{font-size:9px;color:var(--blue);margin-top:1px;text-align:right}
+.statusPanel{flex:0 0 auto;background:var(--panel);border:1px solid var(--rule);padding:6px 8px}.statusTop{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.stabilityLabel{font-size:9px;color:var(--muted);font-weight:900;letter-spacing:.06em}.stabilityValue{font-size:24px;font-weight:950;line-height:1;font-variant-numeric:tabular-nums}.stateText{font-size:11px;font-weight:950;text-align:right}.stateText.warn{color:var(--red)}.stateText.slow{color:#b36b00}.stabilityTrack{height:7px;background:#ddd8cc;margin-top:5px;overflow:hidden}.stabilityFill{height:100%;width:0;background:var(--green);transition:width .1s linear}.statusBottom{display:flex;justify-content:space-between;gap:8px;margin-top:4px;font-size:9px;color:var(--muted);font-weight:800}.dangerMini{height:3px;background:#e4ded3;margin-top:4px;overflow:hidden}.dangerMiniFill{height:100%;width:0;background:var(--red)}
+.stageShell{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center}.stage{position:relative;width:min(100%,calc(100dvh - 224px));max-height:100%;aspect-ratio:1/1;background:#cbd1c6;border:2px solid var(--ink);overflow:hidden}.stage canvas{display:block;width:100%;height:100%}.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:45%;text-align:center;pointer-events:none}.centerMain{font-size:18px;font-weight:950;line-height:1.05}.centerSub{font-size:9px;color:#555951;font-weight:850;margin-top:4px;line-height:1.25}.notice{position:absolute;left:50%;top:8%;transform:translateX(-50%);background:rgba(255,253,250,.96);padding:5px 8px;font-size:10px;font-weight:900;border:1px solid #aaa49a;opacity:0;transition:opacity .15s;pointer-events:none;white-space:nowrap}.notice.show{opacity:1}
+.overlay{position:absolute;inset:0;z-index:20;background:rgba(24,24,24,.88);display:flex;align-items:center;justify-content:center;padding:18px;color:white;text-align:center}.overlay.hidden{display:none}.overlayCard{max-width:390px}.overlay h2{margin:0 0 7px;font-size:21px}.overlay p{margin:6px 0;font-size:12px;line-height:1.45}.overlay button{border:0;background:white;color:#111;padding:9px 18px;font-weight:900;font-size:13px;margin:5px 3px 0}.good{color:#b8ffd6}.bad{color:#ffd0c8}
+.controlPanel{flex:0 0 auto;background:var(--panel);border:1px solid var(--rule);padding:6px 8px 7px}.speedRows{display:grid;grid-template-columns:1fr 1fr auto;align-items:end;gap:8px}.speedBox span{display:block;font-size:8px;color:var(--muted);font-weight:900}.speedBox b{display:block;font-size:18px;line-height:1.05;font-variant-numeric:tabular-nums}.targetBox b{color:var(--blue)}.followBadge{font-size:9px;font-weight:950;padding:3px 6px;background:#ece7dd;color:var(--muted);min-width:74px;text-align:center}.followBadge.active{background:#fff1d6;color:#8c5800}
+.sliderArea{position:relative;height:33px;margin-top:2px}.slider{position:absolute;left:0;right:0;top:6px;width:100%;margin:0;accent-color:var(--blue);z-index:2}.actualMarker{position:absolute;top:1px;height:26px;width:2px;background:var(--ink);z-index:3;pointer-events:none;transform:translateX(-1px)}.actualMarker:after{content:"";position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;background:var(--ink);border:1px solid var(--panel)}.sliderLabels{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;font-size:8px;color:var(--muted);pointer-events:none}.actualLegend{font-size:8px;color:var(--muted);margin-top:-1px}.actualLegend i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ink);vertical-align:-1px;margin-right:3px}
+.actions{flex:0 0 auto;display:flex;gap:5px}.actions button{flex:1;border:0;min-height:27px;background:#ddd8cc;font-weight:850;font-size:10px}.actions #restart{background:var(--ink);color:white}
+@media(max-height:700px){#app{gap:3px}.sub{display:none}.statusPanel{padding:4px 7px}.stabilityValue{font-size:21px}.stage{width:min(100%,calc(100dvh - 194px))}.controlPanel{padding-top:4px;padding-bottom:4px}.speedBox b{font-size:16px}.sliderArea{height:29px}.actions button{min-height:24px}}
+@media(max-width:380px){h1{font-size:15px}.stabilityValue{font-size:21px}.stage{width:min(100%,calc(100dvh - 214px))}}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+ <div><h1>TRAFFIC STABILIZER</h1><div class="sub">1台の速度で stop-and-go を消せ</div></div>
+ <div><div id="stageTag" class="stageTag">STAGE 1/6</div><div id="phaseTag" class="phase">PREP</div></div>
+</header>
+<div class="statusPanel">
+ <div class="statusTop"><div><span class="stabilityLabel">FLOW STABILITY</span> <span id="stabilityValue" class="stabilityValue">--%</span></div><div id="stateText" class="stateText">WAVE INCOMING</div></div>
+ <div class="stabilityTrack"><div id="stabilityFill" class="stabilityFill"></div></div>
+ <div class="statusBottom"><span id="clearText">CLEAR: 100% × 3.0s</span><span id="detailText">平均 -- / 渋滞 --</span></div>
+ <div class="dangerMini"><div id="dangerMiniFill" class="dangerMiniFill"></div></div>
+</div>
+<div class="stageShell">
+ <div class="stage">
+  <canvas id="c" width="600" height="600"></canvas>
+  <div class="center"><div id="centerMain" class="centerMain">READY</div><div id="centerSub" class="centerSub">最初の波は練習です</div></div>
+  <div id="notice" class="notice"></div>
+  <div id="overlay" class="overlay"><div class="overlayCard"><h2>v4.4</h2><p>クリア条件は <b>FLOW STABILITY 100%</b> を維持するだけです。</p><p>速度スライダーは12〜45km/h。黒い印が実速度、青いつまみが目標速度です。</p><button id="start" type="button">START FROM 1</button><button id="challenge" type="button">START FROM 4</button></div></div>
+ </div>
+</div>
+<div class="controlPanel">
+ <div class="speedRows">
+  <div class="speedBox targetBox"><span>TARGET</span><b id="targetRead">24.0 km/h</b></div>
+  <div class="speedBox"><span>ACTUAL</span><b id="actualRead">-- km/h</b></div>
+  <div id="followBadge" class="followBadge">FREE</div>
+ </div>
+ <div class="sliderArea">
+  <input id="slider" class="slider" type="range" min="12" max="45" step="0.1" value="24">
+  <div id="actualMarker" class="actualMarker"></div>
+  <div class="sliderLabels"><span>12</span><span>28</span><span>45 km/h</span></div>
+ </div>
+ <div class="actualLegend"><i></i>黒マーカー = ACTUAL / 青いつまみ = TARGET</div>
+</div>
+<div class="actions"><button id="restart">RESTART</button><button id="pause">PAUSE</button></div>
+</div>
+<script>
+(()=>{
+"use strict";
+const canvas=document.getElementById("c"),ctx=canvas.getContext("2d"),$=id=>document.getElementById(id);
+const overlay=$("overlay"),startBtn=$("start"),challengeBtn=$("challenge"),restartBtn=$("restart"),pauseBtn=$("pause"),slider=$("slider");
+const stageTag=$("stageTag"),phaseTag=$("phaseTag"),notice=$("notice"),stabilityValue=$("stabilityValue"),stabilityFill=$("stabilityFill"),stateText=$("stateText"),clearText=$("clearText"),detailText=$("detailText"),dangerMiniFill=$("dangerMiniFill"),centerMain=$("centerMain"),centerSub=$("centerSub"),targetRead=$("targetRead"),actualRead=$("actualRead"),actualMarker=$("actualMarker"),followBadge=$("followBadge");
+const L=360,CAR=4.5,V0=27.8,S0=2,DELTA=4,R=220,CX=300,CY=300,SIM_SPEED=1.75,MIN_K=12,MAX_K=45;
+const STAGES=[
+ {name:"BASIC WAVE",desc:"練習波を1回消せ",main:false},
+ {name:"HIGH DENSITY",desc:"練習後に交通量+2台",main:true,addCars:2,trucks:0,shockOffsets:[0],dangerThreshold:76,dangerLimit:9,clearStd:2.7,clearAvg:18.5,clearSlow:1,hold:5,shockBrake:-4.0},
+ {name:"TRUCK MIX",desc:"練習後にトラック2台",main:true,addCars:0,trucks:2,shockOffsets:[0],dangerThreshold:76,dangerLimit:9,clearStd:2.7,clearAvg:18.5,clearSlow:1,hold:5,shockBrake:-4.0},
+ {name:"DOUBLE HIT",desc:"本番波が2回来る",main:true,addCars:0,trucks:0,shockOffsets:[0,8],dangerThreshold:68,dangerLimit:9,clearStd:2.7,clearAvg:18.5,clearSlow:1,hold:5,shockBrake:-4.0},
+ {name:"DENSE + TRUCK",desc:"交通量+3台 / トラック2台",main:true,addCars:3,trucks:2,shockOffsets:[0],dangerThreshold:54,dangerLimit:9,clearStd:3.0,clearAvg:17.2,clearSlow:1,hold:5,shockBrake:-4.2},
+ {name:"REDLINE",desc:"交通量+3台 / トラック3台 / 猶予8秒",main:true,addCars:3,trucks:3,shockOffsets:[0],dangerThreshold:52,dangerLimit:8,clearStd:3.1,clearAvg:16.8,clearSlow:1,hold:5,shockBrake:-4.2}
+];
+let stageIndex=0,cars=[],player=null,targetK=24,running=false,paused=false,lastTs=0,simTime=0,phase="prep",practiceHold=0,mainHold=0,dangerClock=0,resultShown=false,noticeTimer=0,practiceShockShown=false,mainWarnShown=false,mainShockStart=0,nextId=100;
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function forward(a,b){let d=b-a;while(d<0)d+=L;while(d>=L)d-=L;return d}
+function sortCars(){cars.sort((a,b)=>a.s-b.s)}
+function gaps(){sortCars();const g=new Map();for(let i=0;i<cars.length;i++){const c=cars[i],lead=cars[(i+1)%cars.length];g.set(c,Math.max(.05,forward(c.s,lead.s)-CAR))}return g}
+function showNotice(t){notice.textContent=t;notice.classList.add("show");noticeTimer=1.8}
+function cfg(){return STAGES[stageIndex]}
+function thresholds(){const s=cfg();if(phase==="prep"||phase==="practice")return{std:2.6,avg:19,slow:1,hold:3};return{std:s.clearStd||2.7,avg:s.clearAvg||18.5,slow:s.clearSlow??1,hold:s.hold||5}}
+function calcStability(st){const th=thresholds();const stdScore=clamp((th.std*2.2-st.std)/(th.std*1.2),0,1);const slowScore=st.slow<=th.slow?1:clamp(1-(st.slow-th.slow)/4,0,1);let score=(stdScore*.72+slowScore*.28)*100;const tooSlow=st.avg<th.avg;if(tooSlow)score=Math.min(score,90);return{score:clamp(score,0,100),tooSlow,th}}
+function resetStage(){
+ cars=[];const N=22,T=1,avgGap=L/N-CAR,initial=Math.min(V0*.82,Math.max(4,((avgGap-S0)/T)*.76));
+ for(let i=0;i<N;i++)cars.push({id:i,s:i*L/N,v:initial,player:i===0,truck:false});
+ player=cars[0];targetK=24;slider.value="24";targetRead.textContent="24.0 km/h";running=true;paused=false;simTime=0;phase="prep";practiceHold=0;mainHold=0;dangerClock=0;resultShown=false;noticeTimer=0;practiceShockShown=false;mainWarnShown=false;mainShockStart=0;nextId=100;pauseBtn.textContent="PAUSE";overlay.classList.add("hidden");slider.disabled=false;
+ stageTag.textContent=`STAGE ${stageIndex+1}/6`;phaseTag.textContent="PREP";render();
+}
+function addTraffic(n){for(let k=0;k<n;k++){sortCars();let best=null;for(let i=0;i<cars.length;i++){const c=cars[i],lead=cars[(i+1)%cars.length],d=forward(c.s,lead.s);if(!best||d>best.d)best={d,c,lead};}cars.push({id:nextId++,s:(best.c.s+best.d/2)%L,v:(best.c.v+best.lead.v)/2,player:false,truck:false});}}
+function activateTrucks(n){sortCars();const picks=[];for(let k=1;k<=n;k++)picks.push(Math.floor(k*cars.length/(n+1)));for(const i of picks)if(cars[i])cars[i].truck=true;}
+function accelStep(dt){
+ const s=cfg();sortCars();const gs=gaps(),acc=new Map();
+ for(let i=0;i<cars.length;i++){
+  const c=cars[i],lead=cars[(i+1)%cars.length],gap=gs.get(c),dv=c.v-lead.v,T=c.truck?1.22:1,A=c.truck?.3025:.55,B=c.truck?1.02:1.2,Vdes=c.truck?22.5:V0;
+  const sStar=S0+Math.max(0,c.v*T+c.v*dv/(2*Math.sqrt(Math.max(.01,A*B))));
+  acc.set(c,clamp(A*(1-Math.pow(c.v/Vdes,DELTA)-Math.pow(sStar/Math.max(.1,gap),2)),-5,2));
+ }
+ if(simTime>8&&simTime<9){const shock=cars.find(c=>c.id===5)||cars[5];acc.set(shock,Math.min(acc.get(shock),-2.4));}
+ if(mainShockStart){for(const off of (s.shockOffsets||[0])){if(simTime>mainShockStart+off&&simTime<mainShockStart+off+1.3){sortCars();const shock=cars[7%cars.length];acc.set(shock,Math.min(acc.get(shock),s.shockBrake||-4));}}}
+ const gp=gs.get(player),safe=Math.max(0,gp-S0),target=Math.min(targetK/3.6,safe);acc.set(player,clamp((target-player.v)*.95,-2.8,1.25));
+ for(const c of cars)c.v=Math.max(0,c.v+acc.get(c)*dt);for(const c of cars)c.s=(c.s+c.v*dt)%L;
+}
+function getStats(){
+ const s=cfg();sortCars();const gs=gaps(),speeds=cars.map(c=>c.v*3.6),avg=speeds.reduce((a,b)=>a+b,0)/cars.length,std=Math.sqrt(speeds.reduce((q,v)=>q+(v-avg)*(v-avg),0)/cars.length),avgGap=L/cars.length-CAR;
+ let slow=0,tight=0;for(const c of cars){const km=c.v*3.6,g=gs.get(c);if(km<avg-7&&g<avgGap*1.08)slow++;if(g<avgGap*.58)tight++;}
+ const clearStd=s.clearStd||2.7,clearAvg=s.clearAvg||18.5,stdPenalty=clamp((std-clearStd)/8,0,1),slowPenalty=clamp(slow/Math.max(5,cars.length*.28),0,1),tightPenalty=clamp(tight/Math.max(4,cars.length*.24),0,1),avgPenalty=clamp((clearAvg-avg)/10,0,1);
+ return{gs,avg,std,slow,tight,gap:gs.get(player),playerK:player.v*3.6,severity:clamp((stdPenalty*.42+slowPenalty*.30+tightPenalty*.18+avgPenalty*.10)*100,0,100)};
+}
+function enterMain(){const s=cfg();if(s.addCars)addTraffic(s.addCars);if(s.trucks)activateTrucks(s.trucks);const bits=[];if(s.addCars)bits.push(`交通量 +${s.addCars}`);if(s.trucks)bits.push(`トラック ${s.trucks}`);if(bits.length)showNotice(bits.join(" / "));phase="mainprep";phaseTag.textContent="MAIN PREP";mainShockStart=simTime+6;practiceHold=0;dangerClock=0;mainWarnShown=false;}
+function update(realDt){
+ let rem=realDt*SIM_SPEED;while(rem>0){const dt=Math.min(.035,rem);simTime+=dt;accelStep(dt);rem-=dt}
+ const s=cfg(),st=getStats(),stab=calcStability(st);
+ if(simTime>=5&&simTime<5.2&&!practiceShockShown){showNotice("まもなく前方でブレーキ");practiceShockShown=true;}
+ if(phase==="prep"&&simTime>=8){phase="practice";phaseTag.textContent="PRACTICE WAVE";}
+ if(phase==="practice"&&simTime>=11){const stable=stab.score>=99.5&&!stab.tooSlow;practiceHold=stable?practiceHold+realDt:Math.max(0,practiceHold-realDt*.5);if(practiceHold>=3){if(!s.main){finishStage(true);return}else enterMain();}}
+ if(phase==="mainprep"&&mainShockStart&&simTime>=mainShockStart-2&&!mainWarnShown){showNotice((s.shockOffsets||[0]).length>1?"連続波まで2秒":"本番波まで2秒");mainWarnShown=true;}
+ if(phase==="mainprep"&&mainShockStart&&simTime>=mainShockStart){phase="main";phaseTag.textContent="MAIN WAVE";}
+ const lastOffset=Math.max(...(s.shockOffsets||[0]));if(phase==="main"&&mainShockStart&&simTime>=mainShockStart+lastOffset+3){phase="recover";phaseTag.textContent="RECOVER";}
+ const dangerActive=phase==="main"||phase==="recover";
+ if(dangerActive){const lim=s.dangerLimit||9,thr=s.dangerThreshold||76;dangerClock=st.severity>=thr?Math.min(lim,dangerClock+realDt):Math.max(0,dangerClock-realDt*1.35);if(dangerClock>=lim){finishStage(false);return}}
+ if(phase==="recover"){const stable=stab.score>=99.5&&!stab.tooSlow;mainHold=stable?mainHold+realDt:Math.max(0,mainHold-realDt*.6);if(mainHold>=(s.hold||5)){finishStage(true);return}}
+ if(noticeTimer>0){noticeTimer-=realDt;if(noticeTimer<=0)notice.classList.remove("show")}render(st);
+}
+function finishStage(ok){if(resultShown)return;running=false;resultShown=true;const st=getStats(),last=stageIndex===STAGES.length-1;if(ok){overlay.innerHTML=`<div class="overlayCard"><h2 class="good">FLOW STABILIZED</h2><p>${cfg().name}</p><p>STABILITY <b>100%</b><br>平均速度 <b>${st.avg.toFixed(1)} km/h</b></p><button id="nextBtn">${last?"PLAY AGAIN":"NEXT STAGE"}</button></div>`;overlay.classList.remove("hidden");$("nextBtn").onclick=()=>{stageIndex=last?0:stageIndex+1;resetStage();};}else{overlay.innerHTML=`<div class="overlayCard"><h2 class="bad">GRIDLOCK</h2><p>${cfg().name}</p><p>危険な渋滞状態を改善できませんでした。</p><button id="retryBtn">RETRY STAGE</button></div>`;overlay.classList.remove("hidden");$("retryBtn").onclick=resetStage;}}
+function drawCar(c,st){const a=-Math.PI/2+2*Math.PI*c.s/L,x=CX+R*Math.cos(a),y=CY+R*Math.sin(a),km=c.v*3.6,avgGap=L/cars.length-CAR,g=st.gs.get(c);ctx.save();ctx.translate(x,y);ctx.rotate(a+Math.PI/2);let color="#e9e3d6";if(c.player)color="#2b64d8";else if(c.truck)color="#555";else if(km<st.avg-7&&g<avgGap*1.08)color="#d84735";else if(km<st.avg-3)color="#e7a226";ctx.fillStyle=color;ctx.strokeStyle=c.player?"#fff":"rgba(0,0,0,.45)";ctx.lineWidth=c.player?3:1.5;const w=c.truck?25:18,h=c.truck?12:10;ctx.fillRect(-w/2,-h/2,w,h);ctx.strokeRect(-w/2,-h/2,w,h);ctx.restore();}
+function render(pre){
+ const s=cfg(),st=pre||getStats(),stab=calcStability(st),holdTarget=phase==="recover"?(s.hold||5):3,holdNow=phase==="recover"?mainHold:phase==="practice"?practiceHold:0;
+ ctx.clearRect(0,0,600,600);ctx.fillStyle="#cbd1c6";ctx.fillRect(0,0,600,600);ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle="#5b6164";ctx.lineWidth=86;ctx.stroke();ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle="#30343a";ctx.lineWidth=70;ctx.stroke();ctx.setLineDash([24,20]);ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle="#d8d3c1";ctx.lineWidth=3;ctx.stroke();ctx.setLineDash([]);const gapAngle=clamp(st.gap/L*Math.PI*2,0,Math.PI*.5),pa=-Math.PI/2+2*Math.PI*player.s/L;ctx.beginPath();ctx.arc(CX,CY,R,pa,pa+gapAngle);ctx.strokeStyle="rgba(43,100,216,.28)";ctx.lineWidth=78;ctx.stroke();for(const c of cars)drawCar(c,st);
+ stabilityValue.textContent=`${Math.round(stab.score)}%`;stabilityFill.style.width=`${stab.score}%`;detailText.textContent=`平均 ${st.avg.toFixed(1)} / 渋滞 ${st.slow}台`;
+ clearText.textContent=`CLEAR: 100% × ${holdTarget.toFixed(1)}s`;
+ stateText.className="stateText";let state="STABILIZE TO 100%";
+ if(phase==="prep")state="WAVE INCOMING";else if(phase==="mainprep")state="MAIN WAVE INCOMING";else if(dangerClock>0){state=`GRIDLOCK ${Math.max(0,(s.dangerLimit||9)-dangerClock).toFixed(1)}s`;stateText.classList.add("warn");}else if(stab.tooSlow){state="TOO SLOW";stateText.classList.add("slow");}else if(holdNow>0)state=`HOLD ${holdNow.toFixed(1)}/${holdTarget.toFixed(1)}s`;stateText.textContent=state;
+ const lim=s.dangerLimit||9;dangerMiniFill.style.width=`${(phase==="main"||phase==="recover")?clamp(dangerClock/lim*100,0,100):0}%`;
+ if(phase==="prep"){centerMain.textContent="READY";centerSub.textContent="最初の波は練習";}else if(phase==="practice"){centerMain.textContent=`${Math.round(stab.score)}%`;centerSub.textContent=stab.tooSlow?"速度を戻して流れを保つ":"100%を3秒維持";}else if(phase==="mainprep"){centerMain.textContent="NEXT WAVE";centerSub.textContent=s.desc;}else if(phase==="main"){centerMain.textContent="ABSORB";centerSub.textContent="波を弱めて生き残る";}else{centerMain.textContent=`${Math.round(stab.score)}%`;centerSub.textContent=stab.tooSlow?"TOO SLOW":"100%まで戻す";}
+ targetRead.textContent=`${targetK.toFixed(1)} km/h`;actualRead.textContent=`${st.playerK.toFixed(1)} km/h`;actualMarker.style.left=`${clamp((st.playerK-MIN_K)/(MAX_K-MIN_K)*100,0,100)}%`;const following=st.playerK<targetK-2&&st.gap<22;followBadge.textContent=following?"FOLLOWING":"FREE";followBadge.classList.toggle("active",following);
+}
+function frame(ts){if(!lastTs)lastTs=ts;const dt=Math.min(.05,(ts-lastTs)/1000);lastTs=ts;if(running&&!paused)update(dt);requestAnimationFrame(frame)}
+slider.addEventListener("input",()=>{targetK=Number(slider.value);targetRead.textContent=`${targetK.toFixed(1)} km/h`;});
+startBtn.addEventListener("click",()=>{stageIndex=0;resetStage();});challengeBtn.addEventListener("click",()=>{stageIndex=3;resetStage();});restartBtn.addEventListener("click",resetStage);pauseBtn.addEventListener("click",()=>{if(!running)return;paused=!paused;pauseBtn.textContent=paused?"RESUME":"PAUSE";});
+resetStage();running=false;overlay.classList.remove("hidden");requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
