@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Traffic Stabilizer v4</title>
+<style>
+:root{--paper:#f3f0e7;--ink:#171717;--muted:#706c64;--panel:#fffdfa;--rule:#c9c4b8;--road:#30343a;--road2:#5b6164;--blue:#2b64d8;--red:#d84735;--amber:#e7a226;--green:#2f8b57}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif}body{display:flex;justify-content:center}button,input{font:inherit;-webkit-tap-highlight-color:transparent}
+#app{width:min(100%,720px);padding:12px 9px calc(18px + env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:8px}h1{margin:0;font-size:20px;line-height:1;font-weight:950}.sub{font-size:11px;color:var(--muted);margin-top:5px}.stageTag{font-size:13px;font-weight:900}
+.hud{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:7px}.stat{background:var(--panel);border:1px solid var(--rule);padding:7px}.stat b{display:block;font-size:16px;font-variant-numeric:tabular-nums}.stat span{font-size:10px;color:var(--muted)}
+.stage{position:relative;aspect-ratio:1/1;background:#cbd1c6;border:3px solid var(--ink);overflow:hidden}.stage canvas{display:block;width:100%;height:100%;touch-action:none}.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:42%;text-align:center;pointer-events:none}.std{font-size:29px;font-weight:950;line-height:1}.label{font-size:10px;color:#555951;font-weight:800;margin-top:3px}.avg{font-size:13px;font-weight:900;margin-top:8px}.goal{font-size:9px;color:#5f625c;margin-top:5px;line-height:1.35}.hold{font-size:11px;font-weight:850;margin-top:7px;color:var(--green)}
+.notice{position:absolute;left:50%;top:12%;transform:translateX(-50%);background:rgba(255,253,250,.96);padding:5px 8px;font-size:11px;font-weight:850;border:1px solid #aaa49a;opacity:0;transition:opacity .15s;pointer-events:none}.notice.show{opacity:1}
+.dangerBox{position:absolute;left:8%;right:8%;bottom:8%;background:rgba(255,253,250,.94);border:1px solid #aaa49a;padding:7px;pointer-events:none}.dangerTop{display:flex;justify-content:space-between;gap:8px;font-size:10px;font-weight:900}.dangerTrack{height:8px;background:#ddd8cc;margin-top:5px;overflow:hidden}.dangerFill{height:100%;width:0;background:var(--red);transition:width .12s linear}.dangerCountdown{margin-top:4px;font-size:10px;color:var(--red);font-weight:900;min-height:14px}
+.overlay{position:absolute;inset:0;z-index:20;background:rgba(24,24,24,.86);display:flex;align-items:center;justify-content:center;padding:24px;color:white;text-align:center}.overlay.hidden{display:none}.overlayCard{max-width:430px}.overlay h2{margin:0 0 8px;font-size:24px}.overlay p{margin:7px 0;font-size:13px;line-height:1.55}.overlay button{border:0;background:white;color:#111;padding:12px 25px;font-weight:900;font-size:15px;margin-top:8px;position:relative;z-index:30}.good{color:#b8ffd6}.bad{color:#ffd0c8}
+#message{min-height:52px;padding:8px 2px 0;font-size:13px;font-weight:850;line-height:1.4}#hint{font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+.controlPanel{margin-top:5px;background:var(--panel);border:1px solid var(--rule);padding:8px}.controlTop{display:flex;justify-content:space-between;align-items:center;gap:10px}.controlTitle{font-size:10px;color:var(--muted);font-weight:800}.targetRead{font-size:19px;font-weight:950;color:var(--blue);font-variant-numeric:tabular-nums}.slider{width:100%;margin:9px 0 2px;accent-color:var(--blue)}.sliderLabels{display:flex;justify-content:space-between;font-size:9px;color:var(--muted)}
+.actions{display:flex;gap:6px;margin-top:7px}.actions button{flex:1;border:0;min-height:40px;background:#ddd8cc;font-weight:850}.actions #restart{background:var(--ink);color:white}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;color:var(--muted);margin-top:8px}.dot{display:inline-block;width:9px;height:9px;margin-right:4px;vertical-align:-1px}
+@media(max-width:480px){#app{padding-left:7px;padding-right:7px}.hud{gap:4px}.stat{padding:6px}.stat b{font-size:14px}.std{font-size:25px}.center{width:45%}}
+</style>
+</head>
+<body>
+<div id="app">
+<header><div><h1>TRAFFIC STABILIZER</h1><div class="sub">1台の速度だけで stop-and-go を消せ</div></div><div id="stageTag" class="stageTag">STAGE 1/3</div></header>
+<div class="hud">
+  <div class="stat"><b id="gap">-- m</b><span>青車の前方車間</span></div>
+  <div class="stat"><b id="slow">0台</b><span>渋滞車</span></div>
+  <div class="stat"><b id="severity">0%</b><span>JAM SEVERITY</span></div>
+</div>
+<div class="stage">
+  <canvas id="c" width="600" height="600"></canvas>
+  <div class="center">
+    <div id="std" class="std">0.0</div><div class="label">速度ばらつき km/h</div>
+    <div id="avg" class="avg">平均 -- km/h</div>
+    <div id="goal" class="goal"></div>
+    <div id="hold" class="hold"></div>
+  </div>
+  <div id="notice" class="notice"></div>
+  <div class="dangerBox"><div class="dangerTop"><span>JAM DANGER</span><span id="dangerText">SAFE</span></div><div class="dangerTrack"><div id="dangerFill" class="dangerFill"></div></div><div id="dangerCountdown" class="dangerCountdown"></div></div>
+  <div id="overlay" class="overlay"><div class="overlayCard"><h2>3 STAGE PROTOTYPE</h2><p>渋滞ゾーンはありません。各車は<b>前方車間と相対速度だけ</b>で加減速します。</p><p>最初の小さなブレーキからstop-and-goが育ちます。青い1台の速度を<b>連続スライダー</b>で調整し、流れを安定させてください。</p><p>悪化状態が続くとGRIDLOCKカウントダウンが始まります。改善すれば戻せます。</p><button id="start" type="button">START</button></div></div>
+</div>
+<div id="message">渋滞が自然に育つところから始まります。<div id="hint">時間切れはありません。安定させればクリア、悪化を放置するとゲームオーバーです。</div></div>
+<div class="controlPanel"><div class="controlTop"><div class="controlTitle">青い車の目標速度</div><div id="targetRead" class="targetRead">30.0 km/h</div></div><input id="slider" class="slider" type="range" min="12" max="32" step="0.5" value="30"><div class="sliderLabels"><span>12</span><span>22</span><span>32 km/h</span></div></div>
+<div class="actions"><button id="restart">RESTART STAGE</button><button id="pause">PAUSE</button></div>
+<div class="legend"><span><i class="dot" style="background:#2b64d8"></i>操作車</span><span><i class="dot" style="background:#d84735"></i>実際に詰まった低速車</span><span><i class="dot" style="background:#e7a226"></i>減速中</span><span><i class="dot" style="background:#555"></i>トラック</span></div>
+</div>
+<script>
+(()=>{
+"use strict";
+const canvas=document.getElementById("c"),ctx=canvas.getContext("2d");
+const overlay=document.getElementById("overlay"),startBtn=document.getElementById("start"),restartBtn=document.getElementById("restart"),pauseBtn=document.getElementById("pause"),slider=document.getElementById("slider");
+const gapEl=document.getElementById("gap"),slowEl=document.getElementById("slow"),severityEl=document.getElementById("severity"),stdEl=document.getElementById("std"),avgEl=document.getElementById("avg"),goalEl=document.getElementById("goal"),holdEl=document.getElementById("hold"),msgEl=document.getElementById("message"),notice=document.getElementById("notice"),stageTag=document.getElementById("stageTag"),targetRead=document.getElementById("targetRead"),dangerFill=document.getElementById("dangerFill"),dangerText=document.getElementById("dangerText"),dangerCountdown=document.getElementById("dangerCountdown");
+const L=360,CAR=4.5,V0=27.8,S0=2.0,DELTA=4,R=220,CX=300,CY=300,SIM_SPEED=1.75,DANGER_LIMIT=6;
+const STAGES=[
+ {name:"BASIC WAVE",N:22,T:1.00,A:.55,B:1.20,shockId:5,shockStart:4.0,shockEnd:5.5,shockBrake:-4.0,clearStd:2.0,clearAvg:21,clearSlow:1,dangerThreshold:72,desc:"基本のstop-and-go"},
+ {name:"HIGH DENSITY",N:26,T:.88,A:.52,B:1.15,shockId:7,shockStart:3.5,shockEnd:5.2,shockBrake:-4.3,clearStd:2.2,clearAvg:18.5,clearSlow:1,dangerThreshold:68,desc:"高密度。波が増幅しやすい"},
+ {name:"TRUCK MIX",N:24,T:.95,A:.52,B:1.20,shockId:6,shockStart:3.8,shockEnd:5.3,shockBrake:-4.0,clearStd:2.4,clearAvg:19,clearSlow:1,dangerThreshold:68,desc:"大型トラック2台入り"}
+];
+let stageIndex=0,cars=[],player=null,targetK=30,running=false,paused=false,lastTs=0,simTime=0,stableHold=0,dangerClock=0,resultShown=false,noticeTimer=0,shockNotified=false;
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function forward(a,b){let d=b-a;while(d<0)d+=L;while(d>=L)d-=L;return d}
+function sortCars(){cars.sort((a,b)=>a.s-b.s)}
+function gaps(){sortCars();const g=new Map();for(let i=0;i<cars.length;i++){const c=cars[i],lead=cars[(i+1)%cars.length];g.set(c,Math.max(.05,forward(c.s,lead.s)-CAR))}return g}
+function leaderOf(c){sortCars();const i=cars.indexOf(c);return cars[(i+1)%cars.length]}
+function frontGap(c){return Math.max(0,forward(c.s,leaderOf(c).s)-CAR)}
+function say(a,b){msgEl.innerHTML=`${a}<div id="hint">${b}</div>`}
+function showNotice(t){notice.textContent=t;notice.classList.add("show");noticeTimer=1.6}
+function cfg(){return STAGES[stageIndex]}
+function resetStage(){
+ const s=cfg();cars=[];const avgGap=L/s.N-CAR;const initial=Math.min(V0*.82,Math.max(4,((avgGap-S0)/s.T)*.76));
+ for(let i=0;i<s.N;i++){
+   const truck=stageIndex===2&&(i===8||i===17);
+   cars.push({id:i,s:i*L/s.N,v:initial,player:i===0,truck});
+ }
+ player=cars[0];targetK=30;slider.value="30";targetRead.textContent="30.0 km/h";running=true;paused=false;simTime=0;stableHold=0;dangerClock=0;resultShown=false;noticeTimer=0;shockNotified=false;pauseBtn.textContent="PAUSE";overlay.classList.add("hidden");slider.disabled=true;
+ stageTag.textContent=`STAGE ${stageIndex+1}/3`;goalEl.innerHTML=`CLEAR: ばらつき ${s.clearStd.toFixed(1)}未満<br>平均 ${s.clearAvg.toFixed(1)}以上 / 渋滞車 ${s.clearSlow}台以下を5秒`;
+ say(`${s.name}：${s.desc}`,"まず小さなブレーキから渋滞が育ちます。操作開始まで少し観察します。");render();
+}
+function accelStep(dt){
+ const s=cfg();sortCars();const gs=gaps(),acc=new Map();
+ for(let i=0;i<cars.length;i++){
+   const c=cars[i],lead=cars[(i+1)%cars.length],gap=gs.get(c),dv=c.v-lead.v;
+   const T=c.truck?s.T*1.22:s.T,A=c.truck?s.A*.55:s.A,B=c.truck?s.B*.85:s.B,Vdes=c.truck?22.5:V0;
+   const sStar=S0+Math.max(0,c.v*T+c.v*dv/(2*Math.sqrt(Math.max(.01,A*B))));
+   let ai=A*(1-Math.pow(c.v/Vdes,DELTA)-Math.pow(sStar/Math.max(.1,gap),2));
+   acc.set(c,clamp(ai,-5,2));
+ }
+ if(simTime>s.shockStart&&simTime<s.shockEnd){const shock=cars.find(c=>c.id===s.shockId);if(shock)acc.set(shock,Math.min(acc.get(shock),s.shockBrake));}
+ if(simTime>=6){const gap=gs.get(player),safe=Math.max(0,(gap-S0)/s.T),target=Math.min(targetK/3.6,safe);acc.set(player,clamp((target-player.v)*.95,-2.8,1.25));}
+ for(const c of cars)c.v=Math.max(0,c.v+acc.get(c)*dt);
+ for(const c of cars)c.s=(c.s+c.v*dt)%L;
+}
+function getStats(){
+ const s=cfg();sortCars();const gs=gaps(),speeds=cars.map(c=>c.v*3.6),avg=speeds.reduce((a,b)=>a+b,0)/cars.length,std=Math.sqrt(speeds.reduce((q,v)=>q+(v-avg)*(v-avg),0)/cars.length);const avgGap=L/cars.length-CAR;
+ let slow=0,tight=0;for(const c of cars){const km=c.v*3.6,g=gs.get(c);if(km<avg-7&&g<avgGap*1.08)slow++;if(g<avgGap*.58)tight++;}
+ const avgPenalty=clamp((s.clearAvg-avg)/10,0,1),stdPenalty=clamp((std-s.clearStd)/8,0,1),slowPenalty=clamp(slow/Math.max(5,cars.length*.28),0,1),tightPenalty=clamp(tight/Math.max(4,cars.length*.24),0,1);
+ const severity=clamp((stdPenalty*.42+slowPenalty*.30+tightPenalty*.18+avgPenalty*.10)*100,0,100);
+ return{gs,avg,std,slow,tight,gap:gs.get(player),severity};
+}
+function update(realDt){
+ let rem=realDt*SIM_SPEED;while(rem>0){const dt=Math.min(.035,rem);simTime+=dt;accelStep(dt);rem-=dt;}
+ const s=cfg(),st=getStats();
+ if(simTime>s.shockStart&&simTime<s.shockEnd&&!shockNotified){showNotice("1台が一瞬ブレーキ");shockNotified=true;}
+ if(simTime>=6&&slider.disabled){slider.disabled=false;say("ここから青い1台だけ操作できます。","連続スライダーで速度を調整。車間を作って波を吸収し、流れを戻します。");}
+ const clearNow=simTime>9&&st.std<s.clearStd&&st.avg>=s.clearAvg&&st.slow<=s.clearSlow;
+ if(clearNow)stableHold+=realDt;else stableHold=Math.max(0,stableHold-realDt*.8);
+ if(st.severity>=s.dangerThreshold)dangerClock=Math.min(DANGER_LIMIT,dangerClock+realDt);else dangerClock=Math.max(0,dangerClock-realDt*1.35);
+ if(noticeTimer>0){noticeTimer-=realDt;if(noticeTimer<=0)notice.classList.remove("show")}
+ if(stableHold>=5){finishStage(true);return}if(dangerClock>=DANGER_LIMIT){finishStage(false);return}
+ render(st);
+}
+function finishStage(ok){
+ if(resultShown)return;running=false;resultShown=true;const st=getStats();
+ if(ok){
+   const last=stageIndex===STAGES.length-1;
+   overlay.innerHTML=`<div class="overlayCard"><h2 class="good">FLOW STABILIZED</h2><p>速度ばらつき <b>${st.std.toFixed(1)} km/h</b><br>平均速度 <b>${st.avg.toFixed(1)} km/h</b><br>渋滞車 <b>${st.slow}台</b></p><p>${last?"3ステージクリア。":"次は交通条件が厳しくなります。"}</p><button id="nextBtn" type="button">${last?"PLAY AGAIN":"NEXT STAGE"}</button></div>`;
+   overlay.classList.remove("hidden");document.getElementById("nextBtn").onclick=()=>{if(last)stageIndex=0;else stageIndex++;resetStage();};
+ }else{
+   overlay.innerHTML=`<div class="overlayCard"><h2 class="bad">GRIDLOCK</h2><p>危険な渋滞状態を6秒間改善できませんでした。</p><p>速度ばらつき <b>${st.std.toFixed(1)} km/h</b><br>平均速度 <b>${st.avg.toFixed(1)} km/h</b><br>渋滞車 <b>${st.slow}台</b></p><button id="retryBtn" type="button">RETRY STAGE</button></div>`;
+   overlay.classList.remove("hidden");document.getElementById("retryBtn").onclick=resetStage;
+ }
+}
+function drawCar(c,st){
+ const a=-Math.PI/2+2*Math.PI*c.s/L,x=CX+R*Math.cos(a),y=CY+R*Math.sin(a),km=c.v*3.6,avgGap=L/cars.length-CAR,g=st.gs.get(c);ctx.save();ctx.translate(x,y);ctx.rotate(a+Math.PI/2);let color="#e9e3d6";if(c.player)color="#2b64d8";else if(c.truck)color="#555";else if(km<st.avg-7&&g<avgGap*1.08)color="#d84735";else if(km<st.avg-3)color="#e7a226";ctx.fillStyle=color;ctx.strokeStyle=c.player?"#fff":"rgba(0,0,0,.45)";ctx.lineWidth=c.player?3:1.5;const w=c.truck?25:18,h=c.truck?12:10;ctx.fillRect(-w/2,-h/2,w,h);ctx.strokeRect(-w/2,-h/2,w,h);ctx.fillStyle="rgba(255,255,255,.55)";ctx.fillRect(-4,-3,8,6);ctx.restore();
+}
+function render(pre){
+ const st=pre||getStats();ctx.clearRect(0,0,600,600);ctx.fillStyle="#cbd1c6";ctx.fillRect(0,0,600,600);ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle="#5b6164";ctx.lineWidth=86;ctx.stroke();ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle="#30343a";ctx.lineWidth=70;ctx.stroke();ctx.setLineDash([24,20]);ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle="#d8d3c1";ctx.lineWidth=3;ctx.stroke();ctx.setLineDash([]);
+ const gapAngle=clamp(st.gap/L*Math.PI*2,0,Math.PI*.5),pa=-Math.PI/2+2*Math.PI*player.s/L;ctx.beginPath();ctx.arc(CX,CY,R,pa,pa+gapAngle);ctx.strokeStyle="rgba(43,100,216,.28)";ctx.lineWidth=78;ctx.stroke();
+ for(const c of cars)drawCar(c,st);
+ gapEl.textContent=`${st.gap.toFixed(1)} m`;slowEl.textContent=`${st.slow}台`;severityEl.textContent=`${Math.round(st.severity)}%`;stdEl.textContent=st.std.toFixed(1);avgEl.textContent=`平均 ${st.avg.toFixed(1)} km/h`;holdEl.textContent=stableHold>0?`安定維持 ${stableHold.toFixed(1)} / 5.0秒`:"";
+ const p=clamp(dangerClock/DANGER_LIMIT*100,0,100);dangerFill.style.width=`${p}%`;if(dangerClock>0){dangerText.textContent="WARNING";dangerCountdown.textContent=`GRIDLOCKまで ${(DANGER_LIMIT-dangerClock).toFixed(1)}秒（改善すると回復）`;}else{dangerText.textContent="SAFE";dangerCountdown.textContent="";}
+}
+function frame(ts){if(!lastTs)lastTs=ts;const dt=Math.min(.05,(ts-lastTs)/1000);lastTs=ts;if(running&&!paused)update(dt);requestAnimationFrame(frame)}
+slider.addEventListener("input",()=>{targetK=Number(slider.value);targetRead.textContent=`${targetK.toFixed(1)} km/h`;});
+startBtn.addEventListener("click",()=>{stageIndex=0;resetStage();});restartBtn.addEventListener("click",resetStage);pauseBtn.addEventListener("click",()=>{if(!running)return;paused=!paused;pauseBtn.textContent=paused?"RESUME":"PAUSE";});
+stageIndex=0;resetStage();running=false;overlay.classList.remove("hidden");slider.disabled=true;requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
