@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Traffic Stabilizer v6</title>
+<style>
+:root{--paper:#f3f0e7;--ink:#171717;--muted:#706c64;--panel:#fffdfa;--rule:#c9c4b8;--road:#30343a;--blue:#2b64d8;--red:#d84735;--amber:#e7a226;--green:#2f8b57;--hill:#c28c3d;--ramp:#3f7770;--curve:#8b6eab;--tunnel:#56616d}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;overflow:hidden}body{display:flex;justify-content:center}button{font:inherit;-webkit-tap-highlight-color:transparent}
+#app{width:min(100%,720px);height:100dvh;padding:max(6px,env(safe-area-inset-top)) 8px max(6px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:5px;overflow:hidden}
+header{display:flex;justify-content:space-between;align-items:center;min-height:30px}h1{margin:0;font-size:17px;line-height:1;font-weight:950}.sub{font-size:9px;color:var(--muted);margin-top:2px}.stageTag{font-size:11px;font-weight:950;text-align:right}.phase{font-size:9px;color:var(--blue);text-align:right}
+.goal{background:var(--panel);border:1px solid var(--rule);padding:6px 8px}.goalTop{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.goalLabel{font-size:9px;color:var(--muted);font-weight:900}.jamValue{font-size:26px;font-weight:950;color:var(--red);font-variant-numeric:tabular-nums}.goalState{font-size:11px;font-weight:950;text-align:right}.goalState.good{color:var(--green)}.goalState.warn{color:var(--red)}.meta{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);font-weight:850;margin-top:3px}.holdTrack{height:5px;background:#ddd8cc;margin-top:4px;overflow:hidden}.holdFill{height:100%;width:0;background:var(--green)}.dangerTrack{height:3px;background:#e5ded3;margin-top:3px;overflow:hidden}.dangerFill{height:100%;width:0;background:var(--red)}
+.stageShell{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}.stage{position:relative;width:min(100%,calc(100dvh - 202px));max-height:100%;aspect-ratio:1;background:#cbd1c6;border:2px solid var(--ink);overflow:hidden}.stage canvas{width:100%;height:100%;display:block}.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:43%;text-align:center;pointer-events:none}.centerMain{font-size:23px;font-weight:950}.centerSub{font-size:9px;color:#555951;font-weight:850;margin-top:4px;line-height:1.3}.notice{position:absolute;left:50%;top:7%;transform:translateX(-50%);background:rgba(255,253,250,.97);padding:5px 8px;font-size:10px;font-weight:900;border:1px solid #aaa49a;opacity:0;transition:.15s;pointer-events:none;white-space:nowrap}.notice.show{opacity:1}
+.overlay{position:absolute;inset:0;z-index:20;background:rgba(24,24,24,.9);display:flex;align-items:center;justify-content:center;padding:14px;color:white;text-align:center}.overlay.hidden{display:none}.overlayCard{max-width:400px;width:100%}.overlay h2{margin:0 0 5px;font-size:21px}.overlay p{margin:5px 0;font-size:11px;line-height:1.4}.stageGrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:9px}.stageGrid button,.mainBtn{border:0;background:white;color:#111;padding:9px 7px;font-weight:900;font-size:11px;min-height:42px}.stageGrid small{display:block;font-size:8px;font-weight:700;color:#666;margin-top:2px}.good{color:#b8ffd6}.bad{color:#ffd0c8}
+.control{display:grid;grid-template-columns:1fr 92px 1fr;gap:6px}.pedal{border:1px solid #aaa49a;background:#e5e0d6;min-height:55px;font-size:14px;font-weight:950;touch-action:none;user-select:none}.pedal span{display:block;font-size:8px;font-weight:800;color:#666;margin-top:2px}.pedal.held{transform:translateY(1px)}.brake.held{background:#f1c4bb}.gas.held{background:#c7dfcd}.speedBox{background:var(--panel);border:1px solid var(--rule);display:flex;flex-direction:column;justify-content:center;align-items:center}.speedBox span{font-size:8px;color:var(--muted);font-weight:900}.speedBox b{font-size:22px;line-height:1;font-weight:950}.speedBox em{font-size:8px;color:var(--muted);font-style:normal;font-weight:850;margin-top:2px}.actions{display:flex;gap:5px}.actions button{flex:1;border:0;min-height:26px;background:#ddd8cc;font-weight:850;font-size:10px}.actions #restart{background:var(--ink);color:white}
+@media(max-height:700px){#app{gap:3px}.sub{display:none}.goal{padding:4px 7px}.jamValue{font-size:22px}.stage{width:min(100%,calc(100dvh - 176px))}.control{grid-template-columns:1fr 84px 1fr;gap:4px}.pedal{min-height:47px}.speedBox b{font-size:19px}.actions button{min-height:23px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header><div><h1>TRAFFIC STABILIZER</h1><div class="sub">赤い渋滞車を0台にする</div></div><div><div id="stageTag" class="stageTag"></div><div id="phaseTag" class="phase"></div></div></header>
+<div class="goal"><div class="goalTop"><div><span class="goalLabel">GOAL: JAM 0</span> <span id="jamValue" class="jamValue">0</span></div><div id="goalState" class="goalState">CLEAR THE JAM</div></div><div class="meta"><span id="hazardText"></span><span id="auxText"></span></div><div class="holdTrack"><div id="holdFill" class="holdFill"></div></div><div class="dangerTrack"><div id="dangerFill" class="dangerFill"></div></div></div>
+<div class="stageShell"><div class="stage"><canvas id="c" width="600" height="600"></canvas><div class="center"><div id="centerMain" class="centerMain">JAM 0</div><div id="centerSub" class="centerSub">赤い車を0台にする</div></div><div id="notice" class="notice"></div><div id="overlay" class="overlay"><div class="overlayCard"><h2>JAM 0</h2><p><b>BRAKE / ACCEL</b>だけで赤い渋滞車を0台にする。</p><p>赤 = 14km/h未満 かつ 前方車間11.5m未満</p><div id="stageGrid" class="stageGrid"></div></div></div></div></div>
+<div class="control"><button id="brake" class="pedal brake">BRAKE<span>押している間 減速</span></button><div class="speedBox"><span>SPEED</span><b id="speedRead">--</b><em id="assistRead">km/h</em></div><button id="gas" class="pedal gas">ACCEL<span>押している間 加速</span></button></div>
+<div class="actions"><button id="restart">RESTART</button><button id="select">STAGES</button><button id="pause">PAUSE</button></div>
+</div>
+<script>
+(()=>{"use strict";
+const $=id=>document.getElementById(id),canvas=$("c"),ctx=canvas.getContext("2d");
+const overlay=$("overlay"),stageGrid=$("stageGrid"),restartBtn=$("restart"),selectBtn=$("select"),pauseBtn=$("pause"),brakeBtn=$("brake"),gasBtn=$("gas");
+const jamValue=$("jamValue"),goalState=$("goalState"),hazardText=$("hazardText"),auxText=$("auxText"),holdFill=$("holdFill"),dangerFill=$("dangerFill"),stageTag=$("stageTag"),phaseTag=$("phaseTag"),centerMain=$("centerMain"),centerSub=$("centerSub"),notice=$("notice"),speedRead=$("speedRead"),assistRead=$("assistRead");
+const L=360,CAR=4.5,V0=27.8,S0=2,DELTA=4,R=220,CX=300,CY=300,SIM_SPEED=1.55,JAM_K=14,JAM_GAP=11.5,CLEAR_HOLD=2.5,DANGER_HOLD=6,PLAYER_MAX=55/3.6;
+const HILL=[60,150],CURVE=[184,264],TUNNEL=[286,352],MERGE_S=225;
+const STAGES=[
+ {name:"UPHILL TRUCK",short:"UPHILL",desc:"上り坂で大型車が失速",n:23,hill:true,trucks:1,warm:20,merge:0},
+ {name:"ON-RAMP",short:"MERGE",desc:"側道から2台が合流",n:21,merge:2,warm:0},
+ {name:"HAIRPIN",short:"CURVE",desc:"急カーブで慎重な車が減速",n:24,curve:true,warm:20,merge:0},
+ {name:"TUNNEL",short:"TUNNEL",desc:"トンネル入口で速度差",n:24,tunnel:true,trucks:1,warm:20,merge:0},
+ {name:"RUSH HOUR",short:"RUSH",desc:"上り坂＋大型車＋4台合流",n:23,hill:true,trucks:2,warm:16,merge:4}
+];
+let stageIndex=0,cars=[],rampCars=[],player=null,running=false,paused=false,lastTs=0,simTime=0,merged=0,clearHold=0,dangerClock=0,resultShown=false,noticeTimer=0,autoFollow=false,warming=false;
+const input={gas:false,brake:false};
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function forward(a,b){let d=b-a;while(d<0)d+=L;while(d>=L)d-=L;return d}
+function angleAt(s){return-Math.PI/2+2*Math.PI*s/L}
+function roadPoint(s,r=R){const a=angleAt(s);return{x:CX+r*Math.cos(a),y:CY+r*Math.sin(a),a}}
+function inZone(s,z){return s>=z[0]&&s<=z[1]}
+function sortCars(){cars.sort((a,b)=>a.s-b.s)}
+function gaps(){sortCars();const g=new Map();for(let i=0;i<cars.length;i++){const c=cars[i],lead=cars[(i+1)%cars.length];g.set(c,Math.max(.05,forward(c.s,lead.s)-CAR))}return g}
+function showNotice(t){notice.textContent=t;notice.classList.add("show");noticeTimer=1.6}
+function cfg(){return STAGES[stageIndex]}
+function assignTrucks(n){sortCars();for(let k=1;k<=n;k++){const i=Math.floor(k*cars.length/(n+1));if(cars[i]&&!cars[i].player)cars[i].truck=true}}
+function makeRampCars(n){rampCars=[];for(let i=0;i<n;i++)rampCars.push({id:`r${i}`,p:Math.max(.04,.78-i*.19),vp:.16,waiting:false})}
+function reset(i=stageIndex){
+ stageIndex=i;const s=cfg();cars=[];rampCars=[];const N=s.n,avgGap=L/N-CAR,initial=Math.min(V0*.82,Math.max(4,(avgGap-S0)*.76));
+ for(let k=0;k<N;k++)cars.push({id:k,s:k*L/N,v:initial,player:k===0,truck:false,style:[.88,.94,1,1.04][k%4],cautious:k%3===0});
+ player=cars[0];assignTrucks(s.trucks||0);if(s.merge)makeRampCars(s.merge);
+ running=true;paused=false;lastTs=0;simTime=0;merged=0;clearHold=0;dangerClock=0;resultShown=false;noticeTimer=0;autoFollow=false;input.gas=false;input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held");pauseBtn.textContent="PAUSE";overlay.classList.add("hidden");
+ warming=true;if(s.warm>0){let t=s.warm;while(t>0){const dt=Math.min(.035,t);simTime+=dt;accelStep(dt);t-=dt}}warming=false;simTime=0;
+ stageTag.textContent=`STAGE ${stageIndex+1}/${STAGES.length}`;phaseTag.textContent=s.short;hazardText.textContent=s.desc;render();
+}
+function neighborsAt(s){sortCars();let leader=cars.find(c=>c.s>s);if(!leader)leader=cars[0];const li=cars.indexOf(leader),follower=cars[(li-1+cars.length)%cars.length];return{follower,leader}}
+function canMerge(){const {follower,leader}=neighborsAt(MERGE_S),back=forward(follower.s,MERGE_S)-CAR/2,front=forward(MERGE_S,leader.s)-CAR/2;return{ok:back>6.2&&front>6.2,follower,leader}}
+function updateRamp(dt){
+ if(!rampCars.length||simTime<1.0)return;rampCars.sort((a,b)=>b.p-a.p);
+ for(let i=0;i<rampCars.length;i++){const rc=rampCars[i],ahead=rampCars[i-1];let limit=.94;if(ahead)limit=Math.min(limit,ahead.p-.14);if(rc.p<limit)rc.p=Math.min(limit,rc.p+rc.vp*dt);rc.waiting=rc.p>=.93}
+ const front=rampCars[0];if(front&&front.p>=.93){const m=canMerge();if(m.ok){cars.push({id:100+merged,s:MERGE_S,v:Math.min(4.6,m.leader.v,m.follower.v+.8),player:false,truck:false,style:1,cautious:false});rampCars.shift();merged++;showNotice(`MERGED ${merged}/${cfg().merge}`)}}
+}
+function npcAccel(c,lead,gap){
+ const s=cfg(),dv=c.v-lead.v,T=c.truck?1.22:1,A=c.truck?.3025:.55,B=c.truck?1.02:1.2;let Vdes=c.truck?22.5:V0;
+ if(s.hill&&inZone(c.s,HILL)){const cap=c.truck?3.35:6.6*c.style;Vdes=Math.min(Vdes,cap)}
+ if(s.curve&&inZone(c.s,CURVE)){const cap=(c.cautious?3.25:5.9)*c.style;Vdes=Math.min(Vdes,cap)}
+ if(s.tunnel&&inZone(c.s,TUNNEL)){const cap=(c.cautious?3.3:6.15)*Math.min(1,c.style+.05);Vdes=Math.min(Vdes,cap)}
+ const sStar=S0+Math.max(0,c.v*T+c.v*dv/(2*Math.sqrt(Math.max(.01,A*B))));return clamp(A*(1-Math.pow(c.v/Math.max(1,Vdes),DELTA)-Math.pow(sStar/Math.max(.1,gap),2)),-5,2)
+}
+function playerAccel(lead,gap){
+ if(warming)return npcAccel(player,lead,gap);
+ let manual=input.brake?-3.0:input.gas?1.35:-.06;const s=cfg();if(s.hill&&inZone(player.s,HILL))manual-=.22;if(player.v>=PLAYER_MAX&&manual>0)manual=0;
+ const safe=npcAccel(player,lead,gap),closing=player.v>lead.v+.3;autoFollow=(gap<16||closing)&&safe<manual-.15;if(autoFollow)manual=Math.min(manual,safe);if(gap<3.1)manual=Math.min(manual,-5);return clamp(manual,-5,1.5)
+}
+function accelStep(dt){sortCars();const gs=gaps(),acc=new Map();for(let i=0;i<cars.length;i++){const c=cars[i],lead=cars[(i+1)%cars.length],gap=gs.get(c);acc.set(c,c.player?playerAccel(lead,gap):npcAccel(c,lead,gap))}for(const c of cars)c.v=Math.max(0,c.v+acc.get(c)*dt);for(const c of cars)c.s=(c.s+c.v*dt)%L}
+function getStats(){sortCars();const gs=gaps(),jammed=[];for(const c of cars){if(c.v*3.6<JAM_K&&gs.get(c)<JAM_GAP)jammed.push(c)}return{gs,jammed,jam:jammed.length,gap:gs.get(player),playerK:player.v*3.6}}
+function readyToClear(){const s=cfg();return !s.merge||(merged>=s.merge&&rampCars.length===0)}
+function update(realDt){
+ let rem=realDt*SIM_SPEED;while(rem>0){const dt=Math.min(.035,rem);simTime+=dt;updateRamp(dt);accelStep(dt);rem-=dt}
+ const st=getStats(),ready=readyToClear(),clearNow=ready&&st.jam===0;clearHold=clearNow?Math.min(CLEAR_HOLD,clearHold+realDt):Math.max(0,clearHold-realDt*.8);
+ const danger=st.jam>=8;dangerClock=danger?Math.min(DANGER_HOLD,dangerClock+realDt):Math.max(0,dangerClock-realDt*1.4);
+ if(clearHold>=CLEAR_HOLD){finish(true);return}if(dangerClock>=DANGER_HOLD){finish(false);return}
+ if(noticeTimer>0){noticeTimer-=realDt;if(noticeTimer<=0)notice.classList.remove("show")}render(st)
+}
+function finish(ok){
+ if(resultShown)return;running=false;resultShown=true;const st=getStats(),last=stageIndex===STAGES.length-1;
+ if(ok){overlay.innerHTML=`<div class="overlayCard"><h2 class="good">JAM CLEARED</h2><p>${cfg().name}</p><p>赤い渋滞車 <b>${st.jam}台</b></p><button id="nextBtn" class="mainBtn">${last?"STAGE SELECT":"NEXT STAGE"}</button></div>`;overlay.classList.remove("hidden");$("nextBtn").onclick=()=>last?showStageSelect():reset(stageIndex+1)}
+ else{overlay.innerHTML=`<div class="overlayCard"><h2 class="bad">GRIDLOCK</h2><p>赤い渋滞車が8台以上の状態が6秒続きました。</p><button id="retryBtn" class="mainBtn">RETRY</button></div>`;overlay.classList.remove("hidden");$("retryBtn").onclick=()=>reset(stageIndex)}
+}
+function quadPoint(p0,p1,p2,t){const u=1-t;return{x:u*u*p0.x+2*u*t*p1.x+t*t*p2.x,y:u*u*p0.y+2*u*t*p1.y+t*t*p2.y}}
+function rampGeom(){const ep=roadPoint(MERGE_S,R),a=ep.a,tx=-Math.sin(a),ty=Math.cos(a),rx=Math.cos(a),ry=Math.sin(a);const p2={x:ep.x,y:ep.y},p1={x:ep.x-tx*70+rx*28,y:ep.y-ty*70+ry*28},p0={x:ep.x-tx*145+rx*115,y:ep.y-ty*145+ry*115};return{p0,p1,p2}}
+function drawZone(z,color,label){const a0=angleAt(z[0]),a1=angleAt(z[1]);ctx.beginPath();ctx.arc(CX,CY,R,a0,a1);ctx.strokeStyle=color;ctx.lineWidth=66;ctx.stroke();const m=roadPoint((z[0]+z[1])/2,R-2);ctx.save();ctx.translate(m.x,m.y);ctx.rotate(m.a+Math.PI/2);ctx.fillStyle="#fff";ctx.font="900 13px system-ui";ctx.textAlign="center";ctx.fillText(label,0,4);ctx.restore()}
+function drawRoad(){
+ const s=cfg();ctx.fillStyle="#cbd1c6";ctx.fillRect(0,0,600,600);ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle="#596064";ctx.lineWidth=86;ctx.stroke();ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle="#30343a";ctx.lineWidth=70;ctx.stroke();
+ if(s.hill)drawZone(HILL,"rgba(194,140,61,.68)","UPHILL");if(s.curve)drawZone(CURVE,"rgba(139,110,171,.68)","HAIRPIN");if(s.tunnel)drawZone(TUNNEL,"rgba(86,97,109,.82)","TUNNEL");
+ if(s.merge){const rg=rampGeom();ctx.beginPath();ctx.moveTo(rg.p0.x,rg.p0.y);ctx.quadraticCurveTo(rg.p1.x,rg.p1.y,rg.p2.x,rg.p2.y);ctx.strokeStyle="#596568";ctx.lineWidth=40;ctx.stroke();ctx.beginPath();ctx.moveTo(rg.p0.x,rg.p0.y);ctx.quadraticCurveTo(rg.p1.x,rg.p1.y,rg.p2.x,rg.p2.y);ctx.strokeStyle="#354146";ctx.lineWidth=30;ctx.stroke();ctx.fillStyle="#274e49";ctx.font="900 12px system-ui";ctx.fillText("ON-RAMP",Math.max(45,rg.p0.x-5),Math.min(570,rg.p0.y+18))}
+ ctx.setLineDash([24,20]);ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle="#d8d3c1";ctx.lineWidth=3;ctx.stroke();ctx.setLineDash([])
+}
+function drawRampCars(){if(!cfg().merge)return;const rg=rampGeom();for(const rc of rampCars){const p=quadPoint(rg.p0,rg.p1,rg.p2,clamp(rc.p,0,1)),p2=quadPoint(rg.p0,rg.p1,rg.p2,clamp(rc.p+.01,0,1));ctx.save();ctx.translate(p.x,p.y);ctx.rotate(Math.atan2(p2.y-p.y,p2.x-p.x));ctx.fillStyle="#e9e3d6";ctx.strokeStyle="#3f7770";ctx.lineWidth=2;ctx.fillRect(-9,-5,18,10);ctx.strokeRect(-9,-5,18,10);ctx.restore()}}
+function drawCar(c,st){
+ const p=roadPoint(c.s),isJam=st.jammed.includes(c);ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a+Math.PI/2);let color="#e9e3d6";if(isJam&&!c.player)color="#d84735";else if(c.player)color="#2b64d8";else if(c.truck)color="#555";else if(c.v*3.6<18)color="#e7a226";ctx.fillStyle=color;ctx.strokeStyle=c.player&&isJam?"#d84735":c.player?"#fff":"rgba(0,0,0,.45)";ctx.lineWidth=c.player?4:1.4;const w=c.truck?25:18,h=c.truck?12:10;ctx.fillRect(-w/2,-h/2,w,h);ctx.strokeRect(-w/2,-h/2,w,h);ctx.restore()
+}
+function render(pre){
+ const st=pre||getStats(),s=cfg();drawRoad();const pa=angleAt(player.s),ga=clamp(st.gap/L*Math.PI*2,0,Math.PI*.45);ctx.beginPath();ctx.arc(CX,CY,R,pa,pa+ga);ctx.strokeStyle="rgba(43,100,216,.22)";ctx.lineWidth=78;ctx.stroke();drawRampCars();for(const c of cars)drawCar(c,st);
+ jamValue.textContent=st.jam;holdFill.style.width=`${clearHold/CLEAR_HOLD*100}%`;dangerFill.style.width=`${dangerClock/DANGER_HOLD*100}%`;speedRead.textContent=st.playerK.toFixed(0);assistRead.textContent=autoFollow?"AUTO BRAKE":"km/h";
+ const pending=s.merge?Math.max(0,s.merge-merged):0;auxText.textContent=s.merge?`流入 残り${pending}台`:"赤 = 低速＋密集";goalState.className="goalState";
+ if(dangerClock>0){goalState.textContent=`GRIDLOCK ${Math.max(0,DANGER_HOLD-dangerClock).toFixed(1)}s`;goalState.classList.add("warn")}else if(!readyToClear()){goalState.textContent="INCOMING"}else if(st.jam===0&&clearHold>0){goalState.textContent=`HOLD ${clearHold.toFixed(1)}/${CLEAR_HOLD.toFixed(1)}s`;goalState.classList.add("good")}else{goalState.textContent="CLEAR THE JAM"}
+ centerMain.textContent=`JAM ${st.jam}`;centerSub.textContent=!readyToClear()?"流入車に備える":st.jam===0?"そのまま維持":"赤い車を0台にする";phaseTag.textContent=s.short+(autoFollow?" / AUTO BRAKE":"")
+}
+function showStageSelect(){
+ running=false;input.gas=false;input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held");overlay.innerHTML=`<div class="overlayCard"><h2>JAM 0</h2><p><b>BRAKE / ACCEL</b>で赤い渋滞車を0台にする。</p><div id="stageGrid" class="stageGrid"></div></div>`;overlay.classList.remove("hidden");const grid=$("stageGrid");STAGES.forEach((s,i)=>{const b=document.createElement("button");b.innerHTML=`${i+1}. ${s.name}<small>${s.desc}</small>`;b.onclick=()=>reset(i);grid.appendChild(b)})
+}
+function setPedal(name,on){input[name]=on;(name==="gas"?gasBtn:brakeBtn).classList.toggle("held",on)}
+function bindPedal(btn,name){btn.addEventListener("pointerdown",e=>{e.preventDefault();btn.setPointerCapture?.(e.pointerId);setPedal(name,true)});const up=e=>{e.preventDefault();setPedal(name,false)};btn.addEventListener("pointerup",up);btn.addEventListener("pointercancel",up);btn.addEventListener("lostpointercapture",()=>setPedal(name,false));btn.addEventListener("contextmenu",e=>e.preventDefault())}
+bindPedal(brakeBtn,"brake");bindPedal(gasBtn,"gas");
+window.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key===" "){e.preventDefault();setPedal("brake",true)}if(e.key==="ArrowRight"){e.preventDefault();setPedal("gas",true)}});window.addEventListener("keyup",e=>{if(e.key==="ArrowLeft"||e.key===" ")setPedal("brake",false);if(e.key==="ArrowRight")setPedal("gas",false)});
+restartBtn.onclick=()=>reset(stageIndex);selectBtn.onclick=showStageSelect;pauseBtn.onclick=()=>{if(!running)return;paused=!paused;pauseBtn.textContent=paused?"RESUME":"PAUSE";input.gas=input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held")};
+function frame(ts){if(!lastTs)lastTs=ts;const dt=Math.min(.05,(ts-lastTs)/1000);lastTs=ts;if(running&&!paused)update(dt);requestAnimationFrame(frame)}
+showStageSelect();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
