@@ -1,5 +1,5 @@
-const CACHE="traffic-stabilizer-app-v1";
-const CORE=["./","./index.html","./style.css","./game.js","./manifest.webmanifest"];
+const CACHE="traffic-stabilizer-app-v2";
+const CORE=["./","./index.html","./style.css","./game.js","./manifest.webmanifest","./icon.svg"];
 
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)));
