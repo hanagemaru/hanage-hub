@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges" role="img" aria-label="hanage.app">
+  <rect width="32" height="32" fill="#1b2340"/>
+  <g fill="#f6f8f4">
+    <rect x="5" y="8" width="5" height="19"/>
+    <rect x="5" y="17" width="19" height="5"/>
+    <rect x="16" y="22" width="8" height="5"/>
+    <rect x="18" y="8" width="6" height="6"/>
+    <rect x="24" y="4" width="4" height="4"/>
+  </g>
+</svg>
