@@ -8,5 +8,17 @@
   "orientation": "portrait",
   "background_color": "#f3f0e7",
   "theme_color": "#f3f0e7",
-  "lang": "ja"
+  "lang": "ja",
+  "id": "./",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": [
+    "games"
+  ]
 }
