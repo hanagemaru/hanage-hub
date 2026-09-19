@@ -463,15 +463,33 @@ function render(pre){
     eventText.textContent=es[eventIndex]?`NEXT MERGE ${es[eventIndex].at.toFixed(1)}L`:cfg().works?"WORK ZONE":cfg().hill?"UP → CREST → DOWN":cfg().curve?"REAL CURVE":"";
   }
 }
+function clearTrafficStabilizerData(){
+  try{
+    const keys=[];
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("trafficStabilizer"))keys.push(k)}
+    keys.forEach(k=>localStorage.removeItem(k));
+  }catch(e){}
+}
+function showSettings(){
+  running=false;input.gas=input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held");
+  overlay.innerHTML=`<div class="overlayCard"><h2>SETTINGS</h2><div class="settingsList"><a class="settingsLink" href="https://hanage.app/privacy/" target="_blank" rel="noopener">PRIVACY POLICY</a><a class="settingsLink" href="https://hanage.app/terms/" target="_blank" rel="noopener">TERMS</a><button id="resetData" class="settingsAction danger">RESET LOCAL RECORDS</button></div><div class="settingsNote">Campaign / Daily / Endless の記録はこの端末のブラウザ内に保存されています。オンライン保存はまだ使用していません。</div><button id="backSettings" class="backBtn">← MODE SELECT</button><div class="versionNote">Traffic Stabilizer prototype v17</div></div>`;
+  overlay.classList.remove("hidden");
+  let armed=false;
+  $("resetData").onclick=()=>{
+    if(!armed){armed=true;$("resetData").textContent="TAP AGAIN TO RESET";return}
+    clearTrafficStabilizerData();showModeSelect();
+  };
+  $("backSettings").onclick=showModeSelect;
+}
 function showModeSelect(){
   running=false;input.gas=input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held");
   const best=getEndlessBest(),daily=buildDailyConfig(),dr=getDailyRecord(daily.dateKey),records=getStageRecords(),next=firstUnclearedStage();
   const count=ch=>{let n=0;for(let i=(ch-1)*7;i<ch*7;i++)if(records[String(i)]?.cleared)n++;return n};
   const allClear=Object.keys(records).filter(k=>records[k]?.cleared&&Number(k)<STAGES.length).length>=STAGES.length;
-  overlay.innerHTML=`<div class="overlayCard"><h2>SELECT MODE</h2><div class="modeMenu"><button id="continue" class="modeBtn wide">${allClear?"CAMPAIGN COMPLETE · REPLAY":"CONTINUE CAMPAIGN"}<small>${allClear?"STAGE 28 · FINAL WAVE":`STAGE ${next+1} · ${STAGES[next].name}`}</small></button><button id="ch1" class="modeBtn">CHAPTER 1<small>${count(1)}/7 · BASIC</small></button><button id="ch2" class="modeBtn">CHAPTER 2<small>${count(2)}/7 · ADVANCED</small></button><button id="ch3" class="modeBtn">CHAPTER 3<small>${count(3)}/7 · WORKS</small></button><button id="ch4" class="modeBtn">CHAPTER 4<small>${count(4)}/7 · MASTER</small></button><button id="daily" class="modeBtn daily">DAILY<small>${daily.dateKey} · ${dr.cleared?"CLEAR":"NEW"}</small></button><button id="endless" class="modeBtn endless">ENDLESS<small>BEST ${best.toFixed(1)} LAPS</small></button></div></div>`;
+  overlay.innerHTML=`<div class="overlayCard"><h2>SELECT MODE</h2><div class="modeMenu"><button id="continue" class="modeBtn wide">${allClear?"CAMPAIGN COMPLETE · REPLAY":"CONTINUE CAMPAIGN"}<small>${allClear?"STAGE 28 · FINAL WAVE":`STAGE ${next+1} · ${STAGES[next].name}`}</small></button><button id="ch1" class="modeBtn">CHAPTER 1<small>${count(1)}/7 · BASIC</small></button><button id="ch2" class="modeBtn">CHAPTER 2<small>${count(2)}/7 · ADVANCED</small></button><button id="ch3" class="modeBtn">CHAPTER 3<small>${count(3)}/7 · WORKS</small></button><button id="ch4" class="modeBtn">CHAPTER 4<small>${count(4)}/7 · MASTER</small></button><button id="daily" class="modeBtn daily">DAILY<small>${daily.dateKey} · ${dr.cleared?"CLEAR":"NEW"}</small></button><button id="endless" class="modeBtn endless">ENDLESS<small>BEST ${best.toFixed(1)} LAPS</small></button><button id="settings" class="modeBtn wide">SETTINGS<small>PRIVACY · TERMS · LOCAL DATA</small></button></div></div>`;
   overlay.classList.remove("hidden");
   $("continue").onclick=()=>reset(allClear?STAGES.length-1:next,"campaign");
-  $("ch1").onclick=()=>showChapter(1);$("ch2").onclick=()=>showChapter(2);$("ch3").onclick=()=>showChapter(3);$("ch4").onclick=()=>showChapter(4);$("daily").onclick=()=>reset(0,"daily");$("endless").onclick=()=>reset(0,"endless");
+  $("ch1").onclick=()=>showChapter(1);$("ch2").onclick=()=>showChapter(2);$("ch3").onclick=()=>showChapter(3);$("ch4").onclick=()=>showChapter(4);$("daily").onclick=()=>reset(0,"daily");$("endless").onclick=()=>reset(0,"endless");$("settings").onclick=showSettings;
 }
 function showChapter(chapter){
   running=false;const start=(chapter-1)*7,end=start+7;
