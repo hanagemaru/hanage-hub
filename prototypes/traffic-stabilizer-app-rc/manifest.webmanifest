@@ -1,0 +1,12 @@
+{
+  "name": "Traffic Stabilizer",
+  "short_name": "Traffic",
+  "description": "車間を作って渋滞波を抑え、交通の流れを安定させるゲーム。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f0e7",
+  "theme_color": "#f3f0e7",
+  "lang": "ja"
+}
