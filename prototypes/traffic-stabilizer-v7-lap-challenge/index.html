@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Traffic Stabilizer v7 Lap Challenge</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+<header><div><h1>TRAFFIC STABILIZER</h1><div class="sub">3周走り切れ。渋滞を限界まで育てるな。</div></div><div><div class="mode">3 LAP CHALLENGE</div><div id="phaseTag" class="phase">READY</div></div></header>
+<div class="hud">
+ <div class="hudTop">
+  <div class="metric lap"><span>PROGRESS</span><b id="lapRead">LAP 1/3</b></div>
+  <div class="metric jam"><span>JAM / LIMIT</span><b id="jamRead">0 / 13</b></div>
+ </div>
+ <div class="hudState"><span id="stateText">PRESS A PEDAL TO START</span><span id="eventText">UPHILL / MERGE / CURVE / TUNNEL</span></div>
+ <div class="progress"><div id="progressFill" class="progressFill"></div></div>
+ <div class="danger"><div id="dangerFill" class="dangerFill"></div></div>
+</div>
+<div class="stageShell"><div class="stage">
+ <canvas id="c" width="600" height="600"></canvas>
+ <div class="center"><div id="centerMain" class="centerMain">3 LAPS</div><div id="centerSub" class="centerSub">JAM 13でGRIDLOCK</div></div>
+ <div id="notice" class="notice"></div>
+ <div id="overlay" class="overlay hidden"></div>
+</div></div>
+<div class="control">
+ <button id="brake" class="pedal brake">BRAKE<span>長押しで減速</span></button>
+ <div class="speedBox"><span>SPEED</span><b id="speedRead">24</b><em id="assistRead">km/h</em></div>
+ <button id="gas" class="pedal gas">ACCEL<span>長押しで加速</span></button>
+</div>
+<div class="actions"><button id="restart">RESTART</button><button id="pause">PAUSE</button></div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
