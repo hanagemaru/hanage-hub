@@ -78,7 +78,7 @@ export const en: Content = {
   privacyPage: {
     title: "Privacy Policy",
     description: "How information is handled on hanage.app and in the games published here.",
-    revision: "Effective 13 August 2026. Last updated 6 September 2026.",
+    revision: "Effective 13 August 2026. Last updated 20 September 2026.",
     translationNote:
       "This is a translation provided for convenience. The Japanese version is the authoritative text.",
     sections: [
@@ -115,6 +115,14 @@ export const en: Content = {
         ],
       },
       {
+        heading: "Putt rankings",
+        paragraphs: [
+          "When you submit a score, we store a per-device anonymous ID, a hash of your credential, your display name, total and per-hole strokes, hole-out information, the speed and direction of each shot, and the submission time. Shot data is used to check for impossible scores. Data is stored in Cloudflare D1.",
+          "Raw IP addresses are not stored in the ranking database. A hashed signal is used to limit excessive submissions. Rate-limit data older than 24 hours is removed when a subsequent score is submitted.",
+          "Use Delete my records on the ranking screen to delete your display name, scores, and shots. Deletion cannot be undone. The credential for accessing your records stays on your device; transferring it to another device is not supported.",
+        ],
+      },
+      {
         heading: "Service providers",
         paragraphs: [
           "The site, the games, the ranking API, and the database are served through hosting providers including Cloudflare, GitHub Pages, and Netlify, depending on the title. These providers may process access information for delivery, security, and fault investigation.",
@@ -135,7 +143,7 @@ export const en: Content = {
       {
         heading: "Analytics",
         paragraphs: [
-          "Cloudflare Web Analytics is used to understand which pages are viewed. It collects aggregate information such as the pages visited, the referring source, browser and device type, and approximate region.",
+          "Cloudflare Web Analytics is used on the hub and on production game pages where measurement is enabled. It collects aggregate information such as the pages visited, the referring source, browser and device type, and approximate region.",
           "The service uses no cookies or local storage and creates no identifier that follows a person across devices. The information it collects does not identify individuals.",
         ],
       },
@@ -143,7 +151,7 @@ export const en: Content = {
         heading: "Retention and deletion",
         paragraphs: [
           "Ranking display names and scores are kept for as long as the ranking feature needs them. Access logs are retained according to each hosting provider's own settings and policies.",
-          "In titles with rankings, you can delete your submitted display name and scores from the in-game settings screen. If you cannot reach that screen, or want to discuss deletion, get in touch through the contact page.",
+          "In Multicolor Sweeper, delete your display name and records from Settings. In Putt, use \"Delete my records\" on the ranking screen. If you cannot reach that screen, or want to discuss deletion, get in touch through the contact page.",
         ],
       },
       {
@@ -321,7 +329,7 @@ export const en: Content = {
           heading: "Modes",
           kind: "defs",
           items: [
-            { term: "Tour:", body: "pick one of three courses and play nine holes." },
+            { term: "Tour:", body: "choose BEGINNER, STANDARD, ADVANCED, or EXPERT and play nine holes." },
             {
               term: "Practice:",
               body: "replay a single hole as many times as you like. NEW HOLE swaps in a different one.",
@@ -348,6 +356,16 @@ export const en: Content = {
           ],
         },
         {
+          heading: "Your first hole",
+          kind: "prose",
+          body: "Start in Practice and compare how far the ball rolls with a short swing and a faster swing. Check the route on the map, then read the slope from the low view before aiming. Once the ball stops, compare its trail with the direction you intended.",
+        },
+        {
+          heading: "Rankings",
+          kind: "prose",
+          body: "Each tour course has its own ranking. After nine holes, choose a display name and submit your personal best. Practice does not count toward the rankings. Submitting a score requires a connection.",
+        },
+        {
           heading: "Putters",
           kind: "prose",
           body: "CHOOSE PUTTER on the top menu offers a pin, a blade, a mallet, and a fang. The shape is cosmetic — all four play exactly the same.",
@@ -356,7 +374,7 @@ export const en: Content = {
           heading: "Rules",
           kind: "list",
           items: [
-            "You are scored on total strokes. The ball rolls heavily once it is in the rough or the second cut.",
+            "You are scored on total strokes. The rough, second cut, and bunkers change how the ball rolls.",
             "Water and out of bounds cost one stroke. You replay from where you last hit.",
             "On tour, if you stop mid-round you resume from the start of that hole. Practice keeps nothing.",
           ],
