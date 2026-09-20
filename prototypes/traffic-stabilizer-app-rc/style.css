@@ -52,3 +52,30 @@ header{display:flex;justify-content:space-between;align-items:center;min-height:
 .settingsAction.danger{background:#ffe0d9}
 .settingsNote{font-size:9px;line-height:1.45;opacity:.75;margin:8px auto;max-width:330px}
 .versionNote{font-size:8px;opacity:.5;margin-top:8px}
+
+/* v18 FLOW JOURNEY */
+.homeLead{font-size:10px;line-height:1.5;opacity:.8;margin:0 0 8px}
+.journeyMain{width:100%;border:0;background:#fff4c9;color:#111;padding:14px 12px;min-height:108px;text-align:left;font-weight:950}
+.journeyMain .journeyLabel{display:block;font-size:10px;color:#625e56}
+.journeyMain strong{display:block;font-size:34px;line-height:1;margin:4px 0 7px;font-variant-numeric:tabular-nums}
+.journeyMain small{display:block;font-size:9px;line-height:1.45;color:#5f5a51}
+.homeModes{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.homeModes button,.homeUtility button{border:0;background:#fff;color:#111;min-height:54px;padding:9px 7px;font-size:11px;font-weight:950}
+.homeModes button small,.homeUtility button small{display:block;font-size:7px;color:#666;margin-top:3px}
+.homeUtility{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+.journeyTotal{font-size:38px;font-weight:950;line-height:1;margin:7px 0 3px;font-variant-numeric:tabular-nums}
+.journeyPlus{font-size:12px;font-weight:950;color:#b8ffd6;letter-spacing:.06em}
+.journeyMeta{display:flex;justify-content:center;gap:14px;font-size:10px;font-weight:900;margin:7px 0}
+.journeyGoal{font-size:9px;font-weight:850;color:#fff4c9;margin:6px 0}
+.journeyQuality{font-size:12px;font-weight:950;margin:5px 0}
+.journeySaved{font-size:10px;font-weight:900;color:#b8ffd6;margin:7px 0}
+.journeyActions{display:grid;grid-template-columns:2fr 1fr;gap:7px;margin-top:9px}
+.journeyActions button{border:0;background:#fff;color:#111;padding:11px 8px;font-size:11px;font-weight:950}
+.journeyActions .next{background:#fff4c9}
+.journeyAuto{font-size:8px;opacity:.65;margin-top:6px}
+.practiceTitle{font-size:10px;font-weight:900;opacity:.72;margin:0 0 8px}
+.milestoneFlash{font-size:11px;font-weight:950;color:#ffe487;margin:7px 0}
+@media(max-height:700px){
+  .journeyMain{min-height:88px;padding:10px}.journeyMain strong{font-size:28px}
+  .homeModes button,.homeUtility button{min-height:46px}
+}
