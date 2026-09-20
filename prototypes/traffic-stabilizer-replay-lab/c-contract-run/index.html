@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Traffic Stabilizer Replay C · Contract Run</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+<header>
+  <div><h1>TRAFFIC STABILIZER</h1><div id="sub" class="sub"></div></div>
+  <div><div id="stageTag" class="mode"></div><div id="phaseTag" class="phase">READY</div></div>
+</header>
+
+<div class="stageShell"><div class="stage">
+  <canvas id="c" width="600" height="600"></canvas>
+
+  <div class="ringHud">
+    <div class="ringMetrics">
+      <div class="ringMetric lap"><span>LAP</span><b id="lapRead">1/3</b></div>
+      <div class="ringMetric jam"><span>JAM</span><b id="jamRead">0%</b></div>
+      <div class="ringMetric speed"><span>SPEED</span><b id="speedRead">24</b><em id="assistRead">km/h</em></div>
+    </div>
+    <div class="ringProgress"><div id="progressFill" class="progressFill"></div></div>
+    <div class="ringDanger"><div id="dangerFill" class="dangerFill"></div></div>
+    <div id="stateText" class="stateText">PRESS A PEDAL</div>
+    <div id="eventText" class="eventText"></div>
+    <div id="centerMain" class="centerMain"></div>
+    <div id="centerSub" class="centerSub"></div>
+  </div>
+
+  <div id="notice" class="notice"></div>
+  <div id="overlay" class="overlay"><div class="overlayCard"><h2>STAGE SELECT</h2><div id="stageGrid" class="stageGrid"></div></div></div>
+</div></div>
+
+<div class="pedals">
+  <button id="brake" class="pedal brake">BRAKE<span>左ペダル</span></button>
+  <button id="gas" class="pedal gas">ACCEL<span>右ペダル</span></button>
+</div>
+<div class="actions"><button id="restart">RESTART</button><button id="select">STAGES</button><button id="pause">PAUSE</button></div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
