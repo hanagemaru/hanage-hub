@@ -343,12 +343,7 @@ function finish(ok){
     overlay.innerHTML=`<div class="overlayCard"><h2 class="${passed?"good":"bad"}">${passed?"CONTRACT CLEAR":"CONTRACT FAILED"}</h2><p>${contractSelected.name}</p><div class="contractResult">${contractActual()} · TARGET ${contractSelected.target}</div><div class="resultStats"><div class="resultStat"><span>MAX JAM</span><b>${Math.round(maxJamPct)}%</b></div><div class="resultStat"><span>TIME</span><b>${formatTime(elapsedReal)}</b></div></div><div class="resultActions"><button id="retryBtn">RETRY</button><button id="contractsBtn">CONTRACTS</button></div></div>`;
     overlay.classList.remove("hidden");$("retryBtn").onclick=()=>reset(0,"contract");$("contractsBtn").onclick=showContractSelect;return;
   }
-  if(cfg().contract){
-    stageTag.textContent=`CONTRACT · ${contractSelected?.name||""}`;
-    if(contractSelected?.id==="smooth")eventText.textContent=`TARGET JAM ≤60% · NOW ${Math.round(st.jamPct)}%`;
-    else if(contractSelected?.id==="fast")eventText.textContent=`TARGET 01:22.0 · NOW ${formatTime(elapsedReal)}`;
-    else eventText.textContent=`AUTO BRAKE ${autoBrakeTime.toFixed(1)} / 3.0s`;
-  }else if(cfg().daily){
+  if(cfg().daily){
     const key=cfg().dateKey,oldDaily=getDailyRecord(key);
     const newDailyTime=ok&&(!oldDaily.cleared||elapsedReal<(oldDaily.bestTime??Infinity)-.05),newDailyJam=ok&&(!oldDaily.cleared||maxJamPct<(oldDaily.bestJam??Infinity)-.2);
     if(ok)saveDailyRecord(key,elapsedReal,maxJamPct);
@@ -486,7 +481,12 @@ function render(pre){
   else if(st.jamPct>=55){stateText.textContent="JAM GROWING";stateText.classList.add("warn");phaseTag.textContent="WARNING";centerMain.textContent="波が成長中";centerSub.textContent="早めに減速して前方に空間"}
   else{stateText.textContent="RUNNING";phaseTag.textContent=autoBrake?"AUTO BRAKE":"RUNNING";centerMain.textContent="";centerSub.textContent=""}
   const es=cfg().events||[];
-  if(cfg().daily){
+  if(cfg().contract){
+    stageTag.textContent=`CONTRACT · ${contractSelected?.name||""}`;
+    if(contractSelected?.id==="smooth")eventText.textContent=`TARGET JAM ≤60% · NOW ${Math.round(st.jamPct)}%`;
+    else if(contractSelected?.id==="fast")eventText.textContent=`TARGET 01:22.0 · NOW ${formatTime(elapsedReal)}`;
+    else eventText.textContent=`AUTO BRAKE ${autoBrakeTime.toFixed(1)} / 3.0s`;
+  }else if(cfg().daily){
     stageTag.textContent="DAILY · "+cfg().dateKey;eventText.textContent=es[eventIndex]?`NEXT ${es[eventIndex].label||"MERGE"} @ ${es[eventIndex].at.toFixed(1)}L`:"TODAY";
   }else if(cfg().endless){
     const wave=Math.floor(raw/5)+1;stageTag.textContent=`ENDLESS · WAVE ${wave}`;
