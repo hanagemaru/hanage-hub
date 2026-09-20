@@ -534,5 +534,5 @@ document.addEventListener("selectionchange",()=>{const s=window.getSelection?.()
 restartBtn.onclick=()=>reset(stageIndex,gameMode);selectBtn.onclick=showModeSelect;
 pauseBtn.onclick=()=>{if(!started||!running)return;paused=!paused;pauseBtn.textContent=paused?"RESUME":"PAUSE";input.gas=input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held")};
 function frame(ts){if(!lastTs)lastTs=ts;const dt=Math.min(.05,(ts-lastTs)/1000);lastTs=ts;if(running&&!paused)update(dt);requestAnimationFrame(frame)}
-reset(0,"campaign");showModeSelect();requestAnimationFrame(frame);
+reset(0,"flow");requestAnimationFrame(frame);
 })();
