@@ -132,9 +132,9 @@ const ENDLESS={
 let DAILY=buildDailyConfig();
 const CONTRACT={name:"CONTRACT CIRCUIT",short:"CONTRACT",desc:"同じコースを別の目標で攻略",n:18,laps:5,jamLimit:9.5,hill:true,curve:true,contract:true,pace:REGULAR_SIM_SPEED,events:[]};
 const CONTRACTS=[
- {id:"smooth",name:"SMOOTH OPERATOR",desc:"MAX JAM 60%以下で完走",target:"MAX JAM ≤ 60%"},
+ {id:"smooth",name:"SMOOTH OPERATOR",desc:"MAX JAM 70%以下で完走",target:"MAX JAM ≤ 70%"},
  {id:"fast",name:"FAST FLOW",desc:"82秒以内で完走",target:"TIME ≤ 01:22.0"},
- {id:"control",name:"NO ASSIST",desc:"AUTO BRAKE合計3秒以下で完走",target:"AUTO BRAKE ≤ 3.0s"}
+ {id:"control",name:"MANUAL CONTROL",desc:"AUTO BRAKE合計15秒以下で完走",target:"AUTO BRAKE ≤ 15.0s"}
 ];
 
 let stageIndex=0,gameMode="campaign",cars=[],rampCars=[],player=null,started=false,running=false,paused=false,lastTs=0,totalDist=0,nextId=100,eventIndex=0,noticeTimer=0,autoBrake=false,failClock=0,resultShown=false,elapsedReal=0,maxJamPct=0,tutorialStep=0,attemptCounted=false,contractSelected=null,autoBrakeTime=0;
@@ -314,9 +314,9 @@ function getContractProgress(){try{return JSON.parse(localStorage.getItem("traff
 function saveContractDone(id){try{const p=getContractProgress();p[id]=true;localStorage.setItem("trafficStabilizerContracts",JSON.stringify(p))}catch(e){}}
 function contractPassed(){
   if(!contractSelected)return false;
-  if(contractSelected.id==="smooth")return maxJamPct<=60;
+  if(contractSelected.id==="smooth")return maxJamPct<=70;
   if(contractSelected.id==="fast")return elapsedReal<=82;
-  if(contractSelected.id==="control")return autoBrakeTime<=3;
+  if(contractSelected.id==="control")return autoBrakeTime<=15;
   return false;
 }
 function contractActual(){
@@ -483,9 +483,9 @@ function render(pre){
   const es=cfg().events||[];
   if(cfg().contract){
     stageTag.textContent=`CONTRACT · ${contractSelected?.name||""}`;
-    if(contractSelected?.id==="smooth")eventText.textContent=`TARGET JAM ≤60% · NOW ${Math.round(st.jamPct)}%`;
+    if(contractSelected?.id==="smooth")eventText.textContent=`TARGET JAM ≤70% · NOW ${Math.round(st.jamPct)}%`;
     else if(contractSelected?.id==="fast")eventText.textContent=`TARGET 01:22.0 · NOW ${formatTime(elapsedReal)}`;
-    else eventText.textContent=`AUTO BRAKE ${autoBrakeTime.toFixed(1)} / 3.0s`;
+    else eventText.textContent=`AUTO BRAKE ${autoBrakeTime.toFixed(1)} / 15.0s`;
   }else if(cfg().daily){
     stageTag.textContent="DAILY · "+cfg().dateKey;eventText.textContent=es[eventIndex]?`NEXT ${es[eventIndex].label||"MERGE"} @ ${es[eventIndex].at.toFixed(1)}L`:"TODAY";
   }else if(cfg().endless){
