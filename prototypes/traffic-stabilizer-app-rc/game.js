@@ -130,12 +130,58 @@ const ENDLESS={
  hill:true,curve:true,tunnel:true,endless:true,pace:REGULAR_SIM_SPEED,events:buildEndlessEvents()
 };
 let DAILY=buildDailyConfig();
+let JOURNEY=null;
+const JOURNEY_KEY="trafficStabilizerJourneyV1";
+const JOURNEY_POOL=[7,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27];
 
-let stageIndex=0,gameMode="campaign",cars=[],rampCars=[],player=null,started=false,running=false,paused=false,lastTs=0,totalDist=0,nextId=100,eventIndex=0,noticeTimer=0,autoBrake=false,failClock=0,resultShown=false,elapsedReal=0,maxJamPct=0,tutorialStep=0,attemptCounted=false;
+function cloneConfig(v){return JSON.parse(JSON.stringify(v))}
+function journeyConfig(flowNo){
+  if(flowNo<=STAGES.length){
+    const c=cloneConfig(STAGES[flowNo-1]);c.journey=true;c.journeyNo=flowNo;return c;
+  }
+  let baseIndex;
+  if(flowNo%10===0)baseIndex=((flowNo/10)%2===0)?27:13;
+  else if(flowNo%5===0)baseIndex=20;
+  else{
+    const rnd=rng32(hashText("traffic-flow-"+flowNo));
+    baseIndex=JOURNEY_POOL[Math.floor(rnd()*JOURNEY_POOL.length)];
+  }
+  const c=cloneConfig(STAGES[baseIndex]),rnd=rng32(hashText("traffic-flow-events-"+flowNo));
+  c.journey=true;c.journeyNo=flowNo;c.tutorial=false;c.laps=5;
+  c.pace=Math.max(c.pace||REGULAR_SIM_SPEED,flowNo%10===0?4.0:REGULAR_SIM_SPEED);
+  if(c.events)c.events=c.events.map((e,idx)=>({...e,at:clamp(e.at+(rnd()-.5)*.12+(idx%2?.01:-.01),.35,4.65)}));
+  c.generatedFrom=baseIndex+1;
+  return c;
+}
+function getJourneyState(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(JOURNEY_KEY)||"null");
+    if(raw&&Number.isFinite(raw.nextFlow)&&raw.nextFlow>=1)return{
+      nextFlow:Math.max(1,Math.floor(raw.nextFlow)),
+      totalFlow:Math.max(0,Math.floor(raw.totalFlow||0)),
+      chain:Math.max(0,Math.floor(raw.chain||0)),
+      bestChain:Math.max(0,Math.floor(raw.bestChain||0))
+    };
+  }catch(e){}
+  return{nextFlow:1,totalFlow:0,chain:0,bestChain:0};
+}
+function saveJourneyState(v){
+  try{localStorage.setItem(JOURNEY_KEY,JSON.stringify(v))}catch(e){}
+}
+function nextJourneyGoal(total){
+  const fixed=[5,10,25,50,100,250,500,1000];
+  const hit=fixed.find(v=>v>total);
+  return hit||Math.ceil((total+1)/500)*500;
+}
+function journeyQuality(jam){
+  return jam<=40?"SMOOTH":jam<=65?"CONTROLLED":"CLEARED";
+}
+
+let stageIndex=0,gameMode="campaign",journeyFlow=1,journeyAdvanceTimer=null,cars=[],rampCars=[],player=null,started=false,running=false,paused=false,lastTs=0,totalDist=0,nextId=100,eventIndex=0,noticeTimer=0,autoBrake=false,failClock=0,resultShown=false,elapsedReal=0,maxJamPct=0,tutorialStep=0,attemptCounted=false;
 let trackRaw=[],trackCum=[],trackTotal=0;
 const input={gas:false,brake:false};
 
-function cfg(){return gameMode==="endless"?ENDLESS:gameMode==="daily"?DAILY:STAGES[stageIndex]}
+function cfg(){return gameMode==="journey"?JOURNEY:gameMode==="endless"?ENDLESS:gameMode==="daily"?DAILY:STAGES[stageIndex]}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function forward(a,b){let d=b-a;while(d<0)d+=L;while(d>=L)d-=L;return d}
 function inZone(s,z){return s>=z[0]&&s<=z[1]}
@@ -202,8 +248,15 @@ function drawChevron(s,lateral,color,dir=1){
   const d=dir;ctx.moveTo(-7*d,-8);ctx.lineTo(6*d,0);ctx.lineTo(-7*d,8);ctx.stroke();ctx.restore();
 }
 
+function clearJourneyAdvance(){
+  if(journeyAdvanceTimer){clearTimeout(journeyAdvanceTimer);journeyAdvanceTimer=null}
+}
+function startJourney(){
+  const js=getJourneyState();reset(js.nextFlow,"journey");
+}
 function reset(i=stageIndex,nextMode=gameMode){
-  gameMode=nextMode;if(gameMode==="campaign")stageIndex=i;if(gameMode==="daily")DAILY=buildDailyConfig();const s=cfg();buildTrack();cars=[];rampCars=[];eventIndex=0;nextId=100;
+  clearJourneyAdvance();
+  gameMode=nextMode;if(gameMode==="campaign")stageIndex=i;if(gameMode==="journey"){journeyFlow=Math.max(1,Math.floor(i||1));JOURNEY=journeyConfig(journeyFlow)}if(gameMode==="daily")DAILY=buildDailyConfig();const s=cfg();buildTrack();cars=[];rampCars=[];eventIndex=0;nextId=100;
   if(s.seed){
     const cluster=new Set([8,9,10,11,12,13,14]),small=5.5,totalGap=L-s.n*CAR,large=(totalGap-cluster.size*small)/(s.n-cluster.size);
     let pos=0;
@@ -219,7 +272,7 @@ function reset(i=stageIndex,nextMode=gameMode){
   if(s.trucks){for(let k=1;k<=s.trucks;k++){const idx=Math.floor(k*cars.length/(s.trucks+1));if(cars[idx]&&!cars[idx].player)cars[idx].truck=true}}
   player=cars.find(c=>c.player);started=false;running=true;paused=false;lastTs=0;totalDist=0;noticeTimer=0;autoBrake=false;failClock=0;resultShown=false;elapsedReal=0;maxJamPct=0;tutorialStep=0;attemptCounted=false;
   input.gas=input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held");pauseBtn.textContent="PAUSE";overlay.classList.add("hidden");
-  stageTag.textContent=gameMode==="endless"?"ENDLESS FLOW":gameMode==="daily"?"DAILY CHALLENGE":`STAGE ${stageIndex+1}/${STAGES.length} · ${s.short}`;sub.textContent=s.desc;render();
+  stageTag.textContent=gameMode==="journey"?`FLOW ${journeyFlow} · ${s.short}`:gameMode==="endless"?"ENDLESS FLOW":gameMode==="daily"?"DAILY CHALLENGE":`STAGE ${stageIndex+1}/${STAGES.length} · ${s.short}`;sub.textContent=gameMode==="journey"?s.desc:s.desc;render();
 }
 function neighborsAt(s){sortCars();let leader=cars.find(c=>c.s>s);if(!leader)leader=cars[0];const li=cars.indexOf(leader);return{follower:cars[(li-1+cars.length)%cars.length],leader}}
 function queueRamp(types,label){for(let i=0;i<types.length;i++)rampCars.push({p:Math.max(.03,.50-i*.18),vp:.14,truck:types[i]});showNotice(label)}
@@ -309,6 +362,28 @@ function formatTime(sec){
 }
 function finish(ok){
   if(resultShown)return;running=false;resultShown=true;const st=jamStats();
+  if(cfg().journey){
+    const js=getJourneyState();
+    if(ok){
+      if(journeyFlow>=js.nextFlow){
+        js.nextFlow=journeyFlow+1;js.totalFlow+=1;js.chain+=1;js.bestChain=Math.max(js.bestChain,js.chain);
+        saveJourneyState(js);
+      }
+      if(journeyFlow<=STAGES.length)saveStageRecord(journeyFlow-1,elapsedReal,maxJamPct);
+      const goal=nextJourneyGoal(js.totalFlow),left=goal-js.totalFlow,quality=journeyQuality(maxJamPct),milestone=(js.totalFlow>0&&(js.totalFlow===5||js.totalFlow===10||js.totalFlow===25||js.totalFlow===50||js.totalFlow===100||js.totalFlow%250===0)),flowBreak=js.totalFlow>0&&js.totalFlow%5===0;
+      overlay.innerHTML=`<div class="overlayCard"><div class="journeyPlus">FLOW +1</div><div class="journeyTotal">${js.totalFlow} FLOW</div>${milestone?`<div class="milestoneFlash">MILESTONE · ${js.totalFlow} FLOW</div>`:""}<div class="journeyQuality">${quality}</div><div class="journeyMeta"><span>CHAIN ${js.chain}</span><span>BEST ${js.bestChain}</span></div><div class="resultStats"><div class="resultStat"><span>MAX JAM</span><b>${Math.round(maxJamPct)}%</b></div><div class="resultStat"><span>TIME</span><b>${formatTime(elapsedReal)}</b></div></div><div class="journeyGoal">NEXT GOAL ${goal} · ${left} TO GO</div><div class="journeyActions"><button id="journeyNext" class="next">${flowBreak?"CONTINUE FLOW":"NEXT FLOW"}</button><button id="journeyMenu">MENU</button></div><div class="journeyAuto">${flowBreak?"FLOW BREAK · CONTINUE WHEN READY":"AUTO NEXT IN 2.4s"}</div></div>`;
+      overlay.classList.remove("hidden");
+      $("journeyNext").onclick=()=>reset(js.nextFlow,"journey");
+      $("journeyMenu").onclick=showHome;
+      if(!flowBreak)journeyAdvanceTimer=setTimeout(()=>{if(gameMode==="journey"&&resultShown)reset(getJourneyState().nextFlow,"journey")},2400);
+    }else{
+      js.chain=0;saveJourneyState(js);
+      overlay.innerHTML=`<div class="overlayCard"><h2 class="bad">GRIDLOCK</h2><p>FLOW ${journeyFlow}</p><div class="journeyTotal">${js.totalFlow} FLOW</div><div class="journeySaved">TOTAL FLOW SAVED · 戻っても進捗は消えません</div><div class="journeyMeta"><span>CHAIN 0</span><span>BEST ${js.bestChain}</span></div><div class="resultStats"><div class="resultStat"><span>MAX JAM</span><b>100%</b></div><div class="resultStat"><span>TIME</span><b>${formatTime(elapsedReal)}</b></div></div><div class="journeyActions"><button id="journeyRetry" class="next">RETRY FLOW ${journeyFlow}</button><button id="journeyMenu">MENU</button></div></div>`;
+      overlay.classList.remove("hidden");
+      $("journeyRetry").onclick=()=>reset(journeyFlow,"journey");$("journeyMenu").onclick=showHome;
+    }
+    return;
+  }
   if(cfg().endless){
     const laps=totalDist/L,oldBest=getEndlessBest(),isNew=laps>oldBest+.005,best=Math.max(oldBest,laps);
     if(isNew)setEndlessBest(best);
@@ -439,7 +514,7 @@ function render(pre){
   stateText.className="stateText";
   if(!started){
     stateText.textContent="PRESS A PEDAL";phaseTag.textContent="READY";centerMain.textContent=cfg().name;
-    centerSub.textContent=cfg().tutorial?"まずBRAKEを短く押して前に空間を作る":cfg().endless?"JAM 100%まで走り続ける":`${cfg().laps}周走り切る`;
+    centerSub.textContent=cfg().tutorial?"まずBRAKEを短く押して前に空間を作る":cfg().journey?`${cfg().laps}周 · 流れを安定させる`:cfg().endless?"JAM 100%まで走り続ける":`${cfg().laps}周走り切る`;
   }
   else if(cfg().tutorial&&tutorialStep<3){
     stateText.textContent="TUTORIAL";phaseTag.textContent="GUIDE";
@@ -454,7 +529,10 @@ function render(pre){
   else if(st.jamPct>=55){stateText.textContent="JAM GROWING";stateText.classList.add("warn");phaseTag.textContent="WARNING";centerMain.textContent="波が成長中";centerSub.textContent="早めに減速して前方に空間"}
   else{stateText.textContent="RUNNING";phaseTag.textContent=autoBrake?"AUTO BRAKE":"RUNNING";centerMain.textContent="";centerSub.textContent=""}
   const es=cfg().events||[];
-  if(cfg().daily){
+  if(cfg().journey){
+    const js=getJourneyState();stageTag.textContent=`FLOW ${journeyFlow} · ${cfg().short}`;
+    eventText.textContent=es[eventIndex]?`NEXT ${es[eventIndex].label||"MERGE"} @ ${es[eventIndex].at.toFixed(1)}L`:`TOTAL ${js.totalFlow} · CHAIN ${js.chain}`;
+  }else if(cfg().daily){
     stageTag.textContent="DAILY · "+cfg().dateKey;eventText.textContent=es[eventIndex]?`NEXT ${es[eventIndex].label||"MERGE"} @ ${es[eventIndex].at.toFixed(1)}L`:"TODAY";
   }else if(cfg().endless){
     const wave=Math.floor(raw/5)+1;stageTag.textContent=`ENDLESS · WAVE ${wave}`;
@@ -472,32 +550,37 @@ function clearTrafficStabilizerData(){
 }
 function showSettings(){
   running=false;input.gas=input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held");
-  overlay.innerHTML=`<div class="overlayCard"><h2>SETTINGS</h2><div class="settingsList"><a class="settingsLink" href="https://hanage.app/privacy/" target="_blank" rel="noopener">PRIVACY POLICY</a><a class="settingsLink" href="https://hanage.app/terms/" target="_blank" rel="noopener">TERMS</a><button id="resetData" class="settingsAction danger">RESET LOCAL RECORDS</button></div><div class="settingsNote">Campaign / Daily / Endless の記録はこの端末のブラウザ内に保存されています。オンライン保存はまだ使用していません。</div><button id="backSettings" class="backBtn">← MODE SELECT</button><div class="versionNote">Traffic Stabilizer prototype v17</div></div>`;
+  overlay.innerHTML=`<div class="overlayCard"><h2>SETTINGS</h2><div class="settingsList"><a class="settingsLink" href="https://hanage.app/privacy/" target="_blank" rel="noopener">PRIVACY POLICY</a><a class="settingsLink" href="https://hanage.app/terms/" target="_blank" rel="noopener">TERMS</a><button id="resetData" class="settingsAction danger">RESET LOCAL RECORDS</button></div><div class="settingsNote">Flow Journey / Daily / Endless / Practice の記録はこの端末のブラウザ内に保存されています。オンライン保存はまだ使用していません。</div><button id="backSettings" class="backBtn">← MODE SELECT</button><div class="versionNote">Traffic Stabilizer Flow Journey RC</div></div>`;
   overlay.classList.remove("hidden");
   let armed=false;
   $("resetData").onclick=()=>{
     if(!armed){armed=true;$("resetData").textContent="TAP AGAIN TO RESET";return}
     clearTrafficStabilizerData();showModeSelect();
   };
-  $("backSettings").onclick=showModeSelect;
+  $("backSettings").onclick=showHome;
 }
-function showModeSelect(){
-  running=false;input.gas=input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held");
-  const best=getEndlessBest(),daily=buildDailyConfig(),dr=getDailyRecord(daily.dateKey),records=getStageRecords(),next=firstUnclearedStage();
-  const count=ch=>{let n=0;for(let i=(ch-1)*7;i<ch*7;i++)if(records[String(i)]?.cleared)n++;return n};
-  const allClear=Object.keys(records).filter(k=>records[k]?.cleared&&Number(k)<STAGES.length).length>=STAGES.length;
-  overlay.innerHTML=`<div class="overlayCard"><h2>SELECT MODE</h2><div class="modeMenu"><button id="continue" class="modeBtn wide">${allClear?"CAMPAIGN COMPLETE · REPLAY":"CONTINUE CAMPAIGN"}<small>${allClear?"STAGE 28 · FINAL WAVE":`STAGE ${next+1} · ${STAGES[next].name}`}</small></button><button id="ch1" class="modeBtn">CHAPTER 1<small>${count(1)}/7 · BASIC</small></button><button id="ch2" class="modeBtn">CHAPTER 2<small>${count(2)}/7 · ADVANCED</small></button><button id="ch3" class="modeBtn">CHAPTER 3<small>${count(3)}/7 · WORKS</small></button><button id="ch4" class="modeBtn">CHAPTER 4<small>${count(4)}/7 · MASTER</small></button><button id="daily" class="modeBtn daily">DAILY<small>${daily.dateKey} · ${dr.cleared?"CLEAR":"NEW"}</small></button><button id="endless" class="modeBtn endless">ENDLESS<small>BEST ${best.toFixed(1)} LAPS</small></button><button id="settings" class="modeBtn wide">SETTINGS<small>PRIVACY · TERMS · LOCAL DATA</small></button></div></div>`;
+function showHome(){
+  clearJourneyAdvance();running=false;input.gas=input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held");
+  const js=getJourneyState(),next=journeyConfig(js.nextFlow),goal=nextJourneyGoal(js.totalFlow),best=getEndlessBest(),daily=buildDailyConfig(),dr=getDailyRecord(daily.dateKey);
+  overlay.innerHTML=`<div class="overlayCard"><h2>TRAFFIC STABILIZER</h2><div class="homeLead">考えるのは目の前の交通だけ。クリアしたFLOWはずっと積み上がります。</div><button id="journeyStart" class="journeyMain"><span class="journeyLabel">CONTINUE FLOW</span><strong>FLOW ${js.nextFlow}</strong><small>${next.name} · TOTAL ${js.totalFlow} · CHAIN ${js.chain} · BEST ${js.bestChain}<br>NEXT GOAL ${goal} · ${goal-js.totalFlow} TO GO</small></button><div class="homeModes"><button id="daily" class="modeBtn daily">DAILY<small>${daily.dateKey} · ${dr.cleared?"CLEAR":"NEW"}</small></button><button id="endless" class="modeBtn endless">ENDLESS<small>BEST ${best.toFixed(1)} LAPS</small></button></div><div class="homeUtility"><button id="practice">RECORDS / PRACTICE<small>過去FLOWを選んで再挑戦</small></button><button id="settings">SETTINGS<small>PRIVACY · DATA</small></button></div></div>`;
   overlay.classList.remove("hidden");
-  $("continue").onclick=()=>reset(allClear?STAGES.length-1:next,"campaign");
-  $("ch1").onclick=()=>showChapter(1);$("ch2").onclick=()=>showChapter(2);$("ch3").onclick=()=>showChapter(3);$("ch4").onclick=()=>showChapter(4);$("daily").onclick=()=>reset(0,"daily");$("endless").onclick=()=>reset(0,"endless");$("settings").onclick=showSettings;
+  $("journeyStart").onclick=startJourney;$("daily").onclick=()=>reset(0,"daily");$("endless").onclick=()=>reset(0,"endless");$("practice").onclick=showPractice;$("settings").onclick=showSettings;
+}
+function showModeSelect(){showHome()}
+function showPractice(){
+  clearJourneyAdvance();running=false;const records=getStageRecords();
+  const count=ch=>{let n=0;for(let i=(ch-1)*7;i<ch*7;i++)if(records[String(i)]?.cleared)n++;return n};
+  overlay.innerHTML=`<div class="overlayCard"><h2>RECORDS / PRACTICE</h2><div class="practiceTitle">FLOW 1–28 の体系は裏側に残し、ここからだけ選べます。</div><div class="modeMenu"><button id="ch1" class="modeBtn">FLOW 1–7<small>${count(1)}/7 · BASIC</small></button><button id="ch2" class="modeBtn">FLOW 8–14<small>${count(2)}/7 · ADVANCED</small></button><button id="ch3" class="modeBtn">FLOW 15–21<small>${count(3)}/7 · WORKS</small></button><button id="ch4" class="modeBtn">FLOW 22–28<small>${count(4)}/7 · MASTER</small></button></div><button id="practiceBack" class="backBtn">← HOME</button></div>`;
+  overlay.classList.remove("hidden");
+  $("ch1").onclick=()=>showChapter(1);$("ch2").onclick=()=>showChapter(2);$("ch3").onclick=()=>showChapter(3);$("ch4").onclick=()=>showChapter(4);$("practiceBack").onclick=showHome;
 }
 function showChapter(chapter){
   running=false;const start=(chapter-1)*7,end=start+7;
-  const titles=["BASIC FLOW","ADVANCED FLOW","ROAD WORKS","MASTER FLOW"];overlay.innerHTML=`<div class="overlayCard"><h2>CHAPTER ${chapter}</h2><div class="chapterTitle">${titles[chapter-1]}</div><div id="stageGrid" class="stageGrid compact"></div><button id="backModes" class="backBtn">← MODE SELECT</button></div>`;
+  const titles=["BASIC FLOW","ADVANCED FLOW","ROAD WORKS","MASTER FLOW"];overlay.innerHTML=`<div class="overlayCard"><h2>FLOW ${start+1}–${end}</h2><div class="chapterTitle">${titles[chapter-1]}</div><div id="stageGrid" class="stageGrid compact"></div><button id="backModes" class="backBtn">← RECORDS / PRACTICE</button></div>`;
   overlay.classList.remove("hidden");
   const g=$("stageGrid"),records=getStageRecords();
   STAGES.slice(start,end).forEach((s,j)=>{const idx=start+j,b=document.createElement("button"),rec=records[String(idx)];b.innerHTML=`${idx+1}. ${s.name}${s.tutorial?" · TUTORIAL":""}<small>${s.desc}</small>${rec?.cleared?`<span class="recordMark">✓ BEST ${formatTime(rec.bestTime)} · JAM ${Math.round(rec.bestJam)}%</span>`:""}`;b.onclick=()=>reset(idx,"campaign");g.appendChild(b)});
-  $("backModes").onclick=showModeSelect;
+  $("backModes").onclick=showPractice;
 }
 function setPedal(name,on){input[name]=on;(name==="gas"?gasBtn:brakeBtn).classList.toggle("held",on);if(on&&!started){started=true;if(gameMode==="daily"&&!attemptCounted){noteDailyAttempt(cfg().dateKey);attemptCounted=true}showNotice(cfg().seed?"車間を作って波を吸収":"GO")}}
 function bind(btn,name){
@@ -508,8 +591,8 @@ function bind(btn,name){
 }
 bind(brakeBtn,"brake");bind(gasBtn,"gas");
 document.addEventListener("selectionchange",()=>{const s=window.getSelection?.();if(s&&s.anchorNode&&(brakeBtn.contains(s.anchorNode)||gasBtn.contains(s.anchorNode)))s.removeAllRanges()});
-restartBtn.onclick=()=>reset(stageIndex,gameMode);selectBtn.onclick=showModeSelect;
+restartBtn.onclick=()=>reset(gameMode==="journey"?journeyFlow:stageIndex,gameMode);selectBtn.onclick=showHome;
 pauseBtn.onclick=()=>{if(!started||!running)return;paused=!paused;pauseBtn.textContent=paused?"RESUME":"PAUSE";input.gas=input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held")};
 function frame(ts){if(!lastTs)lastTs=ts;const dt=Math.min(.05,(ts-lastTs)/1000);lastTs=ts;if(running&&!paused)update(dt);requestAnimationFrame(frame)}
-reset(0,"campaign");showModeSelect();requestAnimationFrame(frame);
+JOURNEY=journeyConfig(getJourneyState().nextFlow);reset(getJourneyState().nextFlow,"journey");showHome();requestAnimationFrame(frame);
 })();
