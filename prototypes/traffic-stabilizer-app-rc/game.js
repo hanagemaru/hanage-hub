@@ -387,7 +387,7 @@ function finish(ok){
   if(cfg().endless){
     const laps=totalDist/L,oldBest=getEndlessBest(),isNew=laps>oldBest+.005,best=Math.max(oldBest,laps);
     if(isNew)setEndlessBest(best);
-    overlay.innerHTML=`<div class="overlayCard"><h2 class="bad">GRIDLOCK</h2><p>ENDLESS FLOW</p><div class="endlessScore">${laps.toFixed(1)} LAPS</div>${isNew?'<div class="bestNote new">NEW PERSONAL BEST</div>':""}<div class="resultStats three"><div class="resultStat"><span>BEST</span><b>${best.toFixed(1)}</b></div><div class="resultStat"><span>MAX JAM</span><b>100%</b></div><div class="resultStat"><span>TIME</span><b>${formatTime(elapsedReal)}</b></div></div><div class="resultActions"><button id="retryBtn">RETRY</button><button id="modeBtn">MODE SELECT</button></div></div>`;
+    overlay.innerHTML=`<div class="overlayCard"><h2 class="bad">GRIDLOCK</h2><p>ENDLESS FLOW</p><div class="endlessScore">${laps.toFixed(1)} LAPS</div>${isNew?'<div class="bestNote new">NEW PERSONAL BEST</div>':""}<div class="resultStats three"><div class="resultStat"><span>BEST</span><b>${best.toFixed(1)}</b></div><div class="resultStat"><span>MAX JAM</span><b>100%</b></div><div class="resultStat"><span>TIME</span><b>${formatTime(elapsedReal)}</b></div></div><div class="resultActions"><button id="retryBtn">RETRY</button><button id="modeBtn">HOME</button></div></div>`;
     overlay.classList.remove("hidden");
     $("retryBtn").onclick=()=>reset(0,"endless");$("modeBtn").onclick=showModeSelect;return;
   }
@@ -397,8 +397,8 @@ function finish(ok){
     if(ok)saveDailyRecord(key,elapsedReal,maxJamPct);
     const rec=getDailyRecord(key),dailyBest=(newDailyTime||newDailyJam)?'<div class="bestNote new">NEW DAILY BEST</div>':"";
     overlay.innerHTML=ok
-      ?`<div class="overlayCard"><h2 class="good">DAILY CLEAR</h2><div class="dailyDate">${key}</div><div class="resultStats"><div class="resultStat"><span>MAX JAM</span><b>${Math.round(maxJamPct)}%</b></div><div class="resultStat"><span>TIME</span><b>${formatTime(elapsedReal)}</b></div></div><div class="dailyScore">BEST ${rec.bestTime!=null?formatTime(rec.bestTime):"--"} · JAM ${rec.bestJam!=null?Math.round(rec.bestJam)+"%":"--"} · ${rec.attempts||1} ATTEMPT(S)</div>${dailyBest}<div class="resultActions"><button id="retryBtn">RETRY</button><button id="modeBtn">MODE SELECT</button></div></div>`
-      :`<div class="overlayCard"><h2 class="bad">DAILY GRIDLOCK</h2><div class="dailyDate">${key}</div><div class="dailyScore">${rec.attempts||1} ATTEMPT(S) TODAY</div><div class="resultActions"><button id="retryBtn">RETRY</button><button id="modeBtn">MODE SELECT</button></div></div>`;
+      ?`<div class="overlayCard"><h2 class="good">DAILY CLEAR</h2><div class="dailyDate">${key}</div><div class="resultStats"><div class="resultStat"><span>MAX JAM</span><b>${Math.round(maxJamPct)}%</b></div><div class="resultStat"><span>TIME</span><b>${formatTime(elapsedReal)}</b></div></div><div class="dailyScore">BEST ${rec.bestTime!=null?formatTime(rec.bestTime):"--"} · JAM ${rec.bestJam!=null?Math.round(rec.bestJam)+"%":"--"} · ${rec.attempts||1} ATTEMPT(S)</div>${dailyBest}<div class="resultActions"><button id="retryBtn">RETRY</button><button id="modeBtn">HOME</button></div></div>`
+      :`<div class="overlayCard"><h2 class="bad">DAILY GRIDLOCK</h2><div class="dailyDate">${key}</div><div class="dailyScore">${rec.attempts||1} ATTEMPT(S) TODAY</div><div class="resultActions"><button id="retryBtn">RETRY</button><button id="modeBtn">HOME</button></div></div>`;
     overlay.classList.remove("hidden");$("retryBtn").onclick=()=>reset(0,"daily");$("modeBtn").onclick=showModeSelect;return;
   }
   const last=stageIndex===STAGES.length-1,oldRec=getStageRecords()[String(stageIndex)]||null;
@@ -406,7 +406,7 @@ function finish(ok){
   if(ok)saveStageRecord(stageIndex,elapsedReal,maxJamPct);
   const bestMsg=(newTime||newJam)?`<div class="bestNote new">NEW BEST${newTime&&newJam?" · TIME + JAM":newTime?" · TIME":" · JAM"}</div>`:"";
   overlay.innerHTML=ok
-    ?`<div class="overlayCard"><h2 class="good">FINISH</h2><p>${cfg().name}</p><div class="resultStats"><div class="resultStat"><span>MAX JAM</span><b>${Math.round(maxJamPct)}%</b></div><div class="resultStat"><span>TIME</span><b>${formatTime(elapsedReal)}</b></div></div>${bestMsg}<button id="nextBtn" class="mainBtn">${last?"MODE SELECT":"NEXT STAGE"}</button></div>`
+    ?`<div class="overlayCard"><h2 class="good">FINISH</h2><p>${cfg().name}</p><div class="resultStats"><div class="resultStat"><span>MAX JAM</span><b>${Math.round(maxJamPct)}%</b></div><div class="resultStat"><span>TIME</span><b>${formatTime(elapsedReal)}</b></div></div>${bestMsg}<button id="nextBtn" class="mainBtn">${last?"HOME":"NEXT PRACTICE FLOW"}</button></div>`
     :`<div class="overlayCard"><h2 class="bad">GRIDLOCK</h2><p>JAM LEVEL 100%</p><div class="resultStats"><div class="resultStat"><span>MAX JAM</span><b>100%</b></div><div class="resultStat"><span>TIME</span><b>${formatTime(elapsedReal)}</b></div></div><button id="retryBtn" class="mainBtn">RETRY</button></div>`;
   overlay.classList.remove("hidden");
   if(ok)$("nextBtn").onclick=()=>last?showModeSelect():reset(stageIndex+1,"campaign");else $("retryBtn").onclick=()=>reset(stageIndex,"campaign");
@@ -550,7 +550,7 @@ function clearTrafficStabilizerData(){
 }
 function showSettings(){
   running=false;input.gas=input.brake=false;brakeBtn.classList.remove("held");gasBtn.classList.remove("held");
-  overlay.innerHTML=`<div class="overlayCard"><h2>SETTINGS</h2><div class="settingsList"><a class="settingsLink" href="https://hanage.app/privacy/" target="_blank" rel="noopener">PRIVACY POLICY</a><a class="settingsLink" href="https://hanage.app/terms/" target="_blank" rel="noopener">TERMS</a><button id="resetData" class="settingsAction danger">RESET LOCAL RECORDS</button></div><div class="settingsNote">Flow Journey / Daily / Endless / Practice の記録はこの端末のブラウザ内に保存されています。オンライン保存はまだ使用していません。</div><button id="backSettings" class="backBtn">← MODE SELECT</button><div class="versionNote">Traffic Stabilizer Flow Journey RC</div></div>`;
+  overlay.innerHTML=`<div class="overlayCard"><h2>SETTINGS</h2><div class="settingsList"><a class="settingsLink" href="https://hanage.app/privacy/" target="_blank" rel="noopener">PRIVACY POLICY</a><a class="settingsLink" href="https://hanage.app/terms/" target="_blank" rel="noopener">TERMS</a><button id="resetData" class="settingsAction danger">RESET LOCAL RECORDS</button></div><div class="settingsNote">Flow Journey / Daily / Endless / Practice の記録はこの端末のブラウザ内に保存されています。オンライン保存はまだ使用していません。</div><button id="backSettings" class="backBtn">← HOME</button><div class="versionNote">Traffic Stabilizer Flow Journey RC</div></div>`;
   overlay.classList.remove("hidden");
   let armed=false;
   $("resetData").onclick=()=>{
