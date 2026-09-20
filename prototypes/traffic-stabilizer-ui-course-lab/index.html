@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Traffic Stabilizer · UI / Course Lab</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;color:#171717;background:#f3f0e7}
+*{box-sizing:border-box}body{margin:0;padding:18px;display:flex;justify-content:center}.wrap{max-width:760px;width:100%}
+h1{font-size:24px;margin:0 0 6px}.lead{font-size:12px;line-height:1.6;color:#625e56;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.card{display:block;text-decoration:none;color:inherit;background:#fffdfa;border:1px solid #c9c4b8;padding:14px;min-height:160px}
+.tag{font-size:9px;font-weight:950;color:#2b64d8;margin-bottom:6px}.card b{font-size:17px}.card p{font-size:11px;line-height:1.5;color:#5c5851}.focus{font-size:9px;font-weight:900;margin-top:8px}
+.note{font-size:10px;line-height:1.55;margin-top:14px;padding:10px;background:#e7e2d7}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.card{min-height:auto}}
+</style>
+</head>
+<body><main class="wrap">
+<h1>TRAFFIC STABILIZER · UI / COURSE LAB</h1>
+<div class="lead">FLOW JOURNEYの遊び方は同じまま、運転中UIとコース形状だけを比較する実験です。4案の進捗保存は本番RCと完全に分離しています。</div>
+<div class="grid">
+<a class="card" href="./a-road-first/index.html"><div class="tag">A · UI ONLY</div><b>ROAD FIRST</b><p>現在の円形コースはそのまま。中央HUDを道路の外へ出し、車列と車間を完全に見えるようにする。</p><div class="focus">見る点：中央が空いた方が渋滞波を追いやすいか</div></a>
+<a class="card" href="./b-control-ring/index.html"><div class="tag">B · UI ONLY</div><b>CONTROL RING</b><p>中央HUDをかなり小さくして残す。JAMはステージ外周にも反映し、視線移動を減らす。</p><div class="focus">見る点：計器感と道路視認性のバランス</div></a>
+<a class="card" href="./c-wide-circuit/index.html"><div class="tag">C · UI + COURSE</div><b>WIDE CIRCUIT</b><p>横長の周回路へ変更。WORK / CREST / CURVE / TUNNELを道路上の場所として理解しやすくする。</p><div class="focus">見る点：円形より「コースを走っている感」が出るか</div></a>
+<a class="card" href="./d-asymmetric-loop/index.html"><div class="tag">D · COURSE</div><b>ASYMMETRIC LOOP</b><p>正円でもオーバルでもない非対称ループ。ROAD FIRST UIと組み合わせ、地図的な道路形状を試す。</p><div class="focus">見る点：特徴的な場所を覚えやすいか／ごちゃつかないか</div></a>
+</div>
+<div class="note">比較するときは、見た目の好みだけでなく「青い車と前方車間を追いやすいか」「JAM/SPEEDを探さず読めるか」「坂・工事・カーブ・トンネルの原因が場所として分かるか」を重視してください。Productionの app/ はまだ変更していません。</div>
+</main></body></html>
