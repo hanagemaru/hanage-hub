@@ -352,10 +352,7 @@ function finish(ok){
     overlay.innerHTML=`<div class="overlayCard"><h2 class="${ok?"good":"bad"}">${ok?"DRAFT COMPLETE":"GRIDLOCK"}</h2><div class="flowScore">${score.toLocaleString()}</div>${isNew?'<div class="bestNote new">NEW DRAFT BEST</div>':""}<div class="resultStats three"><div class="resultStat"><span>BEST</span><b>${best.toLocaleString()}</b></div><div class="resultStat"><span>RISK MULT</span><b>x${draftMult.toFixed(2)}</b></div><div class="resultStat"><span>MAX JAM</span><b>${Math.round(maxJamPct)}%</b></div></div><div class="resultActions"><button id="retryBtn">RETRY</button><button id="modeBtn">MODE SELECT</button></div></div>`;
     overlay.classList.remove("hidden");$("retryBtn").onclick=()=>reset(0,"draft");$("modeBtn").onclick=showModeSelect;return;
   }
-  if(cfg().draft){
-    stageTag.textContent=`FLOW DRAFT · x${draftMult.toFixed(2)}`;
-    eventText.textContent=`SCORE ${Math.round(draftScore).toLocaleString()} · NEXT CHOICE ${draftNext}L`;
-  }else if(cfg().daily){
+  if(cfg().daily){
     const key=cfg().dateKey,oldDaily=getDailyRecord(key);
     const newDailyTime=ok&&(!oldDaily.cleared||elapsedReal<(oldDaily.bestTime??Infinity)-.05),newDailyJam=ok&&(!oldDaily.cleared||maxJamPct<(oldDaily.bestJam??Infinity)-.2);
     if(ok)saveDailyRecord(key,elapsedReal,maxJamPct);
@@ -493,7 +490,10 @@ function render(pre){
   else if(st.jamPct>=55){stateText.textContent="JAM GROWING";stateText.classList.add("warn");phaseTag.textContent="WARNING";centerMain.textContent="波が成長中";centerSub.textContent="早めに減速して前方に空間"}
   else{stateText.textContent="RUNNING";phaseTag.textContent=autoBrake?"AUTO BRAKE":"RUNNING";centerMain.textContent="";centerSub.textContent=""}
   const es=cfg().events||[];
-  if(cfg().daily){
+  if(cfg().draft){
+    stageTag.textContent=`FLOW DRAFT · x${draftMult.toFixed(2)}`;
+    eventText.textContent=`SCORE ${Math.round(draftScore).toLocaleString()} · NEXT CHOICE ${draftNext}L`;
+  }else if(cfg().daily){
     stageTag.textContent="DAILY · "+cfg().dateKey;eventText.textContent=es[eventIndex]?`NEXT ${es[eventIndex].label||"MERGE"} @ ${es[eventIndex].at.toFixed(1)}L`:"TODAY";
   }else if(cfg().endless){
     const wave=Math.floor(raw/5)+1;stageTag.textContent=`ENDLESS · WAVE ${wave}`;
