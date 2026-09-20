@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-12
+Last updated: 2026-09-20
 
 ## Current state
 
@@ -143,6 +143,21 @@ Phase D (advertising)
     - `/updates/` currently holds three one-line entries. Give each a date and a few sentences of what actually changed.
     - `/about/` is a few lines. Who runs this, why, and on what terms.
     Practical constraints: do not change or remove any existing URL, add the new section under a fresh path, Japanese first with English translations following, and allow two to four weeks after publishing for Google to recrawl before ticking 「問題を修正しました」.
+
+19. **Start audience building on X now, ahead of any ad approval.** Decided on 2026-09-20; the reasoning, so it is not re-litigated:
+    - The revenue "lost" by running unmonetised during the pre-approval window is negligible. Even an optimistic two months at 5,000 plays per month with two ad slots per play is roughly 20,000 impressions, about $100 gross at a $5 eCPM, so $45–90 after a 45–90% share — less than the X Ads budget it would take to reach that traffic. Traffic is an asset and impressions are a flow; buying the asset two months earlier is worth more than two months of flow.
+    - AdSense does not use traffic volume as an approval criterion, and the game ad networks pay nothing below their minimum payout (GameMonetize: $30). Traffic is therefore a precondition for every monetisation path, not an alternative to approval. The two tracks are independent and neither should wait on the other.
+    - Acquisition is a skill with a multi-week feedback loop. Learning it while impressions are worthless is cheaper than learning it after they have a price.
+    - **Organic before paid**, as the 集客準備 section above already records. Paid promotion amplifies what already works, so it needs a post with organic traction to amplify and a retention signal to read. Both are missing until in-game event measurement lands (see that section: page views are not a proxy for plays).
+    - **Paid acquisition must stay on X's own ad products.** Legitimate paid promotion to real users is allowed alongside AdSense; traffic exchanges, paid-per-click-to-site schemes and incentivised clicks are invalid traffic and risk the account.
+    - Useful side effect: the material written to promote the games on X — development notes, design reasoning, per-update detail — is the same material item 18 asks for. Posting it to X first and copying it under a new path on `hanage.app` makes the second use nearly free, which is the cheapest available route through item 18.
+
+20. **Ad networks other than AdSense are a live option for the games.** Researched on 2026-09-20 for the case where `hanage.app` stays thin. Neither is chosen; no SDK has been added, and `putt/CLAUDE.md` requires explicit approval before any new dependency.
+    - **GameMonetize**: 45% to the developer, and 45% + 45% when the developer also owns the site the game is served from, which is the case here (`putt.hanage.app`, `mcsweeper.hanage.app`). NET 30 via PayPal or USDT, $30 minimum, balance carried forward. Per-game ID, a verify step, then a content manager activates the game.
+    - **GameDistribution (Azerion)**: 33% to the developer in an equal three-way split, so 66% when also the publisher. Self-hosting is supported. Imposes response-time obligations on the developer.
+    - Both are distribution catalogues first: SDK integration is mandatory and GameDistribution's developer licence is non-exclusive **with the right to sublicense**, so the game is syndicated to third-party portals. Lighter than the Poki/CrazyGames terms that were ruled out — own site and branding are kept, no exclusivity — but not free of them. Whether either can be used for own-site traffic only, and whether a preroll is mandatory, are unconfirmed and decide the question: a forced preroll conflicts with Putt's rule that ads show at the end of three holes and before a new game, never before play begins.
+    - Figures come from search results; the agent environment cannot reach either vendor's site. Confirm on their own pages before signing up.
+    - Item 8 applies to these too: the privacy policy's 「広告を配信していません」 paragraph becomes false when an ad renders from **any** network, and the disclosure must name the vendor actually in use.
 
 Update this file whenever a major task is completed or a decision changes.
 
