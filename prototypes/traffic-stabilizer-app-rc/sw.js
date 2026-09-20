@@ -1,4 +1,4 @@
-const CACHE="traffic-stabilizer-app-v2";
+const CACHE="traffic-stabilizer-app-v3";
 const CORE=["./","./index.html","./style.css","./game.js","./manifest.webmanifest","./icon.svg"];
 
 self.addEventListener("install",event=>{
