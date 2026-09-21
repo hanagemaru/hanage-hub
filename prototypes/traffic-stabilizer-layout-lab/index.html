@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Traffic Stabilizer Layout Lab</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;color:#171717;background:#f3f0e7}
+*{box-sizing:border-box}body{margin:0;padding:18px;display:flex;justify-content:center}.wrap{max-width:820px;width:100%}
+h1{font-size:24px;margin:0 0 5px}.lead{font-size:12px;color:#625e56;line-height:1.6;margin-bottom:14px}
+h2{font-size:13px;margin:18px 0 8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.card{display:block;text-decoration:none;color:inherit;background:#fffdfa;border:1px solid #c9c4b8;padding:13px;min-height:140px}
+.tag{font-size:8px;font-weight:950;color:#2b64d8;margin-bottom:5px}.card b{font-size:15px}.card p{font-size:10px;line-height:1.5;color:#5e5a52;margin:6px 0}
+.check{font-size:9px;font-weight:850}.baseline{background:#e9f4df}.combo{background:#fff4c9}
+.note{font-size:10px;line-height:1.55;padding:10px;background:#e4dfd3;margin-top:12px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.card{min-height:auto}}
+</style>
+</head>
+<body><main class="wrap">
+<h1>TRAFFIC STABILIZER · LAYOUT LAB</h1>
+<div class="lead">FLOW JOURNEYの物理・進行を変えず、UIとコース形状だけを切り分けて比較する実験です。まず単体差を見て、その後に総合候補A/Bを触る想定です。</div>
+
+<h2>BASELINE</h2>
+<div class="grid">
+<a class="card baseline" href="../traffic-stabilizer-app-rc/index.html"><div class="tag">CURRENT RC</div><b>現行 FLOW JOURNEY</b><p>中央矩形HUD＋現行リング。比較基準。</p><div class="check">→ ここから何が良く/悪くなったかを見る</div></a>
+</div>
+
+<h2>UI ONLY</h2>
+<div class="grid">
+<a class="card" href="./ui-a-center-dial/index.html"><div class="tag">UI A</div><b>CENTER DIAL</b><p>中央の空白を使う円形ダイヤル。JAMを最優先にし、矩形パネル感を弱める。</p><div class="check">→ 道路を見ながらJAMを自然に読めるか</div></a>
+<a class="card" href="./ui-b-instrument-rail/index.html"><div class="tag">UI B</div><b>INSTRUMENT RAIL</b><p>常時情報を道路上から外し、コース上部へ細い計器帯として配置。</p><div class="check">→ コースへの没入感と視線移動のバランス</div></a>
+</div>
+
+<h2>COURSE ONLY</h2>
+<div class="grid">
+<a class="card" href="./course-a-oval/index.html"><div class="tag">COURSE A</div><b>WIDE OVAL</b><p>横長オーバル。直線感が増え、右端のCURVE区間を明確なターンとして見せる。</p><div class="check">→ 円形より「道路を走っている」感じが出るか</div></a>
+<a class="card" href="./course-b-asymmetric-loop/index.html"><div class="tag">COURSE B</div><b>ASYMMETRIC LOOP</b><p>丸みのある長方形に近い非対称ループ。直線とコーナーの差が大きい。</p><div class="check">→ 区間ごとの性格が読みやすいか</div></a>
+</div>
+
+<h2>COMBINED CANDIDATES</h2>
+<div class="grid">
+<a class="card combo" href="./candidate-a-dial-oval/index.html"><div class="tag">CANDIDATE A</div><b>DIAL + OVAL</b><p>中央HUDの利点を残しつつ、より道路らしいオーバルへ。</p><div class="check">→ 現行RCから自然に進化する案</div></a>
+<a class="card combo" href="./candidate-b-rail-asymmetric/index.html"><div class="tag">CANDIDATE B</div><b>RAIL + ASYMMETRIC</b><p>中央を完全に空け、コース形状自体を主役にする案。</p><div class="check">→ より大胆に見た目を変える案</div></a>
+</div>
+
+<div class="note">比較時は同じFLOWを数回ずつ触るのがおすすめです。見るポイントは①JAM/SPEEDを見失わない ②プレイヤー車を追いやすい ③道路要因が位置関係で理解しやすい ④中央/上部UIが運転を邪魔しない ⑤短時間に連続プレイして疲れない、の5点です。</div>
+</main></body></html>
