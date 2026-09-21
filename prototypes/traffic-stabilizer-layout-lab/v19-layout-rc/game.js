@@ -466,8 +466,14 @@ function drawRamp(){
   ctx.beginPath();ctx.moveTo(rg.p0.x,rg.p0.y);ctx.quadraticCurveTo(rg.p1.x,rg.p1.y,rg.p2.x,rg.p2.y);ctx.strokeStyle="#354146";ctx.lineWidth=30;ctx.stroke();
   ctx.setLineDash([10,8]);ctx.beginPath();ctx.moveTo(rg.p0.x,rg.p0.y);ctx.quadraticCurveTo(rg.p1.x,rg.p1.y,rg.p2.x,rg.p2.y);ctx.strokeStyle="#d8d3c1";ctx.lineWidth=2;ctx.stroke();ctx.setLineDash([]);
 }
+function drawDirectionMark(s){
+  const p=roadPoint(s);ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);
+  ctx.strokeStyle="rgba(232,227,211,.48)";ctx.lineWidth=2;ctx.beginPath();
+  ctx.moveTo(-7,-5);ctx.lineTo(3,0);ctx.lineTo(-7,5);ctx.stroke();ctx.restore();
+}
 function drawLaneMarks(){
   ctx.setLineDash([20,16]);strokeTrack("#d8d3c1",3);ctx.setLineDash([]);
+  for(const s of [12,102,192,282])drawDirectionMark(s);
 }
 function drawGapHighlight(st){
   const end=player.s+Math.min(st.gap,60);
@@ -505,6 +511,10 @@ function drawCar(c){
   const p=roadPoint(c.s),sc=sev(c.jamLevel);let fill=c.truck?"#555":"#e9e3d6";
   if(!c.player&&sc)fill=sc;if(c.player)fill="#2b64d8";
   const stroke=c.player?(sc||"#fff"):"rgba(0,0,0,.45)",alpha=(cfg().tunnel&&inZone(c.s,TUNNEL))?(c.player?.55:.34):1;
+  if(c.player){
+    ctx.save();ctx.globalAlpha*=alpha;ctx.beginPath();ctx.arc(p.x,p.y,c.truck?21:17,0,Math.PI*2);
+    ctx.strokeStyle="rgba(43,100,216,.22)";ctx.lineWidth=6;ctx.stroke();ctx.restore();
+  }
   drawVehicleShape(p.x,p.y,p.a,c.truck,fill,stroke,c.player?4:1.4,alpha);
 }
 function render(pre){
