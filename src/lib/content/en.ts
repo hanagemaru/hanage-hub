@@ -71,7 +71,7 @@ export const en: Content = {
     siteHeading: "About hanage.app",
     siteParagraphs: [
       "hanage.app is a home for browser games and web apps made by one person. The focus is on games you can open and play without installing anything.",
-      "I would rather test whether a game feels clear and worth replaying than add features just to make the list longer.",
+      "Each game is played on the devices it supports, and the controls, rules, and presentation are adjusted from those tests.",
     ],
     processHeading: "How the games are made",
     processParagraphs: [
@@ -270,7 +270,7 @@ export const en: Content = {
       details: [
         "Shot strength comes from the speed of the swing just before impact, not from how far your finger travelled. A short fast motion can hit harder than a long slow one.",
         "The visible slope is also used by the ball physics. Rough, second cut, and bunkers add different amounts of resistance.",
-        "Courses are generated from seeds, so the same seed recreates the same hole. Each generated hole is also checked for connectivity and for areas around the cup where the ball cannot reasonably stop.",
+        "Each hole is generated from a seed and then selected for a tour. The same seed recreates the same shape, and candidate holes are checked for connectivity and for areas around the cup where the ball cannot reasonably stop.",
       ],
       status: null,
       playLabel: "Open the game ↗",
