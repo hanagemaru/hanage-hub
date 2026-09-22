@@ -17,6 +17,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <p>{t.footerTagline}</p>
         </div>
         <nav className="footerLinks" aria-label={t.nav.footerNavLabel}>
+          <Link href={localePath(locale, "/notes/")}>{t.nav.notes}</Link>
           <Link href={localePath(locale, "/about/")}>{t.nav.about}</Link>
           <Link href={localePath(locale, "/privacy/")}>{t.nav.privacy}</Link>
           <Link href={localePath(locale, "/terms/")}>{t.nav.terms}</Link>
