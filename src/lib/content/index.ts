@@ -14,6 +14,8 @@ export type {
   InlineLink,
   LegalParagraph,
   LegalSection,
+  NoteSection,
+  NoteText,
   Step,
 } from "./types";
 
