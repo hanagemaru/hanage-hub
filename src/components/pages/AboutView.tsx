@@ -12,6 +12,25 @@ export function AboutView({ locale }: { locale: Locale }) {
       <PageHero title={t.aboutPage.title} description={t.aboutPage.description} />
       <section className="contentSection pageWidth">
         <article className="contentCard">
+          <h2>{t.aboutPage.siteHeading}</h2>
+          {t.aboutPage.siteParagraphs.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </article>
+
+        <article className="contentCard">
+          <h2>{t.aboutPage.processHeading}</h2>
+          {t.aboutPage.processParagraphs.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+          <div className="buttonRow">
+            <Link className="buttonSecondary" href={localePath(locale, "/notes/")}>
+              {t.nav.notes}
+            </Link>
+          </div>
+        </article>
+
+        <article className="contentCard">
           <h2>{t.aboutPage.ownerHeading}</h2>
           <p>
             {OWNER.handle} ／ {t.aboutPage.ownerRole}
