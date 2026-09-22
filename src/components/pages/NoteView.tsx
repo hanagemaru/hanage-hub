@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { getContent } from "@/lib/content";
 import { localePath, type Locale } from "@/lib/i18n";
-import { notes, type NoteId } from "@/lib/site";
+import { games, notes, type NoteId } from "@/lib/site";
 
 export function NoteView({ id, locale }: { id: NoteId; locale: Locale }) {
   const t = getContent(locale);
@@ -13,7 +13,11 @@ export function NoteView({ id, locale }: { id: NoteId; locale: Locale }) {
     throw new Error(`Unknown note: ${id}`);
   }
 
-  const gameRoute = note.gameId === "putt" ? "/games/putt/" : "/games/multicolor-sweeper/";
+  const game = games.find((entry) => entry.id === note.gameId);
+
+  if (!game) {
+    throw new Error(`Unknown game for note: ${id}`);
+  }
 
   return (
     <main>
@@ -28,7 +32,7 @@ export function NoteView({ id, locale }: { id: NoteId; locale: Locale }) {
           </article>
         ))}
         <div className="noteBack">
-          <Link className="buttonSecondary" href={localePath(locale, gameRoute)}>
+          <Link className="buttonSecondary" href={localePath(locale, game.route)}>
             ← {text.backLabel}
           </Link>
           <Link className="textLink" href={localePath(locale, "/notes/")}>
