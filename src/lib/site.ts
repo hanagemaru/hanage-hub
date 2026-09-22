@@ -115,8 +115,8 @@ export function gameTitle(game: Game): string {
 /** 一覧・関連記事で使う順番。新しい制作ノートを上に足す */
 export const notes: NoteMeta[] = [
   { id: "putt-swipe", route: "/notes/putt-swipe/", gameId: "putt" },
-  { id: "putt-course", route: "/notes/putt-course/", gameId: "putt" },
   { id: "sweeper-rebuild", route: "/notes/sweeper-rebuild/", gameId: "multicolorSweeper" },
+  { id: "putt-course", route: "/notes/putt-course/", gameId: "putt" },
   { id: "sweeper-no-guess", route: "/notes/sweeper-no-guess/", gameId: "multicolorSweeper" },
 ];
 
