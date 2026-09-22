@@ -508,3 +508,128 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (min-width: 720px) {
   .shotStrip img { height: 300px; }
 }
+
+
+/* 制作ノート。文章量を増やしても一覧が重く見えないよう、既存の直線・白地のルールを使う */
+.notePreviewGrid,
+.noteList {
+  display: grid;
+  gap: 12px;
+}
+
+.notePreview,
+.noteListItem,
+.noteLink {
+  display: block;
+  border: var(--rule);
+  background: var(--surface);
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.notePreview:hover,
+.noteListItem:hover,
+.noteLink:hover {
+  border-color: #b3c0d6;
+  background: #eef3fd;
+}
+
+.notePreview {
+  padding: 20px;
+}
+
+.notePreview > span,
+.noteListItem > span {
+  color: var(--blue);
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.notePreview strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.notePreview p {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.noteListItem {
+  position: relative;
+  padding: 22px 52px 22px 22px;
+}
+
+.noteListItem h2 {
+  margin-top: 5px;
+  font-size: 1.18rem;
+}
+
+.noteListItem p {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.noteListItem b {
+  position: absolute;
+  top: 50%;
+  right: 22px;
+  color: var(--blue);
+  transform: translateY(-50%);
+}
+
+.noteLinkList {
+  display: grid;
+  gap: 10px;
+}
+
+.noteLink {
+  position: relative;
+  padding: 16px 46px 16px 16px;
+}
+
+.noteLink strong {
+  display: block;
+  font-size: 0.96rem;
+}
+
+.noteLink span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.noteLink b {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  color: var(--blue);
+  transform: translateY(-50%);
+}
+
+.noteArticle {
+  max-width: 820px;
+}
+
+.noteBack {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+@media (min-width: 720px) {
+  .notePreviewGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 719px) {
+  .noteBack {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
