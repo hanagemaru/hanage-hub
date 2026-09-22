@@ -2,7 +2,7 @@ import Link from "next/link";
 import { GameTile } from "@/components/GameTile";
 import { getContent } from "@/lib/content";
 import { localePath, type Locale } from "@/lib/i18n";
-import { formatDate, games, notes, updates } from "@/lib/site";
+import { formatDate, gameTitle, games, notes, updates } from "@/lib/site";
 
 export function HomeView({ locale }: { locale: Locale }) {
   const t = getContent(locale);
@@ -38,13 +38,17 @@ export function HomeView({ locale }: { locale: Locale }) {
           </Link>
         </div>
         <div className="notePreviewGrid">
-          {notes.slice(0, 4).map((note) => (
-            <Link className="notePreview" href={localePath(locale, note.route)} key={note.id}>
-              <span>{t.games[note.gameId].subtitle}</span>
-              <strong>{t.notes[note.id].title}</strong>
-              <p>{t.notes[note.id].summary}</p>
-            </Link>
-          ))}
+          {notes.slice(0, 4).map((note) => {
+            const game = games.find((entry) => entry.id === note.gameId);
+            if (!game) throw new Error(`Unknown game for note: ${note.id}`);
+            return (
+              <Link className="notePreview" href={localePath(locale, note.route)} key={note.id}>
+                <span>{gameTitle(game)}</span>
+                <strong>{t.notes[note.id].title}</strong>
+                <p>{t.notes[note.id].summary}</p>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
