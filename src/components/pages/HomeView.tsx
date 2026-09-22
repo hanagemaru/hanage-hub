@@ -38,7 +38,7 @@ export function HomeView({ locale }: { locale: Locale }) {
           </Link>
         </div>
         <div className="notePreviewGrid">
-          {notes.slice(0, 4).map((note) => {
+          {notes.slice(0, 2).map((note) => {
             const game = games.find((entry) => entry.id === note.gameId);
             if (!game) throw new Error(`Unknown game for note: ${note.id}`);
             return (
