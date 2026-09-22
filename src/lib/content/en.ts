@@ -18,6 +18,7 @@ export const en: Content = {
   nav: {
     home: "Home",
     games: "Games",
+    notes: "Dev notes",
     updates: "Updates",
     about: "About",
     privacy: "Privacy",
@@ -32,6 +33,8 @@ export const en: Content = {
   home: {
     gamesHeading: "Games",
     gamesMore: "See all",
+    notesHeading: "Dev notes",
+    notesMore: "See all",
     updatesHeading: "Updates",
     updatesMore: "See all",
   },
@@ -46,6 +49,13 @@ export const en: Content = {
     specsLabel: "Game details",
     howToPlayLabel: "How to play",
     howToPlayTitle: "How to play",
+    relatedNotesLabel: "Dev notes for this game",
+  },
+
+  notesPage: {
+    title: "Dev notes",
+    description: "Things I tried, dropped, measured, and kept while making the games.",
+    metaDescription: "Development notes for the games published on hanage.app.",
   },
 
   updatesPage: {
@@ -58,6 +68,16 @@ export const en: Content = {
     title: "About",
     description: "A site for browser games and web apps built by one person.",
     metaDescription: "Who runs hanage.app.",
+    siteHeading: "About hanage.app",
+    siteParagraphs: [
+      "hanage.app is a home for browser games and web apps made by one person. The focus is on games you can open and play without installing anything.",
+      "Each game is played on the devices it supports, and the controls, rules, and presentation are adjusted from those tests.",
+    ],
+    processHeading: "How the games are made",
+    processParagraphs: [
+      "I handle the concept, rules, interface, implementation, device testing, and post-release tuning.",
+      "For larger mechanics I usually build a small test page or automated check first, then move the result into the game. The useful parts of that process are kept here as dev notes.",
+    ],
     ownerHeading: "Who runs this",
     ownerRole: "design, development, and operation",
     contactLabel: "Contact",
@@ -224,6 +244,12 @@ export const en: Content = {
       subtitle: "Minesweeper where the bombs have colors",
       description:
         "A 9×9 minesweeper where every bomb has a color, and the clue numbers are split by color too.",
+      detailsHeading: "How it works",
+      details: [
+        "Each open tile shows the number of bombs in its eight neighbors, split by color. You can play with three or four colors.",
+        "After the first tile is chosen, the board is generated around that opening. Only boards that can be solved to the end by logic in both three- and four-color mode are accepted.",
+        "The same bomb layout is also tested as ordinary one-color minesweeper. If that version is still solvable, the board is rejected. The colors have to matter, not just decorate the rules.",
+      ],
       status: null,
       playLabel: "Open the game ↗",
       specs: { price: "Free", content: "9×9 time attack", devices: "Phone and desktop" },
@@ -240,6 +266,12 @@ export const en: Content = {
       subtitle: "Putting, read off the slope",
       description:
         "Read the slope, pick your line, and swing the putter with a swipe. How fast you swing is how hard the ball rolls.",
+      detailsHeading: "How it works",
+      details: [
+        "Shot strength comes from the speed of the swing just before impact, not from how far your finger travelled. A short fast motion can hit harder than a long slow one.",
+        "The visible slope is also used by the ball physics. Rough, second cut, and bunkers add different amounts of resistance.",
+        "Each hole is generated from a seed and then selected for a tour. The same seed recreates the same shape, and candidate holes are checked for connectivity and for areas around the cup where the ball cannot reasonably stop.",
+      ],
       status: null,
       playLabel: "Open the game ↗",
       specs: { price: "Free", content: "9-hole stroke play", devices: "Phone only" },
@@ -394,18 +426,153 @@ export const en: Content = {
     },
   },
 
+  notes: {
+    "putt-swipe": {
+      title: "Turning a swipe into putting strength",
+      summary: "Putt uses swing speed immediately before impact, rather than swipe distance, to set the ball's initial speed.",
+      metaDescription: "How Putt measures a swipe and turns it into putting strength.",
+      backLabel: "Back to Putt",
+      sections: [
+        {
+          heading: "Speed, not distance",
+          paragraphs: [
+            "One early decision was not to map swipe distance directly to power. In a real putt, the length of the backswing matters less than what the club is doing when it meets the ball.",
+            "So Putt looks at the speed of the motion immediately before impact instead of simply measuring how far the finger moved.",
+          ],
+        },
+        {
+          heading: "Measure it on a separate page",
+          paragraphs: [
+            "Before wiring this into the game, I made /swipe-test/, a page that only measures the gesture. It reads the finer pointer samples the browser keeps and estimates speed from the final 40 milliseconds before impact.",
+            "Keeping that test away from the course and ball visuals made it much easier to repeat the same motion on an iPhone and tune only the input feel.",
+          ],
+        },
+        {
+          heading: "Movement from a stable origin",
+          paragraphs: [
+            "Touching the screen a little higher or lower should not make the putter jump. The game therefore uses movement from the starting point, not the absolute screen position of the finger.",
+            "Input measurement and ball physics are still separate. That lets the swing feel change without quietly changing how the ball rolls.",
+          ],
+        },
+      ],
+    },
+    "putt-course": {
+      title: "Generating courses that are still playable",
+      summary: "A hole has to be more than a different shape: the ball must be able to stop and the round must be finishable.",
+      metaDescription: "How Putt generates courses and filters out holes that are not actually playable.",
+      backLabel: "Back to Putt",
+      sections: [
+        {
+          heading: "The same seed makes the same hole",
+          paragraphs: [
+            "Putt builds its courses from a seed. A route is generated first, then normal turf, rough, second cut, water, bunkers, and other features are placed around it.",
+            "Randomness is deterministic: the same seed recreates the same hole. That matters for rankings and for reproducing a problem exactly when one appears.",
+          ],
+        },
+        {
+          heading: "A valid shape can still be a bad game",
+          paragraphs: [
+            "During testing I found holes where the area around the cup was so steep that a ball could reach it but would not stay there. The course looked fine, yet it was not really playable.",
+            "The existing validator only knew whether playable ground was connected, so it could not catch that failure.",
+          ],
+        },
+        {
+          heading: "Turn failures into checks",
+          paragraphs: [
+            "I added another check for how much of the area around the cup is too steep for the ball to stop. That can be run across many generated holes before they are used.",
+            "Course generation and course validation are separate on purpose. New shapes can stay experimental while the validator keeps a minimum floor under playability.",
+          ],
+        },
+      ],
+    },
+    "sweeper-rebuild": {
+      title: "From Gradient Sweeper to Multicolor Sweeper",
+      summary: "The first version hid the numbers completely. The rebuild kept color, but made the logic explicit.",
+      metaDescription: "Why Gradient Sweeper was rebuilt as Multicolor Sweeper.",
+      backLabel: "Back to Multicolor Sweeper",
+      sections: [
+        {
+          heading: "The first version removed the numbers",
+          paragraphs: [
+            "Gradient Sweeper did not show normal minesweeper numbers. Instead, the color of each open cell hinted at the mix of nearby bomb colors.",
+            "The next experiment was to keep color meaningful while making the reasoning itself easier to read. That led to splitting the clue numbers by color.",
+          ],
+        },
+        {
+          heading: "Build a lab before rebuilding the game",
+          paragraphs: [
+            "Before making a new product version, I built Multicolor Sweeper Lab. It could compare three and four colors, bomb counts from 15 to 40, and the same bomb layout under different color rules.",
+            "The lab measured more than feel. It also checked whether boards could be solved logically and how long browser-side generation took.",
+          ],
+        },
+        {
+          heading: "Keep the 9×9 skeleton",
+          paragraphs: [
+            "The released game was narrowed to a 9×9 board with 15, 20, or 25 bombs and clue numbers split by color.",
+            "Parts that already worked — a safe opening area, zero-cell expansion, and the basic win condition — stayed. The clue system and board generator were rebuilt around them.",
+          ],
+        },
+      ],
+    },
+    "sweeper-no-guess": {
+      title: "Making boards that do not need guessing",
+      summary: "A solver finishes each candidate board before the player sees it, and boards that require a guess are discarded.",
+      metaDescription: "How Multicolor Sweeper generates No-Guess boards and checks that color is essential.",
+      backLabel: "Back to Multicolor Sweeper",
+      sections: [
+        {
+          heading: "Let the solver play first",
+          paragraphs: [
+            "After the player chooses the first tile, a candidate board is built with that tile and its eight neighbors guaranteed safe. A solver then tries to finish the board using only clues a player could see.",
+            "The solver uses no probability and does not look at the hidden answer to make decisions. If logic cannot identify another safe tile before the board is finished, that candidate is discarded.",
+          ],
+        },
+        {
+          heading: "Check that color actually matters",
+          paragraphs: [
+            "A No-Guess board is not enough. The same bomb layout is also solved after all colors are merged into ordinary minesweeper numbers.",
+            "If the one-color version can still be solved, the candidate is rejected. A board is kept only when the multicolor clues add information the ordinary rules do not provide.",
+          ],
+        },
+        {
+          heading: "Keep generation off the main screen",
+          paragraphs: [
+            "Board generation and solving run in a Web Worker so the interface stays responsive. The timer starts only after an accepted board exists and the first opening has finished.",
+            "Generation time is benchmarked by difficulty, and the seed path is deterministic so the same inputs can reproduce the same accepted board.",
+          ],
+        },
+      ],
+    },
+  },
+
   updates: {
+    "putt-ranking": {
+      title: "Online rankings added to Putt",
+      body: "Each of the four tour courses now has a leaderboard for total strokes over nine holes. Submitted scores are also replay-checked on the server.",
+    },
+    "putt-visuals": {
+      title: "The four Putt tours now look different",
+      body: "BEGINNER, STANDARD, ADVANCED, and EXPERT now use different sky, light, turf, and tree setups. Course geometry and ball physics were left unchanged.",
+    },
+    "putt-course-v2": {
+      title: "Putt course structure updated",
+      body: "Holes now combine different route and hazard features instead of relying on one course-wide difficulty dial. Validation was expanded to reject holes with too much unstoppably steep ground near the cup.",
+    },
+    "mcs-bgm": {
+      title: "BGM added to Multicolor Sweeper",
+      body: "The game now has background music during play. It starts after the first permitted interaction to respect browser audio restrictions.",
+    },
     "putt-release": {
       title: "Putt is out",
-      body: "A putting game about reading the slope and picking your line. Three courses, nine holes each.",
+      body: "Released a putting game where you read the slope, choose a line, and hit the ball with the speed of your swipe.",
     },
     "mcs-release": {
       title: "Multicolor Sweeper is out",
-      body: "A minesweeper about hunting colored bombs, with online rankings.",
+      body: "Released a minesweeper where bomb colors split the clue numbers. Online rankings cover the 15, 20, and 25 bomb modes.",
     },
     "site-start": {
       title: "hanage.app was started",
-      body: "Started as a single place for the games and web apps I build.",
+      body: "Started as one place to publish the browser games and web apps I make.",
     },
   },
 };

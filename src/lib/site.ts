@@ -3,6 +3,19 @@ export type GameArtworkKind = "sweeper" | "putt";
 /** 作品の識別子。文章側もこのキーで引く */
 export type GameId = "multicolorSweeper" | "putt";
 
+/** 制作ノートの識別子。文章側もこのキーで引く */
+export type NoteId =
+  | "putt-swipe"
+  | "putt-course"
+  | "sweeper-rebuild"
+  | "sweeper-no-guess";
+
+export type NoteMeta = {
+  id: NoteId;
+  route: string;
+  gameId: GameId;
+};
+
 /**
  * 紹介ページに並べる実画面。ファイルは public/shots/ に置く。
  *
@@ -99,6 +112,14 @@ export function gameTitle(game: Game): string {
   return game.titleLines.join(" ");
 }
 
+/** 一覧・関連記事で使う順番。新しい制作ノートを上に足す */
+export const notes: NoteMeta[] = [
+  { id: "putt-swipe", route: "/notes/putt-swipe/", gameId: "putt" },
+  { id: "sweeper-rebuild", route: "/notes/sweeper-rebuild/", gameId: "multicolorSweeper" },
+  { id: "putt-course", route: "/notes/putt-course/", gameId: "putt" },
+  { id: "sweeper-no-guess", route: "/notes/sweeper-no-guess/", gameId: "multicolorSweeper" },
+];
+
 export type UpdateKind = "GAME" | "UPDATE" | "SITE";
 
 /**
@@ -107,7 +128,14 @@ export type UpdateKind = "GAME" | "UPDATE" | "SITE";
  * 直和型にしてあるので、項目を足すと両方の言語に文章を書くまでビルドが通らない。
  * 片方の言語だけ更新される事故を防ぐための仕掛け。
  */
-export type UpdateId = "putt-release" | "mcs-release" | "site-start";
+export type UpdateId =
+  | "putt-ranking"
+  | "putt-visuals"
+  | "putt-course-v2"
+  | "mcs-bgm"
+  | "putt-release"
+  | "mcs-release"
+  | "site-start";
 
 /** 更新情報の、言語によって変わらない部分。文言は `content` 側 */
 export type UpdateMeta = {
@@ -123,6 +151,10 @@ export type UpdateMeta = {
  * トップページの1件も更新情報ページも、ここだけを見る。
  */
 export const updates: UpdateMeta[] = [
+  { id: "putt-ranking", date: "2026-09-20", kind: "UPDATE" },
+  { id: "putt-visuals", date: "2026-09-20", kind: "UPDATE" },
+  { id: "putt-course-v2", date: "2026-09-18", kind: "UPDATE" },
+  { id: "mcs-bgm", date: "2026-09-12", kind: "UPDATE" },
   { id: "putt-release", date: "2026-09-06", kind: "GAME" },
   { id: "mcs-release", date: "2026-09-04", kind: "GAME" },
   { id: "site-start", date: "2026-08-13", kind: "SITE" },

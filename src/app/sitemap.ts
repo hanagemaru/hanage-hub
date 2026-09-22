@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { locales, localePath } from "@/lib/i18n";
+import { notes } from "@/lib/site";
 
 export const dynamic = "force-static";
 
@@ -11,6 +12,8 @@ const routes = [
   "/games/multicolor-sweeper/how-to-play/",
   "/games/putt/",
   "/games/putt/how-to-play/",
+  "/notes/",
+  ...notes.map((note) => note.route),
   "/updates/",
   "/about/",
   "/privacy/",

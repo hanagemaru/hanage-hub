@@ -1,4 +1,4 @@
-import type { GameId, UpdateId } from "@/lib/site";
+import type { GameId, NoteId, UpdateId } from "@/lib/site";
 
 /**
  * 手順の1ステップ。番号は並び順から振るので持たない。
@@ -29,6 +29,9 @@ export type GameText = {
   subtitle: string;
   /** 紹介ページのリード */
   description: string;
+  /** 紹介ページ下部の、作品固有の仕組み */
+  detailsHeading: string;
+  details: string[];
   /**
    * タイル左上のバッジ。
    *
@@ -83,6 +86,16 @@ export type LegalParagraph = string | { before: string; link: InlineLink; after:
 /** 法務ページ。見出しと段落の並びで持つ */
 export type LegalSection = { heading: string; paragraphs: LegalParagraph[]; list?: string[] };
 
+export type NoteSection = { heading: string; paragraphs: string[] };
+
+export type NoteText = {
+  title: string;
+  summary: string;
+  metaDescription: string;
+  sections: NoteSection[];
+  backLabel: string;
+};
+
 export type Content = {
   /** <html lang> と OG locale */
   htmlLang: string;
@@ -98,6 +111,7 @@ export type Content = {
   nav: {
     home: string;
     games: string;
+    notes: string;
     updates: string;
     about: string;
     privacy: string;
@@ -113,6 +127,8 @@ export type Content = {
   home: {
     gamesHeading: string;
     gamesMore: string;
+    notesHeading: string;
+    notesMore: string;
     updatesHeading: string;
     updatesMore: string;
   };
@@ -125,7 +141,10 @@ export type Content = {
     howToPlayLabel: string;
     /** 遊び方ページ自身の見出し */
     howToPlayTitle: string;
+    relatedNotesLabel: string;
   };
+
+  notesPage: { title: string; description: string; metaDescription: string };
 
   updatesPage: { title: string; description: string; metaDescription: string };
 
@@ -133,6 +152,10 @@ export type Content = {
     title: string;
     description: string;
     metaDescription: string;
+    siteHeading: string;
+    siteParagraphs: string[];
+    processHeading: string;
+    processParagraphs: string[];
     ownerHeading: string;
     ownerRole: string;
     contactLabel: string;
@@ -168,6 +191,7 @@ export type Content = {
 
   games: Record<GameId, GameText>;
   howToPlay: Record<GameId, HowToPlayText>;
+  notes: Record<NoteId, NoteText>;
   /** `updates` の id をすべて埋める。抜けるとビルドが落ちる */
   updates: Record<UpdateId, { title: string; body: string }>;
 };
