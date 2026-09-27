@@ -508,3 +508,87 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (min-width: 720px) {
   .shotStrip img { height: 300px; }
 }
+
+/* 制作ノートの一覧。更新情報の行と同じ器にして、題名と抜粋を読ませる */
+.noteList { display: grid; gap: 12px; }
+
+.noteRow {
+  display: block;
+  padding: 20px 22px;
+  border: var(--rule);
+  background: var(--surface);
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.noteRow:hover { border-color: #b3c0d6; background: #eef3fd; }
+.noteRow time { color: var(--blue); font-size: 0.8rem; font-weight: 700; }
+.noteRow strong { display: block; margin-top: 4px; font-size: 1.08rem; line-height: 1.45; }
+
+.noteRow p {
+  margin-top: 6px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.88rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* 記事。読ませる幅に絞る */
+.noteArticle {
+  max-width: 720px;
+  padding-block: 50px 72px;
+}
+
+.noteMeta { color: var(--muted); font-size: 0.82rem; font-weight: 700; }
+.noteMeta a { color: var(--blue); }
+
+.noteHeader h1 {
+  margin-top: 12px;
+  font-size: clamp(1.8rem, 6vw, 2.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+}
+
+/* content/ の .md から出す本文 */
+.prose { line-break: strict; }
+.noteArticle .prose { margin-top: 32px; font-size: 1.02rem; line-height: 1.9; }
+.prose > * + * { margin-top: 1.1em; }
+.prose h2 { margin-top: 2em; font-size: 1.3rem; line-height: 1.4; }
+.prose h3 { margin-top: 1.6em; font-size: 1.08rem; }
+.prose ul { margin-left: 1.35em; }
+.prose li + li { margin-top: 0.35em; }
+.prose a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+.prose img { display: block; max-width: 100%; height: auto; border: var(--rule); }
+.noteArticle .buttonRow { margin-top: 44px; }
+
+/* ゲーム紹介の「作者のことば」と、関係する制作ノートへの行 */
+.makerNote .prose { color: #3c475d; }
+
+.makerNoteLink {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+  padding: 14px 16px;
+  background: #eef3fd;
+  transition: background-color 160ms ease;
+}
+
+.makerNoteLink:hover { background: #dfe8fb; }
+.makerNoteLink span:first-child { color: var(--blue); font-size: 0.78rem; font-weight: 900; }
+.makerNoteLink strong { font-size: 0.95rem; line-height: 1.45; }
+
+/* 404。URLから言語が決まらないので、両方の言語を縦に並べる */
+.notFound { padding-block: 56px 88px; }
+.notFound section + section { margin-top: 36px; padding-top: 32px; border-top: var(--rule); }
+.notFoundCode { color: var(--blue); font-size: 0.9rem; font-weight: 900; letter-spacing: 0.12em; }
+.notFound h1 { margin-top: 6px; font-size: clamp(1.6rem, 5vw, 2.2rem); line-height: 1.25; }
+.notFound p:not(.notFoundCode) { margin-top: 10px; color: var(--muted); }
+.notFound .buttonSecondary { margin-top: 20px; }
+
+@media (max-width: 719px) {
+  .makerNoteLink { grid-template-columns: 1fr auto; }
+  .makerNoteLink span:first-child { grid-column: 1 / -1; }
+}

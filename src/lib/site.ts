@@ -107,7 +107,14 @@ export type UpdateKind = "GAME" | "UPDATE" | "SITE";
  * 直和型にしてあるので、項目を足すと両方の言語に文章を書くまでビルドが通らない。
  * 片方の言語だけ更新される事故を防ぐための仕掛け。
  */
-export type UpdateId = "putt-release" | "mcs-release" | "site-start";
+export type UpdateId =
+  | "putt-ranking"
+  | "putt-four-courses"
+  | "bgm"
+  | "putt-putters"
+  | "putt-release"
+  | "mcs-release"
+  | "site-start";
 
 /** 更新情報の、言語によって変わらない部分。文言は `content` 側 */
 export type UpdateMeta = {
@@ -123,6 +130,10 @@ export type UpdateMeta = {
  * トップページの1件も更新情報ページも、ここだけを見る。
  */
 export const updates: UpdateMeta[] = [
+  { id: "putt-ranking", date: "2026-09-20", kind: "UPDATE" },
+  { id: "putt-four-courses", date: "2026-09-19", kind: "UPDATE" },
+  { id: "bgm", date: "2026-09-12", kind: "UPDATE" },
+  { id: "putt-putters", date: "2026-09-09", kind: "UPDATE" },
   { id: "putt-release", date: "2026-09-06", kind: "GAME" },
   { id: "mcs-release", date: "2026-09-04", kind: "GAME" },
   { id: "site-start", date: "2026-08-13", kind: "SITE" },

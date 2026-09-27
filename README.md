@@ -30,6 +30,22 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## 文章の直し方
+
+運営者が直す文章は、コードではなく `content/` の Markdown に置いています。
+
+| ファイル | 出る場所 |
+|---|---|
+| `content/<言語>/notes/<slug>.md` | 制作ノート（`/notes/<slug>/`）。ファイル名がURLになる |
+| `content/<言語>/games/<slug>.md` | ゲーム紹介ページの「作者のことば」 |
+| `content/<言語>/about.md` | このサイトについて |
+
+- 空行で段落が分かれます。段落の中の改行は、そのまま改行として表示されます（標準の Markdown と違う点）。
+- 使える書き方は `## 見出し`、`- 箇条書き`、`**太字**`、`[文字](URL)`、`![説明](/path.jpg)` だけ。
+- ノートの先頭の `---` の間には `title`、`date`（YYYY-MM-DD）、関係する作品があれば `game`（`putt` か `multicolorSweeper`）を書く。`description` を書かなければ、最初の段落が一覧の抜粋になる。
+- ノートは日本語と英語の両方に同じファイル名で置く。片方だけだとビルドが落ちる。
+- 漢字を足したら、下のフォントの手順でサブセットを作り直す。
+
 ## Fonts
 
 The site is set in M PLUS 1p (SIL Open Font License, see `public/fonts/OFL.txt`). The

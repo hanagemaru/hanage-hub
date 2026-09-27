@@ -12,6 +12,7 @@ export const ja: Content = {
     home: "ホーム",
     games: "ゲーム",
     updates: "更新情報",
+    notes: "制作ノート",
     about: "このサイトについて",
     privacy: "プライバシー",
     terms: "利用規約",
@@ -27,6 +28,8 @@ export const ja: Content = {
     gamesMore: "すべて見る",
     updatesHeading: "更新情報",
     updatesMore: "一覧を見る",
+    notesHeading: "制作ノート",
+    notesMore: "一覧を見る",
   },
 
   gamesPage: {
@@ -39,6 +42,8 @@ export const ja: Content = {
     specsLabel: "ゲーム情報",
     howToPlayLabel: "遊び方を見る",
     howToPlayTitle: "遊び方",
+    makerNoteHeading: "作者のことば",
+    readNoteLabel: "制作ノート",
   },
 
   updatesPage: {
@@ -47,10 +52,26 @@ export const ja: Content = {
     metaDescription: "hanage.appと公開作品の更新情報。",
   },
 
+  notesPage: {
+    title: "制作ノート",
+    description: "作った理由や、やめた試作の話。",
+    metaDescription: "hanage.appの作品を作った理由や、試作から作り直した経緯。",
+    listLabel: "制作ノート一覧",
+    backLabel: "制作ノート一覧へ",
+    gameLinkLabel: "ゲーム紹介へ",
+  },
+
+  notFound: {
+    title: "ページが見つかりません",
+    body: "URLが変わったか、ページがなくなった可能性があります。",
+    homeLabel: "トップページへ",
+  },
+
   aboutPage: {
     title: "このサイトについて",
     description: "個人で制作したブラウザゲームとWebアプリを公開しているサイト。",
-    metaDescription: "hanage.appの運営者について。",
+    metaDescription: "hanage.appについて。個人で作ったブラウザゲームとWebアプリを置いている場所。",
+    bodyHeading: "hanage.appについて",
     ownerHeading: "運営者",
     ownerRole: "企画・開発・運営",
     contactLabel: "お問い合わせ",
@@ -368,17 +389,33 @@ export const ja: Content = {
   },
 
   updates: {
+    "putt-ranking": {
+      title: "Puttにオンラインランキング",
+      body: "通常ツアーのスコアをコースごとに競えるようにした。9ホール回ったあと、表示名を決めて自己ベストを登録できる。",
+    },
+    "putt-four-courses": {
+      title: "Puttの通常ツアーを4コースに",
+      body: "3コースだったものを、BEGINNER / STANDARD / ADVANCED / EXPERTの4コースに作り直した。池やバンカーの数と道幅がコースごとに違う。翌日、朝の草原・昼の林間・高原の午後・夕方のリンクスと、コースごとに景色も変えた。",
+    },
+    "bgm": {
+      title: "両方のゲームにBGM",
+      body: "PuttとMulticolor SweeperにBGMを入れた。Puttはパターの打音も作り直して、打った強さで音が変わる。",
+    },
+    "putt-putters": {
+      title: "Puttのパターを4種類に",
+      body: "ピン型・L字・マレット・ネオマレットから選べる。見た目だけの違いで、打ちやすさは変わらない。",
+    },
     "putt-release": {
-      title: "Puttを公開しました",
-      body: "傾斜を読んでラインを決めるパッティングゲーム。3コース × 各9ホール。",
+      title: "Puttを公開",
+      body: "傾斜を読んでスワイプで打つパッティングゲーム。公開時は3コース × 各9ホール。",
     },
     "mcs-release": {
-      title: "Multicolor Sweeperを公開しました",
-      body: "色つきの爆弾を探すマインスイーパー。オンラインランキングつき。",
+      title: "Multicolor Sweeperを公開",
+      body: "爆弾に色があるマインスイーパー。15 / 20 / 25 BOMBSの3部門で、クリアタイムのオンラインランキングつき。",
     },
     "site-start": {
-      title: "hanage.appの制作を始めました",
-      body: "自作ゲームとWebアプリをまとめる場所として制作開始。",
+      title: "hanage.appを始めた",
+      body: "自作のゲームとWebアプリをまとめる場所として作り始めた。",
     },
   },
 };

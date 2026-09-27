@@ -143,6 +143,7 @@ Phase D (advertising)
     - `/updates/` currently holds three one-line entries. Give each a date and a few sentences of what actually changed.
     - `/about/` is a few lines. Who runs this, why, and on what terms.
     Practical constraints: do not change or remove any existing URL, add the new section under a fresh path, Japanese first with English translations following, and allow two to four weeks after publishing for Google to recrawl before ticking 「問題を修正しました」.
+    **Revised on 2026-09-27 and implemented on branch `claude/determined-turing-57aih2`.** The owner narrowed the plan: write for players, not developers, in a short, blunt voice; no technical deep dives. What landed: a `/notes/` section (two notes: why Putt was made; Gradient Sweeper → Multicolor Sweeper), a 「作者のことば」 block on each game page linking to its note, a body for `/about/`, seven `/updates/` entries, and a designed 404 (`src/app/global-not-found.tsx`, bilingual because the URL does not tell the language). The four technical notes listed in `ADSENSE_CONTENT_PLAN.md` were not written. Owner-editable prose now lives in `content/<locale>/` as Markdown (see README); rebuild the font subset after any text change. After merging: resubmit the sitemap in Search Console, request indexing for the new URLs, and resubmit to AdSense only once they show as indexed.
 
 Update this file whenever a major task is completed or a decision changes.
 

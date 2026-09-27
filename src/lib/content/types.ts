@@ -99,6 +99,7 @@ export type Content = {
     home: string;
     games: string;
     updates: string;
+    notes: string;
     about: string;
     privacy: string;
     terms: string;
@@ -115,6 +116,8 @@ export type Content = {
     gamesMore: string;
     updatesHeading: string;
     updatesMore: string;
+    notesHeading: string;
+    notesMore: string;
   };
 
   gamesPage: { title: string; metaDescription: string; listLabel: string };
@@ -125,14 +128,35 @@ export type Content = {
     howToPlayLabel: string;
     /** 遊び方ページ自身の見出し */
     howToPlayTitle: string;
+    /** 「作者のことば」の見出し。本文は content/<言語>/games/<slug>.md */
+    makerNoteHeading: string;
+    /** 関係する制作ノートへのリンクの前置き */
+    readNoteLabel: string;
   };
 
   updatesPage: { title: string; description: string; metaDescription: string };
+
+  /** 制作ノート。記事の本文は content/<言語>/notes/ */
+  notesPage: {
+    title: string;
+    description: string;
+    metaDescription: string;
+    listLabel: string;
+    /** 記事の下から一覧へ戻るリンク */
+    backLabel: string;
+    /** 記事の下から作品の紹介ページへ渡すリンク */
+    gameLinkLabel: string;
+  };
+
+  /** 見つからないページ。全言語を1枚に並べて出す */
+  notFound: { title: string; body: string; homeLabel: string };
 
   aboutPage: {
     title: string;
     description: string;
     metaDescription: string;
+    /** 本文の見出し。本文は content/<言語>/about.md */
+    bodyHeading: string;
     ownerHeading: string;
     ownerRole: string;
     contactLabel: string;

@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { GameTile } from "@/components/GameTile";
+import { NoteList } from "@/components/pages/NotesView";
 import { getContent } from "@/lib/content";
 import { localePath, type Locale } from "@/lib/i18n";
 import { formatDate, games, updates } from "@/lib/site";
+import { getNotes } from "@/lib/writing";
+
+/** トップに出す制作ノートの本数。新しいものから */
+const HOME_NOTES = 3;
 
 export function HomeView({ locale }: { locale: Locale }) {
   const t = getContent(locale);
@@ -28,6 +33,16 @@ export function HomeView({ locale }: { locale: Locale }) {
             <GameTile game={game} key={game.slug} locale={locale} />
           ))}
         </div>
+      </section>
+
+      <section className="section pageWidth" aria-labelledby="notes-title">
+        <div className="sectionHeading">
+          <h2 id="notes-title">{t.home.notesHeading}</h2>
+          <Link className="textLink" href={localePath(locale, "/notes/")}>
+            {t.home.notesMore} <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+        <NoteList locale={locale} notes={getNotes(locale).slice(0, HOME_NOTES)} />
       </section>
 
       <section className="section pageWidth" aria-labelledby="news-title">
