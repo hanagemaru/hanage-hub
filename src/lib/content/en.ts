@@ -19,6 +19,7 @@ export const en: Content = {
     home: "Home",
     games: "Games",
     updates: "Updates",
+    notes: "Notes",
     about: "About",
     privacy: "Privacy",
     terms: "Terms",
@@ -34,6 +35,8 @@ export const en: Content = {
     gamesMore: "See all",
     updatesHeading: "Updates",
     updatesMore: "See all",
+    notesHeading: "Notes",
+    notesMore: "See all",
   },
 
   gamesPage: {
@@ -46,6 +49,8 @@ export const en: Content = {
     specsLabel: "Game details",
     howToPlayLabel: "How to play",
     howToPlayTitle: "How to play",
+    makerNoteHeading: "From the maker",
+    readNoteLabel: "Notes",
   },
 
   updatesPage: {
@@ -54,10 +59,26 @@ export const en: Content = {
     metaDescription: "Release notes and site updates for hanage.app.",
   },
 
+  notesPage: {
+    title: "Notes",
+    description: "Why I made things, and the prototypes I dropped.",
+    metaDescription: "Why the hanage.app games were made, and how they were rebuilt from earlier prototypes.",
+    listLabel: "Notes",
+    backLabel: "All notes",
+    gameLinkLabel: "About the game",
+  },
+
+  notFound: {
+    title: "Page not found",
+    body: "The URL may have changed, or the page may be gone.",
+    homeLabel: "Go to the home page",
+  },
+
   aboutPage: {
     title: "About",
     description: "A site for browser games and web apps built by one person.",
-    metaDescription: "Who runs hanage.app.",
+    metaDescription: "About hanage.app, a place for browser games and web apps made by one person.",
+    bodyHeading: "About hanage.app",
     ownerHeading: "Who runs this",
     ownerRole: "design, development, and operation",
     contactLabel: "Contact",
@@ -395,13 +416,29 @@ export const en: Content = {
   },
 
   updates: {
+    "putt-ranking": {
+      title: "Online rankings for Putt",
+      body: "Tour scores now compete per course. Finish nine holes, pick a display name, and submit your personal best.",
+    },
+    "putt-four-courses": {
+      title: "Putt's tour is now four courses",
+      body: "The three courses were rebuilt as four: BEGINNER, STANDARD, ADVANCED, and EXPERT. Each has a different number of ponds and bunkers and a different fairway width. The next day each course got its own scenery: a morning meadow, a midday wood, a highland afternoon, and evening links.",
+    },
+    "bgm": {
+      title: "Music in both games",
+      body: "Putt and Multicolor Sweeper now have background music. Putt also got a new putter sound that changes with how hard you hit.",
+    },
+    "putt-putters": {
+      title: "Four putters in Putt",
+      body: "Pick a pin, a blade, a mallet, or a fang. They only look different. All four play the same.",
+    },
     "putt-release": {
       title: "Putt is out",
-      body: "A putting game about reading the slope and picking your line. Three courses, nine holes each.",
+      body: "A putting game where you read the slope and swing with a swipe. It launched with three courses of nine holes each.",
     },
     "mcs-release": {
       title: "Multicolor Sweeper is out",
-      body: "A minesweeper about hunting colored bombs, with online rankings.",
+      body: "Minesweeper with colored bombs. Online rankings for clear time in three classes: 15, 20, and 25 bombs.",
     },
     "site-start": {
       title: "hanage.app was started",

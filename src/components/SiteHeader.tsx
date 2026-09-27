@@ -20,6 +20,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         </Link>
         <nav className="mainNav" aria-label={t.nav.mainNavLabel}>
           <Link href={localePath(locale, "/games/")}>{t.nav.games}</Link>
+          <Link href={localePath(locale, "/notes/")}>{t.nav.notes}</Link>
           <Link href={localePath(locale, "/updates/")}>{t.nav.updates}</Link>
           <Link href={localePath(locale, "/about/")}>{t.nav.about}</Link>
           <LocaleSwitch label={t.nav.otherLocaleLabel} />

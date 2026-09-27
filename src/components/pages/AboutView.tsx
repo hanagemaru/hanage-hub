@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { Markdown } from "@/components/Markdown";
 import { PageHero } from "@/components/PageHero";
 import { getContent } from "@/lib/content";
 import { localePath, type Locale } from "@/lib/i18n";
 import { OWNER } from "@/lib/site";
+import { getAbout } from "@/lib/writing";
 
 export function AboutView({ locale }: { locale: Locale }) {
   const t = getContent(locale);
@@ -11,6 +13,12 @@ export function AboutView({ locale }: { locale: Locale }) {
     <main>
       <PageHero title={t.aboutPage.title} description={t.aboutPage.description} />
       <section className="contentSection pageWidth">
+        <article className="contentCard">
+          <h2>{t.aboutPage.bodyHeading}</h2>
+          <div className="prose">
+            <Markdown blocks={getAbout(locale)} />
+          </div>
+        </article>
         <article className="contentCard">
           <h2>{t.aboutPage.ownerHeading}</h2>
           <p>
