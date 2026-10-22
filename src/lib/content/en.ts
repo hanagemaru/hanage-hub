@@ -99,7 +99,7 @@ export const en: Content = {
   privacyPage: {
     title: "Privacy Policy",
     description: "How information is handled on hanage.app and in the games published here.",
-    revision: "Effective 13 August 2026. Last updated 20 September 2026.",
+    revision: "Effective 13 August 2026. Last updated 22 October 2026.",
     translationNote:
       "This is a translation provided for convenience. The Japanese version is the authoritative text.",
     sections: [

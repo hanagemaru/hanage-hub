@@ -92,7 +92,7 @@ export const ja: Content = {
   privacyPage: {
     title: "プライバシーポリシー",
     description: "hanage.appおよび掲載作品における情報の取り扱いについてご案内します。",
-    revision: "制定日：2026年8月13日／最終更新：2026年9月20日",
+    revision: "制定日：2026年8月13日／最終更新：2026年10月22日",
     sections: [
       {
         heading: "適用範囲",
