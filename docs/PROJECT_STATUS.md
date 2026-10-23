@@ -173,3 +173,7 @@ Update this file whenever a major task is completed or a decision changes.
 ## Putt計測の公開説明（2026-10-22）
 
 所有者確認済みの短い一文をプライバシー日英のアクセス解析へ追加。一時的な訪問ID・流入元分類・進行状況・時刻と改善目的を記載。Puttの計測有効化に先立って公開する。
+
+## Gameplay analytics disclosure (2026-10-23)
+
+The existing short Japanese/English gameplay analytics sentence now covers both Putt and Multicolor Sweeper. No extra public paragraphs are added. Publish before enabling Sweeper first-cell-open analytics in production (multicolor-sweeper PR #54).
