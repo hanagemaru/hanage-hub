@@ -55,7 +55,7 @@ export const ja: Content = {
   notesPage: {
     title: "制作ノート",
     description: "ゲームを作り始めた理由や、試作の経緯を紹介しています。",
-    metaDescription: "hanage.appのゲームの制作背景や、試作から作り直した経緯を紹介しています。",
+    metaDescription: "hanage.appのゲームの作った理由や、試作から作り直した経緯を紹介しています。",
     listLabel: "制作ノート一覧",
     backLabel: "制作ノート一覧へ",
     gameLinkLabel: "ゲーム紹介へ",
@@ -85,7 +85,7 @@ export const ja: Content = {
     reachBody: "ゲームやサイトについてのご連絡は、Xのアカウントへお願いします。",
     bugsHeading: "不具合を報告する",
     bugsBody:
-      "不具合はGitHub Issuesから報告できます。発生した状況や再現手順を書くと確認しやすくなります。投稿は公開されるので、個人情報は書かないでください。",
+      "不具合はGitHub Issuesから報告できます。発生した状況や再現手順を書くと確認しやすくなります。書いた内容は公開されるので、個人情報は書かないでください。",
     siteLabel: "サイト",
   },
 
@@ -233,7 +233,7 @@ export const ja: Content = {
   games: {
     multicolorSweeper: {
       subtitle: "色つき爆弾のマインスイーパー",
-      description: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を推理します。",
+      description: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を考えます。",
       status: null,
       playLabel: "ゲームを開く ↗",
       specs: { price: "無料", content: "9×9 タイムアタック", devices: "スマホ・PC" },
@@ -243,7 +243,7 @@ export const ja: Content = {
         "決着後、爆弾の位置がすべて見える盤面",
       ],
       shotsLabel: "Multicolor Sweeperの画面",
-      metaDescription: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を推理します。",
+      metaDescription: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を考えます。",
     },
     putt: {
       subtitle: "傾斜を読むパッティング",
@@ -283,7 +283,7 @@ export const ja: Content = {
         {
           heading: "旗",
           kind: "defs",
-          intro: "閉じたマスを指でスワイプすると、その方向に対応する色の旗を立てられます。",
+          intro: "まだ開いていないマスを指でスワイプすると、その方向に対応する色の旗を立てられます。",
           items: [
             { term: "左上：", body: "赤" },
             { term: "右上：", body: "青" },
@@ -296,7 +296,7 @@ export const ja: Content = {
         {
           heading: "まとめて開ける",
           kind: "prose",
-          body: "すでに開いたマスをタップすると、周囲の旗が数字と一致している場合に、旗のない隣接マスをまとめて開きます。旗が間違っていると爆発することがあります。",
+          body: "すでに開いたマスをタップすると、周囲の旗の数が数字と合っている場合に、旗のない隣接マスをまとめて開きます。旗が間違っていると爆発することがあります。",
         },
         {
           heading: "ランキング",
@@ -371,7 +371,7 @@ export const ja: Content = {
           kind: "list",
           items: [
             "打数の合計で競います。ラフ・セカンドカット・バンカーでは転がり方が変わります。",
-            "池やOBに入った場合は1罰打が加算され、直前に打った位置から打ち直します。",
+            "池やOBに入った場合は1罰打となり、直前に打った位置から打ち直します。",
             "通常ツアーは中断しても、そのホールの頭から再開できます。練習の途中経過は残りません。",
           ],
         },
@@ -396,7 +396,7 @@ export const ja: Content = {
     },
     "putt-four-courses": {
       title: "Puttの通常ツアーを4コースに",
-      body: "通常ツアーを3コースから4コース（BEGINNER / STANDARD / ADVANCED / EXPERT）に変更しました。池やバンカーの数、コースの幅がそれぞれ異なります。翌日には、コースごとの景色も変更しました。",
+      body: "通常ツアーを3コースから4コース（BEGINNER / STANDARD / ADVANCED / EXPERT）に変更しました。池やバンカーの数、コースの幅が各コースで違います。翌日には、コースごとの景色も変更しました。",
     },
     "bgm": {
       title: "両方のゲームにBGM",
