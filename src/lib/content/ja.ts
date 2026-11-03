@@ -233,7 +233,7 @@ export const ja: Content = {
   games: {
     multicolorSweeper: {
       subtitle: "色つき爆弾のマインスイーパー",
-      description: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を考えます。",
+      description: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を見つけます。",
       status: null,
       playLabel: "ゲームを開く ↗",
       specs: { price: "無料", content: "9×9 タイムアタック", devices: "スマホ・PC" },
@@ -243,7 +243,7 @@ export const ja: Content = {
         "決着後、爆弾の位置がすべて見える盤面",
       ],
       shotsLabel: "Multicolor Sweeperの画面",
-      metaDescription: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を考えます。",
+      metaDescription: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を見つけます。",
     },
     putt: {
       subtitle: "傾斜を読むパッティング",
