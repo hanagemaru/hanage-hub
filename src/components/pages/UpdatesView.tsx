@@ -17,7 +17,11 @@ export function UpdatesView({ locale }: { locale: Locale }) {
               <article className="updateItem" key={entry.id}>
                 <time dateTime={entry.date}>{formatDate(entry.date)}</time>
                 <h2>{text.title}</h2>
-                <p>{text.body}</p>
+                <ul>
+                  {text.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
               </article>
             );
           })}
