@@ -6,7 +6,7 @@ export const ja: Content = {
 
   siteTagline: "ゲームやアプリを公開しています",
   footerTagline: "ゲームやアプリを公開しています",
-  siteDescription: "個人制作のブラウザゲームとWebアプリを公開しています。インストール不要・無料。",
+  siteDescription: "個人で作ったブラウザゲームとWebアプリを公開しています。インストール不要で、無料で遊べます。",
 
   nav: {
     home: "ホーム",
@@ -42,20 +42,20 @@ export const ja: Content = {
     specsLabel: "ゲーム情報",
     howToPlayLabel: "遊び方を見る",
     howToPlayTitle: "遊び方",
-    makerNoteHeading: "作者のことば",
+    makerNoteHeading: "制作について",
     readNoteLabel: "制作ノート",
   },
 
   updatesPage: {
     title: "更新情報",
-    description: "サイトと公開作品の主な更新。",
+    description: "サイトやゲームの主な更新をまとめています。",
     metaDescription: "hanage.appと公開作品の更新情報。",
   },
 
   notesPage: {
     title: "制作ノート",
-    description: "作った理由や、やめた試作の話。",
-    metaDescription: "hanage.appの作品を作った理由や、試作から作り直した経緯。",
+    description: "ゲームを作り始めた理由や、試作の経緯を紹介しています。",
+    metaDescription: "hanage.appのゲームの制作背景や、試作から作り直した経緯を紹介しています。",
     listLabel: "制作ノート一覧",
     backLabel: "制作ノート一覧へ",
     gameLinkLabel: "ゲーム紹介へ",
@@ -69,8 +69,8 @@ export const ja: Content = {
 
   aboutPage: {
     title: "このサイトについて",
-    description: "個人で制作したブラウザゲームとWebアプリを公開しているサイト。",
-    metaDescription: "hanage.appについて。個人で作ったブラウザゲームとWebアプリを置いている場所。",
+    description: "個人で作ったブラウザゲームとWebアプリを公開しています。",
+    metaDescription: "hanage.appについて。個人で制作したゲームとWebアプリを公開しているサイトです。",
     bodyHeading: "hanage.appについて",
     ownerHeading: "運営者",
     ownerRole: "企画・開発・運営",
@@ -79,13 +79,13 @@ export const ja: Content = {
 
   contactPage: {
     title: "お問い合わせ",
-    description: "作品とサイトについての連絡先。",
+    description: "ゲームやサイトに関するお問い合わせ方法を案内しています。",
     metaDescription: "hanage.appと公開作品についての連絡先。",
     reachHeading: "運営者に連絡する",
-    reachBody: "作品とサイトについての連絡は、Xのアカウントへ。",
+    reachBody: "ゲームやサイトについてのご連絡は、Xのアカウントへお願いします。",
     bugsHeading: "不具合を報告する",
     bugsBody:
-      "再現手順を添えて報告する場合は、GitHubのIssuesが確実。公開される場所なので、知られて困る情報は書かないこと。",
+      "不具合はGitHub Issuesから報告できます。発生した状況や再現手順を書くと確認しやすくなります。投稿は公開されるので、個人情報は書かないでください。",
     siteLabel: "サイト",
   },
 
@@ -233,7 +233,7 @@ export const ja: Content = {
   games: {
     multicolorSweeper: {
       subtitle: "色つき爆弾のマインスイーパー",
-      description: "爆弾に色がある9×9のマインスイーパー。数字も色ごとに分かれる。",
+      description: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を推理します。",
       status: null,
       playLabel: "ゲームを開く ↗",
       specs: { price: "無料", content: "9×9 タイムアタック", devices: "スマホ・PC" },
@@ -243,12 +243,12 @@ export const ja: Content = {
         "決着後、爆弾の位置がすべて見える盤面",
       ],
       shotsLabel: "Multicolor Sweeperの画面",
-      metaDescription: "爆弾に色がある9×9のマインスイーパー。数字も色ごとに分かれる。",
+      metaDescription: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を推理します。",
     },
     putt: {
       subtitle: "傾斜を読むパッティング",
       description:
-        "傾斜を読んでラインを決め、スワイプでパターを振る。振った速さが、そのまま球の強さになる。",
+        "グリーンの傾斜を読んで狙いを決めたら、画面上で指をスワイプしてパターを振ります。指を動かす速さによって、ボールの強さが変わります。",
       status: null,
       playLabel: "ゲームを開く ↗",
       specs: { price: "無料", content: "9ホール ストロークプレー", devices: "スマホ専用" },
@@ -259,7 +259,7 @@ export const ja: Content = {
       ],
       shotsLabel: "Puttの画面",
       metaDescription:
-        "傾斜を読んでラインを決め、スワイプでパターを振る。振った速さが、そのまま球の強さになる。",
+        "グリーンの傾斜を読んで狙いを決めたら、画面上で指をスワイプしてパターを振ります。指を動かす速さによって、ボールの強さが変わります。",
     },
   },
 
@@ -267,23 +267,23 @@ export const ja: Content = {
     multicolorSweeper: {
       metaTitle: "Multicolor Sweeperの遊び方",
       metaDescription: "色つきの爆弾を、色ごとの数字から見つけるMulticolor Sweeperの遊び方。",
-      heroDescription: "基本はマインスイーパー。ただし爆弾に色があり、数字も色ごとに分かれています。",
+      heroDescription: "爆弾に色があり、周囲の爆弾の数が色別の数字で表示されるマインスイーパーです。",
       backLabel: "ゲーム紹介へ戻る",
       sections: [
         {
           heading: "基本",
           kind: "steps",
           steps: [
-            { title: "難易度と色数を選ぶ", body: "15 / 20 / 25 BOMBS と、3色か4色。" },
-            { title: "好きなマスから開ける", body: "最初のマスと周りの8マスは必ず安全です。" },
-            { title: "色ごとの数字を読む", body: "隣接する8マスにある爆弾の数が、色ごとに出ます。" },
-            { title: "爆弾のないマスを全部開ける", body: "それでクリアです。" },
+            { title: "難易度と色数を選ぶ", body: "爆弾の数（15・20・25個）と色数（3・4色）を選びます。" },
+            { title: "好きなマスから開ける", body: "最初に開くマスと、その周囲8マスには爆弾がありません。" },
+            { title: "色ごとの数字を読む", body: "数字は、そのマスの周囲8マスにある爆弾の数を色ごとに示しています。" },
+            { title: "爆弾のないマスを全部開ける", body: "爆弾のないマスをすべて開くとクリアです。" },
           ],
         },
         {
           heading: "旗",
           kind: "defs",
-          intro: "マスの上で指を滑らせた方向で、旗の色が決まります。",
+          intro: "閉じたマスを指でスワイプすると、その方向に対応する色の旗を立てられます。",
           items: [
             { term: "左上：", body: "赤" },
             { term: "右上：", body: "青" },
@@ -296,12 +296,12 @@ export const ja: Content = {
         {
           heading: "まとめて開ける",
           kind: "prose",
-          body: "開いたマスをタップすると、周りの旗の数が合っていれば、旗のない隣のマスをまとめて開けます。旗が間違っていれば爆発します。",
+          body: "すでに開いたマスをタップすると、周囲の旗が数字と一致している場合に、旗のない隣接マスをまとめて開きます。旗が間違っていると爆発することがあります。",
         },
         {
           heading: "ランキング",
           kind: "prose",
-          body: "クリアタイムは 15 / 20 / 25 BOMBS の3部門。名前は自己ベストを登録するときに決めます。",
+          body: "クリアタイムは爆弾15個・20個・25個の3部門で競います。自己ベストを登録するときに表示名を決めます。",
         },
         {
           heading: "ホーム画面に追加する",
@@ -318,7 +318,7 @@ export const ja: Content = {
     putt: {
       metaTitle: "Puttの遊び方",
       metaDescription: "グリーンを読み、パターを振ってカップに沈めるPuttの遊び方。",
-      heroDescription: "スマホを縦に持って、少ない打数でカップに沈めます。",
+      heroDescription: "スマホを縦向きに持ち、できるだけ少ない打数でカップに入れることを目指します。",
       backLabel: "ゲーム紹介へ戻る",
       sections: [
         {
@@ -328,7 +328,7 @@ export const ja: Content = {
             { term: "通常ツアー：", body: "BEGINNER / STANDARD / ADVANCED / EXPERTからコースを選び、9ホールを回ります。" },
             {
               term: "練習：",
-              body: "1ホールを何度でも打ち直せます。コース変更で別のホールに差し替えられます。",
+              body: "1ホールを何度でも打ち直せます。「コース変更」で別のホールを選べます。",
             },
           ],
         },
@@ -338,23 +338,23 @@ export const ja: Content = {
           steps: [
             {
               title: "コースを見る",
-              body: "視点ボタンとマップで、傾斜とカップまでの形を確かめます。",
+              body: "視点ボタンやマップで、グリーンの傾斜とカップの位置を確認します。",
             },
             {
               title: "狙いを決める",
-              body: "ボール後方と低い視点では、左右のスワイプで狙いを調整できます。",
+              body: "ボール後方や低い視点では、画面を左右にスワイプして打つ方向を調整できます。",
             },
             { title: "構える", body: "画面をタップすると、パターを構えます。" },
             {
               title: "打つ",
-              body: "パターを右へ引いてから、左へ振り抜きます。振る速さが強さになります。",
+              body: "画面上で指を右に動かしてパターを引き、左に振ります。指を動かす速さによって、ボールの強さが変わります。",
             },
           ],
         },
         {
           heading: "最初の1ホール",
           kind: "prose",
-          body: "まず練習で、短く振ったときと速く振ったときの転がる距離を比べてみてください。マップでカップまでの形を確認し、低い視点で傾斜を見てから狙いを決めます。止まった後の軌跡を見れば、狙った方向と実際に曲がった方向を比べられます。",
+          body: "まず練習モードで、ゆっくり振った場合と速く振った場合の転がる距離を比べてみてください。マップでカップの位置を確認し、低い視点で傾斜を見ながら狙いを決めます。打った後に表示される軌跡で、ボールがどちらに曲がったかも確認できます。",
         },
         {
           heading: "ランキング",
@@ -364,14 +364,14 @@ export const ja: Content = {
         {
           heading: "パター",
           kind: "prose",
-          body: "トップの「パターを選ぶ」から、ピン型・L字・マレット・ネオマレットを選べます。見た目だけの違いで、打ちやすさは変わりません。",
+          body: "タイトル画面の「パターを選ぶ」から、ピン型・L字・マレット・ネオマレットを選べます。形が違うだけで性能は同じです。",
         },
         {
           heading: "ルール",
           kind: "list",
           items: [
             "打数の合計で競います。ラフ・セカンドカット・バンカーでは転がり方が変わります。",
-            "池とOBは1罰打。直前に打った位置から打ち直します。",
+            "池やOBに入った場合は1罰打が加算され、直前に打った位置から打ち直します。",
             "通常ツアーは中断しても、そのホールの頭から再開できます。練習の途中経過は残りません。",
           ],
         },
@@ -392,31 +392,31 @@ export const ja: Content = {
   updates: {
     "putt-ranking": {
       title: "Puttにオンラインランキング",
-      body: "通常ツアーのスコアをコースごとに競えるようにした。9ホール回ったあと、表示名を決めて自己ベストを登録できる。",
+      body: "通常ツアーのスコアをコースごとに競えるようにしました。9ホールを回った後、表示名を決めて自己ベストを登録できます。",
     },
     "putt-four-courses": {
       title: "Puttの通常ツアーを4コースに",
-      body: "3コースだったものを、BEGINNER / STANDARD / ADVANCED / EXPERTの4コースに作り直した。池やバンカーの数と道幅がコースごとに違う。翌日、朝の草原・昼の林間・高原の午後・夕方のリンクスと、コースごとに景色も変えた。",
+      body: "通常ツアーを3コースから4コース（BEGINNER / STANDARD / ADVANCED / EXPERT）に変更しました。池やバンカーの数、コースの幅がそれぞれ異なります。翌日には、コースごとの景色も変更しました。",
     },
     "bgm": {
       title: "両方のゲームにBGM",
-      body: "PuttとMulticolor SweeperにBGMを入れた。Puttはパターの打音も作り直して、打った強さで音が変わる。",
+      body: "PuttとMulticolor SweeperにBGMを追加しました。Puttではパターの打音も調整し、打つ強さによって音が変わるようにしました。",
     },
     "putt-putters": {
       title: "Puttのパターを4種類に",
-      body: "ピン型・L字・マレット・ネオマレットから選べる。見た目だけの違いで、打ちやすさは変わらない。",
+      body: "ピン型・L字・マレット・ネオマレットの4種類から選べるようにしました。形が違うだけで性能は同じです。",
     },
     "putt-release": {
       title: "Puttを公開",
-      body: "傾斜を読んでスワイプで打つパッティングゲーム。公開時は3コース × 各9ホール。",
+      body: "グリーンの傾斜を読んで、スワイプでパターを振るゲームを公開しました。公開時は3コースで、それぞれ9ホールありました。",
     },
     "mcs-release": {
       title: "Multicolor Sweeperを公開",
-      body: "爆弾に色があるマインスイーパー。15 / 20 / 25 BOMBSの3部門で、クリアタイムのオンラインランキングつき。",
+      body: "爆弾に色があるマインスイーパーを公開しました。爆弾15個・20個・25個の3部門で、クリアタイムのオンラインランキングに対応しています。",
     },
     "site-start": {
       title: "hanage.appを始めた",
-      body: "自作のゲームとWebアプリをまとめる場所として作り始めた。",
+      body: "自作のゲームとWebアプリをまとめて公開するサイトとして、hanage.appを作り始めました。",
     },
   },
 };
