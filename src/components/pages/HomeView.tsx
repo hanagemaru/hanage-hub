@@ -35,16 +35,6 @@ export function HomeView({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="section pageWidth" aria-labelledby="notes-title">
-        <div className="sectionHeading">
-          <h2 id="notes-title">{t.home.notesHeading}</h2>
-          <Link className="textLink" href={localePath(locale, "/notes/")}>
-            {t.home.notesMore} <span aria-hidden="true">→</span>
-          </Link>
-        </div>
-        <NoteList locale={locale} notes={getNotes(locale).slice(0, HOME_NOTES)} />
-      </section>
-
       <section className="section pageWidth" aria-labelledby="news-title">
         <div className="sectionHeading">
           <h2 id="news-title">{t.home.updatesHeading}</h2>
@@ -58,6 +48,16 @@ export function HomeView({ locale }: { locale: Locale }) {
           <strong>{latestText.title}</strong>
           <span className="newsArrow" aria-hidden="true">→</span>
         </Link>
+      </section>
+
+      <section className="section pageWidth" aria-labelledby="notes-title">
+        <div className="sectionHeading">
+          <h2 id="notes-title">{t.home.notesHeading}</h2>
+          <Link className="textLink" href={localePath(locale, "/notes/")}>
+            {t.home.notesMore} <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+        <NoteList locale={locale} notes={getNotes(locale).slice(0, HOME_NOTES)} />
       </section>
     </main>
   );
