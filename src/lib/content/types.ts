@@ -193,5 +193,5 @@ export type Content = {
   games: Record<GameId, GameText>;
   howToPlay: Record<GameId, HowToPlayText>;
   /** `updates` の id をすべて埋める。抜けるとビルドが落ちる */
-  updates: Record<UpdateId, { title: string; body: string }>;
+  updates: Record<UpdateId, { title: string; items: string[] }>;
 };
