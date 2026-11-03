@@ -419,31 +419,52 @@ export const en: Content = {
   updates: {
     "putt-ranking": {
       title: "Online rankings for Putt",
-      body: "Tour scores now have separate rankings for each course. After nine holes, you can choose a display name and submit your personal best.",
+      items: [
+        "Separate rankings for each tour course",
+        "Submit a personal best with a display name after nine holes",
+      ],
     },
     "putt-four-courses": {
       title: "Putt's tour is now four courses",
-      body: "Tour mode changed from three courses to four: BEGINNER, STANDARD, ADVANCED, and EXPERT. Each has different water hazards, bunkers, and widths. The following day, I also updated the scenery for each course.",
+      items: [
+        "Expanded tour mode from three to four courses: BEGINNER / STANDARD / ADVANCED / EXPERT",
+        "Adjusted hazards and course widths for each course",
+        "Updated the scenery for each course the following day",
+      ],
     },
     "bgm": {
       title: "Music in both games",
-      body: "I added background music to Putt and Multicolor Sweeper. I also updated the putting sound in Putt so it changes with the strength of each shot.",
+      items: [
+        "Added background music to Putt and Multicolor Sweeper",
+        "Updated Putt's stroke sound so it changes with shot strength",
+      ],
     },
     "putt-putters": {
       title: "Four putters in Putt",
-      body: "Putt now lets you choose from four putter shapes. Their appearance differs, but their performance is the same.",
+      items: [
+        "Added four putter shapes: pin, blade, mallet, and fang",
+        "All four have the same performance",
+      ],
     },
     "putt-release": {
       title: "Putt is out",
-      body: "I released a putting game where you read the slope of the green and swipe to swing. It launched with three courses of nine holes each.",
+      items: [
+        "Released a putting game controlled by swiping",
+        "Launched with three courses of nine holes each",
+      ],
     },
     "mcs-release": {
       title: "Multicolor Sweeper is out",
-      body: "I released a Minesweeper game with colored bombs and online clear-time rankings for boards with 15, 20, or 25 bombs.",
+      items: [
+        "Released a Minesweeper game with colored bombs",
+        "Added online clear-time rankings for boards with 15, 20, or 25 bombs",
+      ],
     },
     "site-start": {
       title: "hanage.app was started",
-      body: "I started hanage.app as one place to publish my games and web apps.",
+      items: [
+        "Launched a site for my independently developed games and web apps",
+      ],
     },
   },
 };
