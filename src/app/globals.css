@@ -426,7 +426,15 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .updateItem time { color: var(--blue); font-size: 0.8rem; font-weight: 700; }
 .updateItem h2 { margin-top: 5px; font-size: 1.15rem; }
-.updateItem p { margin-top: 7px; color: var(--muted); font-size: 0.9rem; }
+.updateItem ul {
+  margin-top: 10px;
+  padding-left: 1.25em;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  list-style: disc;
+}
+.updateItem li + li { margin-top: 4px; }
 
 .siteFooter {
   margin-top: 40px;

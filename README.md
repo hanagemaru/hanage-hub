@@ -30,6 +30,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+文章の表現を調整するときは [文章の方針](./docs/WRITING_STYLE.md) に従ってください。
+
 ## 文章の直し方
 
 運営者が直す文章は、コードではなく `content/` の Markdown に置いています。

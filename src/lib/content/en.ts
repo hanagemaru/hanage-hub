@@ -10,8 +10,8 @@ export const en: Content = {
   htmlLang: "en",
   ogLocale: "en_US",
 
-  siteTagline: "Games and apps.",
-  footerTagline: "Games and apps.",
+  siteTagline: "I make and publish browser games and web apps.",
+  footerTagline: "I make and publish browser games and web apps.",
   siteDescription:
     "Browser games and web apps made by one person. Free to play, nothing to install.",
 
@@ -49,7 +49,7 @@ export const en: Content = {
     specsLabel: "Game details",
     howToPlayLabel: "How to play",
     howToPlayTitle: "How to play",
-    makerNoteHeading: "From the maker",
+    makerNoteHeading: "About development",
     readNoteLabel: "Notes",
   },
 
@@ -61,8 +61,8 @@ export const en: Content = {
 
   notesPage: {
     title: "Notes",
-    description: "Why I made things, and the prototypes I dropped.",
-    metaDescription: "Why the hanage.app games were made, and how they were rebuilt from earlier prototypes.",
+    description: "How I started making each game and what I tried during development.",
+    metaDescription: "Background on the games published at hanage.app, including prototypes and design changes.",
     listLabel: "Notes",
     backLabel: "All notes",
     gameLinkLabel: "About the game",
@@ -89,10 +89,10 @@ export const en: Content = {
     description: "How to reach me about the games and the site.",
     metaDescription: "How to get in touch about hanage.app and its games.",
     reachHeading: "Get in touch",
-    reachBody: "For anything about the games or the site, message the X account.",
+    reachBody: "For questions about the games or the site, please contact the X account.",
     bugsHeading: "Report a bug",
     bugsBody:
-      "If you can describe how to reproduce it, GitHub Issues is the surest route. Issues are public, so leave out anything you would not want published.",
+      "You can report bugs through GitHub Issues. Include what happened and how to reproduce it if possible. Issues are public, so do not include personal information.",
     siteLabel: "Site",
   },
 
@@ -243,9 +243,9 @@ export const en: Content = {
 
   games: {
     multicolorSweeper: {
-      subtitle: "Minesweeper where the bombs have colors",
+      subtitle: "Minesweeper with colored bombs",
       description:
-        "A 9×9 minesweeper where every bomb has a color, and the clue numbers are split by color too.",
+        "A 9×9 Minesweeper game with colored bombs. The clue numbers show how many bombs of each color are nearby, helping you work out which tiles are safe.",
       status: null,
       playLabel: "Open the game ↗",
       specs: { price: "Free", content: "9×9 time attack", devices: "Phone and desktop" },
@@ -256,12 +256,12 @@ export const en: Content = {
       ],
       shotsLabel: "Multicolor Sweeper screenshots",
       metaDescription:
-        "A 9×9 minesweeper where every bomb has a color, and the clue numbers are split by color too.",
+        "A 9×9 Minesweeper game with colored bombs. The clue numbers show how many bombs of each color are nearby, helping you work out which tiles are safe.",
     },
     putt: {
-      subtitle: "Putting, read off the slope",
+      subtitle: "Putting on sloped greens",
       description:
-        "Read the slope, pick your line, and swing the putter with a swipe. How fast you swing is how hard the ball rolls.",
+        "Read the slope of the green and choose your aim, then swipe across the screen to swing the putter. The speed of your swipe determines how hard the ball rolls.",
       status: null,
       playLabel: "Open the game ↗",
       specs: { price: "Free", content: "9-hole stroke play", devices: "Phone only" },
@@ -272,7 +272,7 @@ export const en: Content = {
       ],
       shotsLabel: "Putt screenshots",
       metaDescription:
-        "Read the slope, pick your line, and swing the putter with a swipe. How fast you swing is how hard the ball rolls.",
+        "Read the slope of the green and choose your aim, then swipe across the screen to swing the putter. The speed of your swipe determines how hard the ball rolls.",
     },
   },
 
@@ -282,7 +282,7 @@ export const en: Content = {
       metaDescription:
         "How to play Multicolor Sweeper: finding colored bombs from clue numbers split by color.",
       heroDescription:
-        "Minesweeper at heart, except the bombs have colors and the clue numbers are split by color.",
+        "In this version of Minesweeper, bombs have colors and the clue numbers count them separately.",
       backLabel: "Back to the game",
       sections: [
         {
@@ -290,7 +290,7 @@ export const en: Content = {
           kind: "steps",
           steps: [
             {
-              title: "Pick a difficulty and a color count",
+              title: "Choose the number of bombs and colors",
               body: "15, 20, or 25 bombs, in three or four colors.",
             },
             {
@@ -325,13 +325,13 @@ export const en: Content = {
         {
           heading: "Rankings",
           kind: "prose",
-          body: "Clear times are ranked in three brackets: 15, 20, and 25 bombs. You choose a name when you submit a personal best.",
+          body: "Clear times are ranked in three brackets: 15, 20, and 25 bombs. You choose a display name when submitting a personal best.",
         },
         {
           heading: "Add it to your home screen",
           kind: "defs",
           intro:
-            "Open it from your home screen like any other app. You get more screen, and it works offline.",
+            "Open it from your home screen like any other app. The game uses more of your screen and also works offline.",
           items: [
             { term: "iPhone:", body: "use the Share button, then Add to Home Screen." },
             { term: "Android:", body: "open the browser menu, then Install app." },
@@ -344,7 +344,7 @@ export const en: Content = {
       metaTitle: "How to play Putt",
       metaDescription:
         "How to play Putt: read the green, swing the putter, and sink it in as few strokes as you can.",
-      heroDescription: "Hold your phone upright and sink the ball in as few strokes as you can.",
+      heroDescription: "Hold your phone vertically and try to get the ball into the cup in as few strokes as possible.",
       backLabel: "Back to the game",
       sections: [
         {
@@ -373,14 +373,14 @@ export const en: Content = {
             { title: "Address the ball", body: "Tap the screen to take your stance." },
             {
               title: "Swing",
-              body: "Draw the putter to the right, then swing through to the left. Swing speed becomes ball speed.",
+              body: "Move your finger right to pull the putter back, then swipe left to swing. The speed of your swipe affects how hard the ball rolls.",
             },
           ],
         },
         {
           heading: "Your first hole",
           kind: "prose",
-          body: "Start in Practice and compare how far the ball rolls with a short swing and a faster swing. Check the route on the map, then read the slope from the low view before aiming. Once the ball stops, compare its trail with the direction you intended.",
+          body: "Start in Practice mode and compare how far the ball rolls when you swing slowly and quickly. Check the route on the map, then read the slope from the low view before aiming. Once the ball stops, compare its trail with the direction you intended.",
         },
         {
           heading: "Rankings",
@@ -390,7 +390,7 @@ export const en: Content = {
         {
           heading: "Putters",
           kind: "prose",
-          body: "CHOOSE PUTTER on the top menu offers a pin, a blade, a mallet, and a fang. The shape is cosmetic — all four play exactly the same.",
+          body: "CHOOSE PUTTER on the top menu offers a pin, a blade, a mallet, and a fang. The putters look different but all have the same performance.",
         },
         {
           heading: "Rules",
@@ -398,14 +398,14 @@ export const en: Content = {
           items: [
             "You are scored on total strokes. The rough, second cut, and bunkers change how the ball rolls.",
             "Water and out of bounds cost one stroke. You replay from where you last hit.",
-            "On tour, if you stop mid-round you resume from the start of that hole. Practice keeps nothing.",
+            "On tour, if you stop mid-round you resume from the start of that hole. Progress in Practice mode is not saved.",
           ],
         },
         {
           heading: "Add it to your home screen",
           kind: "defs",
           intro:
-            "Open it from your home screen like any other app. You get more screen, and it works offline.",
+            "Open it from your home screen like any other app. The game uses more of your screen and also works offline.",
           items: [
             { term: "iPhone:", body: "use the Share button, then Add to Home Screen." },
             { term: "Android:", body: "open the browser menu, then Install app." },
@@ -419,31 +419,52 @@ export const en: Content = {
   updates: {
     "putt-ranking": {
       title: "Online rankings for Putt",
-      body: "Tour scores now compete per course. Finish nine holes, pick a display name, and submit your personal best.",
+      items: [
+        "Separate rankings for each tour course",
+        "Submit a personal best with a display name after nine holes",
+      ],
     },
     "putt-four-courses": {
       title: "Putt's tour is now four courses",
-      body: "The three courses were rebuilt as four: BEGINNER, STANDARD, ADVANCED, and EXPERT. Each has a different number of ponds and bunkers and a different fairway width. The next day each course got its own scenery: a morning meadow, a midday wood, a highland afternoon, and evening links.",
+      items: [
+        "Expanded tour mode from three to four courses: BEGINNER / STANDARD / ADVANCED / EXPERT",
+        "Adjusted hazards and course widths for each course",
+        "Updated the scenery for each course the following day",
+      ],
     },
     "bgm": {
       title: "Music in both games",
-      body: "Putt and Multicolor Sweeper now have background music. Putt also got a new putter sound that changes with how hard you hit.",
+      items: [
+        "Added background music to Putt and Multicolor Sweeper",
+        "Updated Putt's stroke sound so it changes with shot strength",
+      ],
     },
     "putt-putters": {
       title: "Four putters in Putt",
-      body: "Pick a pin, a blade, a mallet, or a fang. They only look different. All four play the same.",
+      items: [
+        "Added four putter shapes: pin, blade, mallet, and fang",
+        "All four have the same performance",
+      ],
     },
     "putt-release": {
       title: "Putt is out",
-      body: "A putting game where you read the slope and swing with a swipe. It launched with three courses of nine holes each.",
+      items: [
+        "Released a putting game controlled by swiping",
+        "Launched with three courses of nine holes each",
+      ],
     },
     "mcs-release": {
       title: "Multicolor Sweeper is out",
-      body: "Minesweeper with colored bombs. Online rankings for clear time in three classes: 15, 20, and 25 bombs.",
+      items: [
+        "Released a Minesweeper game with colored bombs",
+        "Added online clear-time rankings for boards with 15, 20, or 25 bombs",
+      ],
     },
     "site-start": {
       title: "hanage.app was started",
-      body: "Started as a single place for the games and web apps I build.",
+      items: [
+        "Launched a site for my independently developed games and web apps",
+      ],
     },
   },
 };

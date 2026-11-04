@@ -4,16 +4,14 @@ date: 2026-09-27
 game: putt
 ---
 
-Putting is hard. Hit it a little too firm and you blow past the cup. Let your hands wobble a little at impact and the ball leaves your line. I've missed plenty of putts on real greens that way.
+In real golf, a small difference in stroke strength or hand movement can send the ball away from where you intended. I've had that happen many times on a green, and it made me want to build a putting game that captures the same challenge.
 
-That feeling, where everything is decided in the last split second: could it work as a swipe on a phone? That's where Putt started.
+I started with a test page that measured swipe speed rather than a full game. I treated moving a finger back and then forward as a putter swing, and tried using the swipe speed to set the ball's strength. I tested it repeatedly on an iPhone until the controls felt consistent with the ball's movement.
 
-The first thing I built wasn't a game. It was a page that only measured swipe speed. Pull the putter back, swing it through, measure how fast, and turn that into ball speed. I swung it over and over on an iPhone until the numbers matched how the swing felt.
+The stroke has a few rules:
 
-There's a bit more to the stroke.
+- You need to pull back before you can hit the ball.
+- Moving your finger up or down makes you miss the center of the putter, so the ball moves more slowly.
+- Moving too far up or down causes a miss.
 
-- No backswing, no shot.
-- Drift up or down and you miss the sweet spot. The ball comes off weaker.
-- Drift too far and you whiff.
-
-There's no power gauge and no button. Once you've picked your line, it's down to your finger. Read the slope perfectly, swing too hard, and it still won't drop. That's the game.
+I wanted players to control both direction and strength themselves, so the swipe directly affects the shot.

@@ -36,6 +36,10 @@ Do not add server-only Next.js features unless the hosting/export strategy is in
 5. Do not change production domains, hosting settings, or monetization behavior without explicit user approval.
 6. Keep documentation updated when deployment, URL structure, major design decisions, or the current development status changes.
 
+## Writing and copy
+
+For changes to user-facing text, follow [`docs/WRITING_STYLE.md`](./docs/WRITING_STYLE.md). Keep game behavior and factual claims accurate, and update Japanese and English copy together.
+
 ## Required checks
 
 Before proposing a merge, run:
