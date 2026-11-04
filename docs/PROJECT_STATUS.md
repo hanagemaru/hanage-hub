@@ -1,6 +1,18 @@
 # Project status
 
-Last updated: 2026-09-29
+Last updated: 2026-11-04
+
+## AdSense再審査の申請（2026-11-04）
+
+- **状態：再審査申請済み、結果待ち。** 2026-11-04に運営者から `hanage.app` のGoogle AdSense再審査申請完了の報告があった。承認済みではない。
+- 前回は2026-09-19に「有用性の低いコンテンツ」を理由に否認。以降、ゲーム紹介・遊び方・サイト紹介・更新情報の拡充と、制作ノート2本の公開を実施した。
+- 2026-11-04に[文章の修正と更新情報の箇条書き化（PR #40）](https://github.com/hanagemaru/hanage-hub/pull/40)を `main` にマージし、本番反映済み（運営者による確認）。
+- 再申請前にSearch ConsoleのURL検査で、以下の2ページがともに「URLはGoogleに登録されています」と表示されることを運営者のスクリーンショットで確認した。
+  - https://hanage.app/notes/putt-origin/
+  - https://hanage.app/notes/from-gradient-sweeper/ （Gradient Sweeperの試作から現行Multicolor Sweeperへの制作経緯）
+- 次の判断はAdSenseの審査結果を確認してから行う。承認された場合も広告が配信されるまで、広告実装済み・広告収益発生とは扱わない。
+
+
 
 ## Current state
 
