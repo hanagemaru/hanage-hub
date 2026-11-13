@@ -66,9 +66,18 @@ GitHub構成は `hanage-hub` と `putt` を分離したまま。ハブのNext.js
 ## フェーズ0〜2の完了基準
 
 - [x] リポジトリ運用・対象URL・切り戻し方針が文書化された
-- [ ] Putt専用Workerへの自動デプロイが成功
-- [ ] ブラウザから新パスでゲームとJSが読み込める
-- [ ] PWAとAPIの自動検証が成功
+- [x] Putt専用Workerへの自動デプロイが成功（GitHub Actions 2026-11-13）
+- [x] 新パスでHTML・JSをHTTP取得できる（ゲーム操作は実機未確認）
+- [x] PWAとAPIの自動検証が成功（本番D1接続なし、書き込み拒否確認）
 - [ ] iPhoneで主要操作を実機確認（利用者確認が必要）
 
 **フェーズ2の自動検証まで達しても、本番公開は許可されない。**
+
+## 検証記録（2026-11-13）
+
+- Puttの検証用PR: https://github.com/hanagemaru/putt/pull/117
+- プレビューURL: https://putt-hub-preview.jibunnha.workers.dev/games/putt/play/
+- Cloudflare Worker `putt-hub-preview` へ別デプロイ成功。
+- GitHub Actionsの成功実行: https://github.com/hanagemaru/putt/actions/runs/43437337388
+- HTML、JS、PWAマニフェスト、Service Worker、noindex、API health、D1バインディング不在、書き込み拒否を検証。
+- ゲーム操作の実機テストおよび本番へのCloudflare経路設定は**未実施**。
