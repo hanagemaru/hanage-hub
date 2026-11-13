@@ -1,5 +1,14 @@
 # Project status
 
+## 2026-11-13: AdSense再否認とPuttハブ内プレイ検証
+
+- AdSense再審査は再び「有用性の低いコンテンツ」で否認（運営者から管理画面を提示）。2026-11-04の「審査結果待ち」記述は履歴として維持するが、**現在の状態は否認**。
+- `hanage.app/games/putt/play/` でのPutt本体提供を検証する方針を採用。サブドメインが審査対象外だったことは確認できておらず、承認を保証しない。
+- フェーズ0〜2: `hanage-hub` の作業ブランチ `plan/putt-hub-path-20261113` と `putt` の `feature/hub-path-putt-20261113` で設計・独立プレビュー・URL対応を実施。本番公開は別フェーズ。
+- 詳細正本: [HUB_GAME_PATH_MIGRATION_2026-11-13.md](HUB_GAME_PATH_MIGRATION_2026-11-13.md)。
+- **本番 `main`、`hanage.app`ルート、既存 `putt.hanage.app`、本番D1は変更しない。**
+
+
 Last updated: 2026-11-04
 
 ## AdSense再審査の申請（2026-11-04）
