@@ -1,5 +1,14 @@
 # Project status
 
+## 2026-11-14: ハブとゲームの往復導線・SEOを最小限整備（本番未反映）
+
+- ハブの既存説明文・画像・制作ノート・ゲーム一覧の構造は維持。`GameView`の「遊ぶ」は新URL公開フラグOFFなら旧URLを別タブで開き、ONなら`hanage.app`配下のゲームを**同じタブ**で開く。Putt/Sweeper共通の方式。
+- Puttの新パスのトップメニューへ紹介ページへの戻り導線を追加。「遊び方」「プライバシー」も本番hanage.app同一オリジンなら同タブ、旧Puttは従来の別タブ導線を維持。狭い画面はリンクを折り返す。
+- 新Putt HTMLに`canonical=https://hanage.app/games/putt/play/`を出力。旧Puttは新サイト案内の明示ビルド変数が有効になった**後だけ**canonicalを新URLへ向ける。プレビューはnoindexを継続。
+- `sitemap.xml`は新URLを本番公開した場合だけ追加。旧URLへのリンクはフラグOFFなら変わらない。ハブの両フラグ・リンク・サイトマップのCIテスト成功。
+- **本番URLの新Route追加、Putt旧URL・ハブの本番デプロイ、D1への書き込みは未実施**。公開前のドラフトPRまで。
+
+
 ## 2026-11-14: www用Putt限定リダイレクトも準備・検証済み
 
 - 実HTTP監査で`www.hanage.app`はrootへ自動リダイレクトせず、`/games/putt/play/`は404と確認。
