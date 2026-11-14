@@ -118,3 +118,12 @@ Putt PRに限定キーのデータ抽出・インポート衝突判定・安全�
 - [ ] 本番D1への接続・登録・削除のステージング検証
 - [ ] Cloudflareの本番ルーティング検証
 
+
+### 実装試作の追加（2026-11-14）
+
+Puttの作業ブランチで、旧サイトから新サイトへ利用者の明示操作でローカル記録を引き継ぐUIと通信処理を試作した。厳密な送信元・送信先Originとウィンドウ照合で受け渡し、認証鍵をURLへ載せず、既存の保存データを無断で上書きしない。旧Putt本番にはまだ適用していないため、**実際のクロスドメイン引き継ぎは未検証**。Puttの検証URLでランキングモックが表示されたことは利用者が確認済み。
+
+Cloudflare公式資料によると、`assets.base_path` は特定パス配信に対応し、Cloudflare Worker Routeは同じホストのCustom Domain Workerより前に動作できる。従って技術構成の方向性は成立するが、`hanage.app`本番のRoute競合・Service Worker/PWA/ランキング接続の実地検証は残る。
+- https://developers.cloudflare.com/workers/static-assets/routing/advanced/serving-a-subdirectory/
+- https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
+
