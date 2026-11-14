@@ -12,7 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Purpose
 
-Hanage Hub is the public hub for independently developed games and web apps. The visual direction is a mobile-first, tile-based catalog inspired by the pre-renewal Nintendo store. Keep the presentation playful, simple, and easy to scan.
+Hanage Hub is the public catalog and same-domain entry point for independently developed games and web apps. The visual direction is a mobile-first, tile-based catalog inspired by the pre-renewal Nintendo store. Keep the presentation playful, simple, and easy to scan.
 
 ## Technical baseline
 
@@ -31,7 +31,7 @@ Do not add server-only Next.js features unless the hosting/export strategy is in
 
 1. Read `README.md`, `docs/PROJECT_STATUS.md`, and the relevant part of `docs/SITE_PLAN.md` before making structural changes.
 2. Preserve the tile-based catalog direction and verify mobile layouts first.
-3. Keep games and apps as separate projects; link to their public URLs from this hub.
+3. Keep each game/app in its own source repository and deployable Worker, but publish new app play URLs under `https://hanage.app/` (normally `/games/<slug>/play/`). The catalog links to these same-domain URLs, opening games in a separate tab. Keep existing legacy subdomains running during parallel publication; do not redirect or merge player identities automatically. The rollout plan and live availability are recorded in `docs/SITE_PLAN.md` and `docs/PROJECT_STATUS.md`.
 4. Do not commit credentials, analytics secrets, advertising IDs, or Netlify tokens.
 5. Do not change production domains, hosting settings, or monetization behavior without explicit user approval.
 6. Keep documentation updated when deployment, URL structure, major design decisions, or the current development status changes.
