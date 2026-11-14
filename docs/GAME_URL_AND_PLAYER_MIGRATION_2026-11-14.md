@@ -83,6 +83,14 @@ PuttでG3/G4を先に確立するが、Sweeperにも**同じ運用条件**を適
 - 旧URLを301/302で新URLへ強制リダイレクトしない。旧URLのスコア登録を止めたり、旧プレイヤーを無断削除したりしない。
 - 旧・新の個別IDが同じ板に2件載り得ることは仕様として認め、同一人物と断定して勝手に記録を統合しない。
 
+## www.hanage.appのルート整理（2026-11-14）
+
+- 実測でwwwはrootへ自動転送していない（`www/`と`www/games/putt/`は200）。`www/games/putt/play/`は未使用404。
+- 同じゲームが`www`とroot両方で起動すると、端末内の匿名ID・自己ベストがさらに別になる。**新しいゲームの正式オリジンを`hanage.app`に統一**する。
+- `hanage-game-www-redirect`WorkerでwwwのPuttプレイパス2Routeだけを302/no-storeでrootへ転送する。ほかのwwwのページと旧Puttには触れない。ユニットテストとWrangler dry-run成功（本番未デプロイ）。
+- [wwwのHTTP実測](https://github.com/hanagemaru/hanage-hub/actions/runs/43596093123)、[リダイレクトdry-run成功](https://github.com/hanagemaru/hanage-hub/actions/runs/43596320442)。
+- Sweeperの新パスを作る際にも同じWWW経路整理を適用する。
+
 ## 2026-11-14：Cloudflare/D1公開前検証の結果と現在地
 
 - 本番Zoneを読み取り専用で監査。4つの現行Custom Domainを確認でき、`hanage.app`のWorker Routesは0件。新Putt用パスは現在404で未使用。
