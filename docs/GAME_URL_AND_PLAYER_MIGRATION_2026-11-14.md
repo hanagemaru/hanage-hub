@@ -42,8 +42,8 @@
 | --- | --- | --- | --- |
 | G0 計画・隔離 | 旧URL、既存Worker、D1を保持し別プレビューで試す | 完了 | 計画のみ |
 | G1 ゲーム・UI | 新URLのゲーム、アセット、PWA、ランキング画面を検証 | ゲームは実機確認済、ランキングはモックで確認済 | 未着手 |
-| G2 旧サイト告知 | 旧サイトで新URL案内、ゲーム継続、新旧の端末情報分離を検証 | 作業ブランチに実装、CI確認待ち | 未着手 |
-| G3 ランキング共用 | 新旧同一D1、同じ板、各ID独立、登録・表示・更新・削除、CSRF/Originを確認 | 一時ローカルD1でAPI試験成功、本番D1/Zone未確認 | 未着手 |
+| G2 旧サイト告知 | 旧サイトで新URL案内、ゲーム継続、新旧の端末情報分離を検証 | Chromium/WebKit自動テスト成功、本番では新URL稼働後に有効化 | 未着手 |
+| G3 ランキング共用 | 新旧同一D1、同じ板、各ID独立、登録・表示・更新・削除、CSRF/Originを確認 | 別Workerで本番D1の表示一致を確認／ローカルDB CRUD成功。実Zone登録・本番書込未実施 | 未着手 |
 | G4 本番追加 | 旧URL維持、新URLのWorker Route、ハブリンク変更、切り戻し可能 | 未実施 | 未実施 |
 | G5 検証 | 既存利用者・PWA稼働、計測、Search Console/サイトマップ、AdSense再評価 | 未実施 | 未実施 |
 
@@ -82,3 +82,13 @@ PuttでG3/G4を先に確立するが、Sweeperにも**同じ運用条件**を適
 - URL・D1・PWA・ランキングの接続確認前に旧サイトで新サイトの告知は出さない。
 - 旧URLを301/302で新URLへ強制リダイレクトしない。旧URLのスコア登録を止めたり、旧プレイヤーを無断削除したりしない。
 - 旧・新の個別IDが同じ板に2件載り得ることは仕様として認め、同一人物と断定して勝手に記録を統合しない。
+
+## 2026-11-14：Cloudflare/D1公開前検証の結果と現在地
+
+- 本番Zoneを読み取り専用で監査。4つの現行Custom Domainを確認でき、`hanage.app`のWorker Routesは0件。新Putt用パスは現在404で未使用。
+- Putt側で新Workerの本番候補`putt-hub`＋末尾スラッシュありなし2Route＋既存D1`putt-ranking`を`wrangler.hub-production.jsonc`に準備。`wrangler deploy --dry-run`に成功し、**本番Routeは一度も作成していない**。
+- D1共用については、旧Puttとは別の読み取り専用Workerに**実本番D1をバインド**し、4コースの総合ランキングが旧Puttと一致（35/16/8/10件）。POST/PUT/DELETEは拒否、一時Workerの削除も確認。
+- ハブの`src/lib/site.ts`と`src/app/sitemap.ts`をゲーム別のフラグ`PUTT_HUB_PLAY_ENABLED`/`SWEEPER_HUB_PLAY_ENABLED`に対応させる準備を実装。既定で旧URL、公開確認後だけ新URLとsitemap掲載。OFF/ONの両ビルドCI成功。
+- 旧Puttの新URL告知もリポ変数`PUTT_HUB_PLAY_URL`を設定して再デプロイした後にのみ表示。既定では告知しない。
+- **残りの本番変更:** Zoneの新専用Route設置とそのHTTPテスト、iPhoneの本番PWA動作・新URLスコア登録の最終確認、`www.hanage.app`での扱い、ハブ導線切替。Putt実機ゲームとモックランキングはユーザー確認済み。
+- 運用手順と切り戻し: [PUTT_HUB_RELEASE_GATE_2026-11-14.md](PUTT_HUB_RELEASE_GATE_2026-11-14.md)。
