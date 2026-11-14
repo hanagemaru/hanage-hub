@@ -1,5 +1,18 @@
 # Project status
 
+## 2026-11-14: Putt / Multicolor Sweeper両方をハブ内で本番公開（最新）
+
+- **公開済み:** https://hanage.app/games/putt/play/ と https://hanage.app/games/multicolor-sweeper/play/ 。既存の `putt.hanage.app` と `mcsweeper.hanage.app` は双方とも稼働継続。
+- ハブの両ゲーム紹介ページの「遊ぶ」はハブ配下の新URLを**別タブ**で開く。作品の紹介文・制作ノート・画像は維持。新ゲームから紹介へ戻るリンクは同タブ、遊び方は別タブ。
+- ランキングは作品ごとに既存D1を新旧2つのWorkerから共用。両ゲームとも全ランキング部門が新旧で一致することを本番で確認。各URLの匿名プレイヤーIDとローカル自己ベストは独立。手動引き継ぎ機能は提供しない。
+- 旧サブドメインのゲームに新URL案内と「ランキング共通、プレイヤーID・自己ベストはURLごとに別管理」を表示。旧URLから引き続きプレイ・登録可能。
+- **計測:** Puttは旧新とも訪問・初打・ホール完了・ラウンド完了を同一D1へ保存（現在のデータではURL別内訳なし）。Sweeperは旧新とも訪問・最初のマス開封を同一D1へ保存。Sweeperには`site_variant`（legacy/hub）を導入し、URL別に集計可能。新URLの合成イベント記録・確認・削除まで本番で成功。
+- 両ゲームの正規play URLをsitemapに登録。wwwの各ゲームplayサブパスだけapexへ302/no-store転送。その他のwwwページは維持。
+- [Putt新URL検証](https://github.com/hanagemaru/putt/actions/runs/43603881560)、[Sweeper新URLと計測検証](https://github.com/hanagemaru/multicolor-sweeper/actions/runs/43608035207)、[ハブの両新URL導線・www転送](https://github.com/hanagemaru/hanage-hub/actions/runs/43608440293)、[Sweeper旧URL案内検証](https://github.com/hanagemaru/multicolor-sweeper/actions/runs/43608605304)。
+- **次:** ユーザーのiPhoneで新Sweeperのプレイ・ランキング表示を実機確認、Search Consoleで新しいplay URLを検査し、AdSense再申請を判断。iPhoneのホーム画面PWAのすべてのパターンは未検証。
+- 以下の「Sweeper未移行」「本番未反映」は過去の準備段階の履歴であり、**この節が現行の正本**。
+
+
 ## 2026-11-14: Puttをhanage.app配下で本番公開（最新・検証済み）
 
 - **公開済み:** https://hanage.app/games/putt/play/。既存 https://putt.hanage.app/ も引き続き利用可能。新Worker`putt-hub`はPuttの専用パスのみに割り当て、ハブ本体のWorkerを残した。
