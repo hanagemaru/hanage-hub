@@ -1,5 +1,7 @@
 # Putt・Multicolor Sweeper：旧URLを維持する並行公開計画
 
+> **公開状況の更新（2026-11-14後半）:** Puttは `https://hanage.app/games/putt/play/` で本番公開済み。旧 `https://putt.hanage.app/` は引き続き利用可能。ハブの「遊ぶ」は新URLを別タブで開き、新旧の本番ランキングD1も共用している。Multicolor Sweeperの新パスはまだ未公開。以下の「未公開」「未実施」「次の作業」は公開前の検証時点の記録であり、**現在地は [PROJECT_STATUS.md](PROJECT_STATUS.md) の冒頭を優先**する。
+
 更新日: 2026-11-14（21時台の方針変更）
 **現行の正本。** 以前の「旧URL→新URLへ記録を手動引き継ぎする」案は**不採用**。試作・検証した事実は履歴として残すが、本番機能として提供しない。
 
