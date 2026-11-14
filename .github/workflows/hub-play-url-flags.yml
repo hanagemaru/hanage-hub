@@ -8,6 +8,9 @@ on:
       - src/app/sitemap.ts
       - .github/workflows/deploy.yml
       - scripts/verify-hub-play-flags.mjs
+      - src/workers/game-www-redirect.ts
+      - wrangler.game-www-redirect.jsonc
+      - scripts/verify-game-www-redirect.mjs
       - .github/workflows/hub-play-url-flags.yml
 
 jobs:
@@ -34,3 +37,7 @@ jobs:
         env:
           NEXT_PUBLIC_PUTT_HUB_PLAY_ENABLED: 'true'
           NEXT_PUBLIC_SWEEPER_HUB_PLAY_ENABLED: 'false'
+      - name: Verify narrowly scoped www redirect behavior
+        run: node --experimental-transform-types scripts/verify-game-www-redirect.mjs
+      - name: Dry-run www redirect Worker and routes (no deployment)
+        run: npx --yes wrangler@4.148.0 deploy --dry-run --config wrangler.game-www-redirect.jsonc --outdir /tmp/www-publish-check
