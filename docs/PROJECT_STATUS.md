@@ -1,5 +1,12 @@
 # Project status
 
+## 2026-11-14: Putt移行の自動検証成功・iPhone実機確認待ち
+
+- Puttで、本番とは別の旧URL相当/新URL相当の2プレビューWorkerを使用し、明示的な記録引き継ぎをChromiumとWebKit（390×844/タッチ）でE2E確認済み。ローカル専用D1でランキング旧新両APIのCRUDを確認済み。
+- 成功したActions: https://github.com/hanagemaru/putt/actions/runs/43591313342
+- **次はiPhone Safari実機確認**。PWAからの引き継ぎ、実ZoneのWorker Route、本番D1連続性は未確認。本番URL・D1・両リポジトリのmainは未変更。
+- 二作品の共通移行方針: [GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。
+
 ## 2026-11-14: Putt/Sweeperの共通移行方針
 
 - **正本:** [ゲームURL・既存プレイヤーの統一移行計画](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。PuttとSweeperを同じG0〜G5ゲートで段階移行し、両方の旧URLを維持。ランキングD1はゲーム別に継続し、利用者の明示選択による端末内データ移行、同一ID認証、iPhone/PWAでのE2E成功を本番公開条件とする。
