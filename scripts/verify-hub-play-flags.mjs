@@ -18,7 +18,7 @@ for (const page of [ja, en]) {
   assert.ok(playButton, 'Game detail page needs a primary play link');
   if (flag === 'putt') {
     assert.ok(playButton[0].includes(`href="${newUrl}"`), 'Published Putt uses hub game URL');
-    assert.doesNotMatch(playButton[0], /target="_blank"/, 'Hub game must open in same tab');
+    assert.match(playButton[0], /target="_blank"/, 'Hub game must open in a separate tab');
   } else {
     assert.ok(playButton[0].includes(`href="${oldUrl}"`), 'Legacy Putt link stays unchanged');
     assert.match(playButton[0], /target="_blank"/, 'Old subdomain keeps its separate tab');
