@@ -62,7 +62,7 @@ jobs:
           await retry(origin + '/games/putt/', async response => {
             if (response.status !== 200) return false;
             const html = await response.text();
-            const button = html.match(/<a\\b[^>]*class="buttonPrimary"[^>]*>/);
+            const button = html.match(/<a\b[^>]*class="buttonPrimary"[^>]*>/);
             return !!button && button[0].includes('href="https://hanage.app/games/putt/play/"') &&
               button[0].includes('target="_blank"');
           });
