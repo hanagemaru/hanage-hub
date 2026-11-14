@@ -40,7 +40,7 @@
 | --- | --- | --- | --- |
 | G0 設計と隔離 | ゲーム固有Worker/DB/既存URLを保護し、独立プレビューを用意 | 作業中／プレビュー完成 | 未着手 |
 | G1 新パス基本動作 | ゲーム・JS・PWA・API経路・ランキングUIモックが正常 | 自動テスト成功、実画面確認済み | 未着手 |
-| G2 移行動作 | **旧→新間の匿名認証と端末データ**、競合時、失敗時、iPhone/PWAをE2E検証 | Chromiumの別HTTPSオリジンE2E成功、iPhone/PWA未確認 | 未着手 |
+| G2 移行動作 | **旧→新間の匿名認証と端末データ**、競合時、失敗時、iPhone/PWAをE2E検証 | Chromium＋WebKit（390×844・タッチ）のE2E成功、iPhone/PWA未確認 | 未着手 |
 | G3 実ランキングと配信 | ステージングD1で取得/登録/更新/削除。CloudflareのURL経路と切り戻しを検証 | 一時ローカルD1で全API経路テスト成功、実Zoneルーティング未確認 | 未着手 |
 | G4 段階公開 | 旧URLを維持したまま新URLを公開。ハブのリンクを更新。ログ監視、記録消失なし | 未実施 | 未実施 |
 | G5 検証後の整理 | 旧URL稼働と移行導線を維持。Search Console・サイトマップ・リンク・AdSense再申請を評価 | 未実施 | 未実施 |
@@ -86,12 +86,12 @@
 
 ## 2026-11-14 検証進捗
 
-**Puttの技術的なゲートG2（Chromium）/G3（ローカルDB）は成功。iPhone実機での手動確認が次のアクション。**
+**Puttの技術的なゲートG2（Chromium・WebKit）/G3（ローカルDB）は成功。iPhone実機での手動確認が次のアクション。**
 
-- Chrome系のChromiumで旧・新を模した2つの独立HTTPS Worker間の明示的な記録引き継ぎをE2E検証。旧データ保持・別ID衝突時の非上書き・opener無しの転送禁止を確認。
+- ChromiumとWebKit（390×844のスマートフォン相当・タッチ）で旧・新を模した2つの独立HTTPS Worker間の明示的な記録引き継ぎをE2E検証。旧データ保持・別ID衝突時の非上書き・opener無しの転送禁止を確認。
 - 本番から完全に分離した一時ローカルD1を使い、同じランキングを新旧のAPIルートから取得、スコア登録・冪等性・名前変更・認証・削除を実試験。
 - テストは実ゲーム利用者の匿名ID/認証鍵を触らず、サンプル値を使った。
-- 2026-11-14 GitHub Actions: https://github.com/hanagemaru/putt/actions/runs/43590970005
+- 2026-11-14 GitHub Actions: https://github.com/hanagemaru/putt/actions/runs/43591313342
 - iPhone Safari通常タブとホーム画面PWAでの旧サイト→新サイト認証情報受け渡しは未確認。ユーザーがそれを確認するまでは本番`hanage.app`のWorker Routeも`main`も変更しない。
 - 本番`putt.hanage.app`は変更なし。Sweeperはこの移行方式がiPhoneで成功するまで作業開始しない（移行基準は共通）。
 - [PuttでのiPhone確認手順](https://github.com/hanagemaru/putt/blob/feature/hub-path-putt-20261113/docs/hub-path-preview.md#ユーザー実機確認の操作)。
