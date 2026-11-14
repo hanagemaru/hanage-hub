@@ -1,6 +1,6 @@
 # hanage-hub
 
-`hanage.app` で公開する、個人制作ゲーム・Webアプリのハブサイトです。
+`hanage.app` で個人制作ゲーム・Webアプリを紹介し、ゲーム本体も同一ドメインのパス配下で公開するサイトです。ソースコードと配信Workerは作品ごとに分けています。
 
 ## Current deployment
 
@@ -10,10 +10,12 @@
 - Additional custom domain: https://www.hanage.app/
 - Worker URL: https://hanage-hub.jibunnha.workers.dev/
 - Netlify fallback: https://hanage-hub.netlify.app/ (custom domains detached; retirement pending)
-- Multicolor Sweeper: https://mcsweeper.hanage.app/
-- Putt: https://putt.hanage.app/
+- Putt（新しい正式プレイURL・公開済み）: https://hanage.app/games/putt/play/
+- Putt（旧URL・利用継続）: https://putt.hanage.app/
+- Multicolor Sweeper（現行URL）: https://mcsweeper.hanage.app/
+- Multicolor Sweeper（将来の追加先・未公開）: https://hanage.app/games/multicolor-sweeper/play/
 
-Game URLs are defined once in `src/lib/site.ts` (`GAME_URLS`). Update them there if a game moves to another host.
+The catalog's game URLs are selected in `src/lib/site.ts` (`GAME_URLS`) using per-game release flags. Do not enable a new path before its independent Worker, assets, API and shared ranking D1 have been verified in production. Putt is live at the new path; Multicolor Sweeper has not migrated yet. Old subdomains stay playable and must not be forcibly redirected.
 
 Changes merged into `main` are deployed automatically to Cloudflare when the repository variable `CLOUDFLARE_DEPLOY` is `true`.
 Netlify remains temporarily available for rollback and may continue to provide Deploy Previews until it is retired.

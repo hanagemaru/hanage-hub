@@ -4,7 +4,7 @@
 
 ## 目的と適用範囲
 
-この文書は、`hanage.app` と、そこから案内する hanagemaru 運営のゲームに共通する広告方針の正本です。各ゲームのサブドメイン、正式公開前の `workers.dev` / GitHub Pages などの暫定URLも含みます。別の運営者が提供する外部サイトには適用しません。
+この文書は、`hanage.app` と、そこから案内する hanagemaru 運営のゲームに共通する広告方針の正本です。`hanage.app/games/<slug>/play/` のゲーム本体、引き続き利用可能な旧サブドメイン、および正式公開前の `workers.dev` / GitHub Pages などの暫定URLも含みます。別の運営者が提供する外部サイトには適用しません。
 
 この文書は実装・運用上の方針です。利用者向けの説明は `https://hanage.app/privacy/` を正とします。
 

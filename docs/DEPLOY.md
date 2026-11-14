@@ -18,6 +18,17 @@ GitHub Actionsの `Deploy` は、`main` へのpush時にリポジトリ変数 `C
 - `/games/` のようなURLは `out/games/index.html` が返る（`trailingSlash: true` に合わせた `html_handling`）
 - 存在しないURLは `out/404.html` を返す
 
+## ゲーム本体の同一ドメイン配信（2026-11-14以降）
+
+- `hanage.app/` と紹介・説明ページは従来の `hanage-hub` Workerが担当する。
+- 公開済みPutt本体 `https://hanage.app/games/putt/play/` は別Worker `putt-hub` にゲーム専用のZone Worker Routeで割り当てる。ハブのルートWorkerをゲームのコードに置き換えない。
+- `https://putt.hanage.app/` は既存Workerで継続し、新旧は同じ本番D1 `putt-ranking` を利用する。旧サイトのプレイヤーIDと新サイトのIDは別。
+- `www.hanage.app/games/putt/play/*` は `hanage.app` へ302で転送し、端末内記録の二重化を防ぐ。ほかのwwwのページは従来どおり。
+- Multicolor Sweeperの新しい同一ドメインパスは**未公開**。現行 `mcsweeper.hanage.app` を維持する。
+- ハブの `GAME_URLS` とサイトマップはゲームごとの公開フラグで切替える。新Workerの本番HTTP・D1・PWAを確認する前にフラグを有効にしない。
+
+公開状態と本番検証の証跡は [PROJECT_STATUS.md](PROJECT_STATUS.md)、旧URLを維持する共通運用は [GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md) を参照。
+
 ## Cloudflare切り替え状況
 
 完了済み:
