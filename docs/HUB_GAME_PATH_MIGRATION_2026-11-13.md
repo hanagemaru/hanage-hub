@@ -49,6 +49,16 @@ GitHub構成は `hanage-hub` と `putt` を分離したまま。ハブのNext.js
 
 プレビュー実装と検証の詳細: [putt/docs/hub-path-preview.md](https://github.com/hanagemaru/putt/blob/feature/hub-path-putt-20261113/docs/hub-path-preview.md)。
 
+### フェーズ2補足：ランキングと保存データ
+
+2026-11-14、Puttの検証WorkerでランキングUIをテストデータで表示する対応を実施（ブランチ上で検証）。本番D1は引き続き非接続。実ランキングの動作とユーザーデータ移行はフェーズ3に先立つ別タスク。
+
+- **サーバー記録:** 同じPuttのD1を新しい本番Workerにもバインドすれば板・スコア自体のDBコピーは不要。ただし旧端末側のプレイヤー識別情報が自動では引き継がれない。
+- **端末情報:** 旧`putt.hanage.app`の`localStorage`（名前・匿名IDと認証鍵・自己ベスト・途中進行・送信保留）は`hanage.app`とは別保管。
+- **方針:** 利用者の同意を得て引き継ぐ仕組みと、そのセキュリティ・実機検証を先に確定する。旧サイトは維持。既存ユーザーデータは削除しない。
+- **テスト方針:** まずローカルD1や独立ステージングDBで登録/読込/削除を検証する。本番D1への試験書き込みをしない。
+- **UI:** 通常のSafariタブではブラウザツールバーが残る。ゲームのPWAをホーム画面に追加し、`display: standalone`で起動した場合はブラウザUIなし（iPhone iOS26以降は「Web Appとして開く」の設定に依存）。URLの移動だけではツールバーは消えない。
+
 ### 3. 本番公開（今回は実施しない）
 
 - Cloudflare Zoneで`hanage.app/games/putt/play/*`にWorker Routeを割り当てる前に、既存のCustom Domainとの競合を試験する。
