@@ -1,0 +1,45 @@
+name: Verify Sweeper hub link switch and www route (no deployment)
+
+on:
+  pull_request:
+    paths:
+      - 'src/workers/game-www-redirect.ts'
+      - 'wrangler.game-www-redirect.jsonc'
+      - 'scripts/verify-game-www-redirect.mjs'
+      - 'scripts/verify-hub-play-flags.mjs'
+      - '.github/workflows/deploy.yml'
+      - '.github/workflows/verify-sweeper-hub-links.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit
+      - run: npm run lint
+      - name: Game links remain Putt-only before Sweeper switch
+        run: |
+          npm run build
+          node scripts/verify-hub-play-flags.mjs putt
+        env:
+          NEXT_PUBLIC_PUTT_HUB_PLAY_ENABLED: 'true'
+          NEXT_PUBLIC_SWEEPER_HUB_PLAY_ENABLED: 'false'
+      - name: Both new game links and sitemap work after Sweeper switch
+        run: |
+          npm run build
+          node scripts/verify-hub-play-flags.mjs both
+        env:
+          NEXT_PUBLIC_PUTT_HUB_PLAY_ENABLED: 'true'
+          NEXT_PUBLIC_SWEEPER_HUB_PLAY_ENABLED: 'true'
+      - name: No cross-game www redirect or unrelated route
+        run: node scripts/verify-game-www-redirect.mjs
+      - name: Verify www game paths before production deployment
+        run: npx --yes wrangler@4.148.0 deploy --dry-run --config wrangler.game-www-redirect.jsonc --outdir /tmp/sweeper-www-redirect

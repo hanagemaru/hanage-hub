@@ -7,15 +7,20 @@ for (const path of [
   '/games/putt/play/',
   '/games/putt/play/assets/game.js',
   '/games/putt/play/api/rankings?board=x&lang=ja',
+  '/games/multicolor-sweeper/play',
+  '/games/multicolor-sweeper/play/',
+  '/games/multicolor-sweeper/play/assets/index.js',
+  '/games/multicolor-sweeper/play/api/health?lang=ja',
 ]) {
   const response = test('https://www.hanage.app' + path);
   assert.equal(response.status, 302);
   assert.equal(response.headers.get('location'), 'https://hanage.app' + path);
   assert.equal(response.headers.get('Cache-Control'), 'no-store');
 }
-for (const path of ['/games/putt/', '/games/multicolor-sweeper/play/', '/games/putt/play-other']) {
+for (const path of ['/games/putt/', '/games/multicolor-sweeper/', '/games/putt/play-other']) {
   assert.equal(test('https://www.hanage.app' + path).status, 404);
 }
 assert.equal(test('https://www.hanage.app/games/putt/play/api/records', 'POST').status, 405);
+assert.equal(test('https://www.hanage.app/games/multicolor-sweeper/play/api/records', 'POST').status, 405);
 assert.equal(test('https://hanage.app/games/putt/play/').status, 404);
-console.log('PASS: www Putt path-only canonical redirect, no effects on other pages, no writes, no caching');
+console.log('PASS: www Putt/Sweeper game-play path-only canonical redirect, no effects on other pages, no writes, no caching');
