@@ -1,5 +1,12 @@
 # Project status
 
+## 2026-11-14: www用Putt限定リダイレクトも準備・検証済み
+
+- 実HTTP監査で`www.hanage.app`はrootへ自動リダイレクトせず、`/games/putt/play/`は404と確認。
+- `hanage-game-www-redirect`という別Worker（`src/workers/game-www-redirect.ts`）で、**wwwのPuttプレイパスだけ**rootの`hanage.app`へ302/no-storeで転送する案を実装。ほかのwwwパスは対象外。
+- Wranglerの2つのwww Routeのdry-runと、URL/クエリ保持・他パスの非影響・書込み拒否のテスト成功：[Actions](https://github.com/hanagemaru/hanage-hub/actions/runs/43596320442)。**実Zoneには追加していない**。
+- 公開・切り戻しを含む最新手順: [PUTT_HUB_RELEASE_GATE_2026-11-14.md](PUTT_HUB_RELEASE_GATE_2026-11-14.md)。
+
 ## 2026-11-14: Puttの本番Route事前監査・実ランキングDB共用成功
 
 - Cloudflare Zone監査：`hanage.app`のWorker Routesは現在0件、新Putt用URLは404で未使用。Custom Domainsの現行配置も確認。
