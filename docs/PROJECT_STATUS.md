@@ -1,23 +1,19 @@
 # Project status
 
-## 2026-11-14: Putt移行の自動検証成功・iPhone実機確認待ち
+## 2026-11-14: 既存URLを維持するPutt/Sweeperの並行公開方式を採用
 
-- Puttで、本番とは別の旧URL相当/新URL相当の2プレビューWorkerを使用し、明示的な記録引き継ぎをChromiumとWebKit（390×844/タッチ）でE2E確認済み。ローカル専用D1でランキング旧新両APIのCRUDを確認済み。
-- 成功したActions: https://github.com/hanagemaru/putt/actions/runs/43591313342
-- **次はiPhone Safari実機確認**。PWAからの引き継ぎ、実ZoneのWorker Route、本番D1連続性は未確認。本番URL・D1・両リポジトリのmainは未変更。
-- 二作品の共通移行方針: [GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。
-
-## 2026-11-14: Putt/Sweeperの共通移行方針
-
-- **正本:** [ゲームURL・既存プレイヤーの統一移行計画](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。PuttとSweeperを同じG0〜G5ゲートで段階移行し、両方の旧URLを維持。ランキングD1はゲーム別に継続し、利用者の明示選択による端末内データ移行、同一ID認証、iPhone/PWAでのE2E成功を本番公開条件とする。
-- 現在はPuttの新パス・ランキングUI（モック）・移行試作の段階。**旧→新ドメインの実移行、ステージングD1、本番ルーティングは未検証**。Sweeperは移行実装未着手。
-- 本番`main`や既存URLは変更していない。
+- **正本:** [Putt/Sweeper共通の並行公開計画](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。
+- Putt/Sweeperの旧サブドメインは引き続きプレイ可能なまま維持、`hanage.app/games/.../play/`に新URLを追加する。即時リダイレクトしない。
+- 作品ごとに**旧新URLでランキングの本番D1を共用**する。一方、プレイヤーID/認証鍵と端末の自己ベストはURLごとに独立するので、旧スコアが新URLで「自分のスコア」にはならず、両方で登録すれば2プレイヤー扱いになり得る。その制限を旧サイトに明記する。
+- **手動の旧→新の記録引き継ぎ機能は不採用**。Puttで以前作った引き継ぎ試作は作業ブランチから削除済み。
+- Puttでは旧サイトの案内リンクをビルドフラグ付きで実装し、Chromium/WebKitで案内・新URL・旧サイト継続・localStorage分離を確認。既存のローカル専用D1でランキングAPIの旧新経路も検証成功。 [Actions](https://github.com/hanagemaru/putt/actions/runs/43593549252)。
+- **本番`hanage.app`・`putt.hanage.app`・`mcsweeper.hanage.app`・各D1・`main`は未変更。** Puttの本番Route・D1共用を確認してから公開、次にSweeperへ同じルールを展開する。
 
 ## 2026-11-13: AdSense再否認とPuttハブ内プレイ検証
 
 - AdSense再審査は再び「有用性の低いコンテンツ」で否認（運営者から管理画面を提示）。2026-11-04の「審査結果待ち」記述は履歴として維持するが、**現在の状態は否認**。
 - `hanage.app/games/putt/play/` でのPutt本体提供を検証する方針を採用。サブドメインが審査対象外だったことは確認できておらず、承認を保証しない。
-- フェーズ0〜2: `hanage-hub` の `plan/putt-hub-path-20261113` と `putt` の `feature/hub-path-putt-20261113` で設計・独立プレビュー・URL対応を実施。**Puttの自動検証成功**（[Actions実行結果](https://github.com/hanagemaru/putt/actions/runs/43437337388)、[検証URL](https://putt-hub-preview.jibunnha.workers.dev/games/putt/play/)）。iPhone実機操作は未確認。本番公開は別フェーズ。
+- フェーズ0〜2: `hanage-hub` の `plan/putt-hub-path-20261113` と `putt` の `feature/hub-path-putt-20261113` で設計・独立プレビュー・URL対応を実施。**Puttの自動検証成功**（[Actions実行結果](https://github.com/hanagemaru/putt/actions/runs/43437337388)、[検証URL](https://putt-hub-preview.jibunnha.workers.dev/games/putt/play/)）。その後ユーザーがゲームとモックランキングを実機で確認済み。本番公開は別フェーズ。
 - 詳細正本: [HUB_GAME_PATH_MIGRATION_2026-11-13.md](HUB_GAME_PATH_MIGRATION_2026-11-13.md)。
 - **本番 `main`、`hanage.app`ルート、既存 `putt.hanage.app`、本番D1は変更しない。**
 
