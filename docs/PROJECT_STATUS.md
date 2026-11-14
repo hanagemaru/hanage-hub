@@ -1,5 +1,15 @@
 # Project status
 
+## 2026-11-14: Puttの本番Route事前監査・実ランキングDB共用成功
+
+- Cloudflare Zone監査：`hanage.app`のWorker Routesは現在0件、新Putt用URLは404で未使用。Custom Domainsの現行配置も確認。
+- Putt専用Worker`putt-hub`の2Routeと既存D1`putt-ranking`バインドをWrangler dry-run検証。**Routeの本番作成は未実施**。
+- 本番D1に別のread-only Workerから実接続し、旧Puttの4コースランキング（35/16/8/10件）との一致・書き込み拒否・Worker削除を確認。
+- ハブのゲーム導線とsitemapをビルドフラグにより公開後のみ切替える実装を追加。無効時は旧URL維持、有効時はPutt新URLを追加し架空の`/en/games/putt/play/`を作らない。GitHub Actionsで双方のビルドが成功。
+- 本番公開ゲート・巻き戻し: [PUTT_HUB_RELEASE_GATE_2026-11-14.md](PUTT_HUB_RELEASE_GATE_2026-11-14.md)。
+- 証跡：[Route監査](https://github.com/hanagemaru/putt/actions/runs/43594376873)、[実DB共用](https://github.com/hanagemaru/putt/actions/runs/43595040164)、[ハブフラグ](https://github.com/hanagemaru/hanage-hub/actions/runs/43595585443)。
+- **本番`hanage.app`・`putt.hanage.app`・`mcsweeper.hanage.app`・D1・本番各mainは変更していない。** 本番Route作成は別途判断。
+
 ## 2026-11-14: 既存URLを維持するPutt/Sweeperの並行公開方式を採用
 
 - **正本:** [Putt/Sweeper共通の並行公開計画](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。
