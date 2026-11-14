@@ -1,5 +1,49 @@
 # Project status
 
+## 2026-11-14: ハブとゲームの往復導線・SEOを最小限整備（本番未反映）
+
+- ハブの既存説明文・画像・制作ノート・ゲーム一覧の構造は維持。`GameView`の「遊ぶ」は新URL公開フラグOFFなら旧URLを別タブで開き、ONなら`hanage.app`配下のゲームを**同じタブ**で開く。Putt/Sweeper共通の方式。
+- Puttの新パスのトップメニューへ紹介ページへの戻り導線を追加。「遊び方」「プライバシー」も本番hanage.app同一オリジンなら同タブ、旧Puttは従来の別タブ導線を維持。狭い画面はリンクを折り返す。
+- 新Putt HTMLに`canonical=https://hanage.app/games/putt/play/`を出力。旧Puttは新サイト案内の明示ビルド変数が有効になった**後だけ**canonicalを新URLへ向ける。プレビューはnoindexを継続。
+- `sitemap.xml`は新URLを本番公開した場合だけ追加。旧URLへのリンクはフラグOFFなら変わらない。ハブの両フラグ・リンク・サイトマップのCIテスト成功。
+- **本番URLの新Route追加、Putt旧URL・ハブの本番デプロイ、D1への書き込みは未実施**。公開前のドラフトPRまで。
+
+
+## 2026-11-14: www用Putt限定リダイレクトも準備・検証済み
+
+- 実HTTP監査で`www.hanage.app`はrootへ自動リダイレクトせず、`/games/putt/play/`は404と確認。
+- `hanage-game-www-redirect`という別Worker（`src/workers/game-www-redirect.ts`）で、**wwwのPuttプレイパスだけ**rootの`hanage.app`へ302/no-storeで転送する案を実装。ほかのwwwパスは対象外。
+- Wranglerの2つのwww Routeのdry-runと、URL/クエリ保持・他パスの非影響・書込み拒否のテスト成功：[Actions](https://github.com/hanagemaru/hanage-hub/actions/runs/43596320442)。**実Zoneには追加していない**。
+- 公開・切り戻しを含む最新手順: [PUTT_HUB_RELEASE_GATE_2026-11-14.md](PUTT_HUB_RELEASE_GATE_2026-11-14.md)。
+
+## 2026-11-14: Puttの本番Route事前監査・実ランキングDB共用成功
+
+- Cloudflare Zone監査：`hanage.app`のWorker Routesは現在0件、新Putt用URLは404で未使用。Custom Domainsの現行配置も確認。
+- Putt専用Worker`putt-hub`の2Routeと既存D1`putt-ranking`バインドをWrangler dry-run検証。**Routeの本番作成は未実施**。
+- 本番D1に別のread-only Workerから実接続し、旧Puttの4コースランキング（35/16/8/10件）との一致・書き込み拒否・Worker削除を確認。
+- ハブのゲーム導線とsitemapをビルドフラグにより公開後のみ切替える実装を追加。無効時は旧URL維持、有効時はPutt新URLを追加し架空の`/en/games/putt/play/`を作らない。GitHub Actionsで双方のビルドが成功。
+- 本番公開ゲート・巻き戻し: [PUTT_HUB_RELEASE_GATE_2026-11-14.md](PUTT_HUB_RELEASE_GATE_2026-11-14.md)。
+- 証跡：[Route監査](https://github.com/hanagemaru/putt/actions/runs/43594376873)、[実DB共用](https://github.com/hanagemaru/putt/actions/runs/43595040164)、[ハブフラグ](https://github.com/hanagemaru/hanage-hub/actions/runs/43595585443)。
+- **本番`hanage.app`・`putt.hanage.app`・`mcsweeper.hanage.app`・D1・本番各mainは変更していない。** 本番Route作成は別途判断。
+
+## 2026-11-14: 既存URLを維持するPutt/Sweeperの並行公開方式を採用
+
+- **正本:** [Putt/Sweeper共通の並行公開計画](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。
+- Putt/Sweeperの旧サブドメインは引き続きプレイ可能なまま維持、`hanage.app/games/.../play/`に新URLを追加する。即時リダイレクトしない。
+- 作品ごとに**旧新URLでランキングの本番D1を共用**する。一方、プレイヤーID/認証鍵と端末の自己ベストはURLごとに独立するので、旧スコアが新URLで「自分のスコア」にはならず、両方で登録すれば2プレイヤー扱いになり得る。その制限を旧サイトに明記する。
+- **手動の旧→新の記録引き継ぎ機能は不採用**。Puttで以前作った引き継ぎ試作は作業ブランチから削除済み。
+- Puttでは旧サイトの案内リンクをビルドフラグ付きで実装し、Chromium/WebKitで案内・新URL・旧サイト継続・localStorage分離を確認。既存のローカル専用D1でランキングAPIの旧新経路も検証成功。 [Actions](https://github.com/hanagemaru/putt/actions/runs/43593549252)。
+- **本番`hanage.app`・`putt.hanage.app`・`mcsweeper.hanage.app`・各D1・`main`は未変更。** Puttの本番Route・D1共用を確認してから公開、次にSweeperへ同じルールを展開する。
+
+## 2026-11-13: AdSense再否認とPuttハブ内プレイ検証
+
+- AdSense再審査は再び「有用性の低いコンテンツ」で否認（運営者から管理画面を提示）。2026-11-04の「審査結果待ち」記述は履歴として維持するが、**現在の状態は否認**。
+- `hanage.app/games/putt/play/` でのPutt本体提供を検証する方針を採用。サブドメインが審査対象外だったことは確認できておらず、承認を保証しない。
+- フェーズ0〜2: `hanage-hub` の `plan/putt-hub-path-20261113` と `putt` の `feature/hub-path-putt-20261113` で設計・独立プレビュー・URL対応を実施。**Puttの自動検証成功**（[Actions実行結果](https://github.com/hanagemaru/putt/actions/runs/43437337388)、[検証URL](https://putt-hub-preview.jibunnha.workers.dev/games/putt/play/)）。その後ユーザーがゲームとモックランキングを実機で確認済み。本番公開は別フェーズ。
+- 詳細正本: [HUB_GAME_PATH_MIGRATION_2026-11-13.md](HUB_GAME_PATH_MIGRATION_2026-11-13.md)。
+- **本番 `main`、`hanage.app`ルート、既存 `putt.hanage.app`、本番D1は変更しない。**
+
+
 Last updated: 2026-11-04
 
 ## AdSense再審査の申請（2026-11-04）

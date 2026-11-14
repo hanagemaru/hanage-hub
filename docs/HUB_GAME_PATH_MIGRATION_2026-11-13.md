@@ -1,0 +1,131 @@
+# Puttをhanage.app配下で提供する検証計画
+
+> **履歴資料。** 2026-11-14の最新決定により、手動の匿名ID・自己ベスト引き継ぎ機能は**不採用**。旧URLを維持したまま新URLを追加し、総合ランキングのD1だけ共用する。以下の「移行UI」等の記述は初期案の記録であり、**現行の実施指示ではない**。最新方針の正本は [GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。
+
+更新日: 2026-11-13
+
+## 背景と目的
+
+2026-11-13、hanage.appのAdSense審査は再び「有用性の低いコンテンツ」で否認された（運営者が管理画面で確認）。現状はハブ内でゲームを紹介し、Puttのプレイは別サブドメイン `putt.hanage.app` に遷移する。
+
+**仮説:** ルートドメイン配下にゲーム本体を配置することは、ゲームが独自コンテンツであることをより直接的に示せる可能性がある。しかしGoogleがサブドメインを評価しなかった事実はなく、AdSense承認も保証しない。検索上のindexability・クロール状況は別途確認する。
+
+製品上の目的は、作品が増えても「ハブで作品を探す→同じドメイン内で遊ぶ・使う」という導線を保ち、ゲームごとのコード・リポジトリ・デプロイを独立させること。
+
+## ターゲット構造
+
+| 種別 | 現行 | 検証案 |
+| --- | --- | --- |
+| ハブ | `hanage.app/` | 維持 |
+| Putt紹介 | `hanage.app/games/putt/` | 維持 |
+| Putt遊び方 | `hanage.app/games/putt/how-to-play/` | 維持 |
+| Puttプレイ | `putt.hanage.app/` | `hanage.app/games/putt/play/` を追加（未公開） |
+| Putt既存URL | `putt.hanage.app/` | 当面維持 |
+| 将来の作品 | 個別サブドメイン | 作品ごとに独立Worker＋同ドメイン配下の専用パスを検討 |
+
+GitHub構成は `hanage-hub` と `putt` を分離したまま。ハブのNext.jsは静的書き出しのまま。PuttはVite＋Cloudflare Workerを継続。
+
+## フェーズ
+
+### 0. 設計・リポジトリ準備
+
+- 作業ブランチとPRを別々に作る。両リポジトリの`main`は変更しない。
+- ハブは設計・導線の責任範囲、Puttは実装・API・PWAの責任範囲に分離。
+- プレビューURLができる前に、本番Worker RouteやDNSを触らない。
+
+### 1. 専用プレビュー環境
+
+- Putt専用Worker `putt-hub-preview` を`workers.dev`に追加。既存 `putt` Workerとは別。
+- `assets.base_path=/games/putt/play` をWrangler 4.148.0以上で利用。
+- 本番D1のバインディングを一切持たせない。計測とランキングは無効化。
+- previewだけnoindex。秘密情報を置かない（URLは公開アクセス可能）。
+- 既存の `versions upload` プレビューは本番リソースを使うため、この検証には流用しない。
+
+### 2. URLパス対応と検証
+
+- Viteのベースパス、Service Worker/PWA manifestのscopeを `/games/putt/play/` に揃える。
+- APIが `/games/putt/play/api/*` でも動作可能な経路を作り、従来の `/api/*` を維持。
+- ランキングは検証Workerでは無効。書き込み拒否（D1未接続）を自動検証。
+- CIでビルド、HTML/JS、manifest、SW、noindex、API healthを確認。
+- 実機でiPhoneのタッチ操作・スクロール・全画面相当の動作を確認する。
+
+プレビュー実装と検証の詳細: [putt/docs/hub-path-preview.md](https://github.com/hanagemaru/putt/blob/feature/hub-path-putt-20261113/docs/hub-path-preview.md)。
+
+### フェーズ2補足：ランキングと保存データ
+
+2026-11-14、Puttの検証WorkerでランキングUIをテストデータで表示する対応を実施（ブランチ上で検証）。本番D1は引き続き非接続。実ランキングの動作とユーザーデータ移行はフェーズ3に先立つ別タスク。
+
+- **サーバー記録:** 同じPuttのD1を新しい本番Workerにもバインドすれば板・スコア自体のDBコピーは不要。ただし旧端末側のプレイヤー識別情報が自動では引き継がれない。
+- **端末情報:** 旧`putt.hanage.app`の`localStorage`（名前・匿名IDと認証鍵・自己ベスト・途中進行・送信保留）は`hanage.app`とは別保管。
+- **方針:** 利用者の同意を得て引き継ぐ仕組みと、そのセキュリティ・実機検証を先に確定する。旧サイトは維持。既存ユーザーデータは削除しない。
+- **テスト方針:** まずローカルD1や独立ステージングDBで登録/読込/削除を検証する。本番D1への試験書き込みをしない。
+- **UI:** 通常のSafariタブではブラウザツールバーが残る。ゲームのPWAをホーム画面に追加し、`display: standalone`で起動した場合はブラウザUIなし（iPhone iOS26以降は「Web Appとして開く」の設定に依存）。URLの移動だけではツールバーは消えない。
+
+### 3. 本番公開（今回は実施しない）
+
+- Cloudflare Zoneで`hanage.app/games/putt/play/*`にWorker Routeを割り当てる前に、既存のCustom Domainとの競合を試験する。
+- 実ランキングD1とOriginチェック・認証・計測の新パスでの安全な動作を確認。
+- サブドメインとルートドメインは別オリジン。localStorageにある名前・自己ベスト・認証情報を自動引き継ぎできないため移行仕様を先に決める。
+- PWAオフラインやインストール、既存リンク、Canonical・サイトマップ、プライバシー案内を調整。
+- ハブの「ゲームを開く」のリンクを新URLへ変えるのは、検証後の別PRにする。旧URLは維持し、切り戻し可能にする。
+
+### 4. AdSense再審査（今回は実施しない）
+
+- 新ルートのクロール/検索登録をSearch Consoleで確認。
+- ページの独自性・実用性・広告ポリシーを再評価。
+- 配置変更は審査通過の保証ではなく、他の不承認要因も残り得る。
+
+## フェーズ0〜2の完了基準
+
+- [x] リポジトリ運用・対象URL・切り戻し方針が文書化された
+- [x] Putt専用Workerへの自動デプロイが成功（GitHub Actions 2026-11-13）
+- [x] 新パスでHTML・JSをHTTP取得できる（ゲーム操作は実機未確認）
+- [x] PWAとAPIの自動検証が成功（本番D1接続なし、書き込み拒否確認）
+- [ ] iPhoneで主要操作を実機確認（利用者確認が必要）
+
+**フェーズ2の自動検証まで達しても、本番公開は許可されない。**
+
+## 検証記録（2026-11-13）
+
+- Puttの検証用PR: https://github.com/hanagemaru/putt/pull/117
+- プレビューURL: https://putt-hub-preview.jibunnha.workers.dev/games/putt/play/
+- Cloudflare Worker `putt-hub-preview` へ別デプロイ成功。
+- GitHub Actionsの成功実行: https://github.com/hanagemaru/putt/actions/runs/43437337388
+- HTML、JS、PWAマニフェスト、Service Worker、noindex、API health、D1バインディング不在、書き込み拒否を検証。
+- ゲーム操作の実機テストおよび本番へのCloudflare経路設定は**未実施**。
+
+## 利用実測と移行方針（2026-11-14）
+
+Putt本番D1に書き込みなしの集計を実行。2026-11-14 13:07 JST時点:
+
+| 指標 | 直近7日 | 直近30日 |
+| --- | ---: | ---: |
+| 訪問タブセッション（30分区切り） | 2 | 36 |
+| 初打到達セッション | 0 | 15 |
+| ラウンド完了セッション | 0 | 9 |
+
+直近7日以前の7日間は19訪問。ランキングの累計登録IDは44、スコア登録ありは41ID、累計スコア記録は69。直近30日に新スコアを記録したIDは4。
+
+これらは**実人数ではなく**、セッション・登録ID単位である。再訪率や引き継ぎを必要とする実人数は不明。
+
+**判断:** 強制的に全ユーザーを新URLへ移す必要はない。既存サブドメインとD1上のスコアは維持し、希望する利用者がローカル記録・匿名ランキングの認証情報を引き継げる手段を検討する。認証情報をURLへ載せたり、既存データを自動上書きしたりしない。
+
+Putt PRに限定キーのデータ抽出・インポート衝突判定・安全テストを追加。検証が通っているのはその**基礎処理のみ**で、旧サイトとの実際の引き継ぎ通信、UX、D1接続はまだ未実装。
+
+- [x] プレイ・ランキングモックのUIとAPI経路の自動検証
+- [x] 利用状況の本番集計（読み取り専用）
+- [x] ローカル記録移行のデータ選別・競合検知の自動テスト
+- [ ] 旧→新ドメインの認証情報受け渡し（Origin制限・明示同意）を実装・検証
+- [ ] 既存データがある端末の衝突時UX、iPhone実機検証
+- [ ] 本番D1への接続・登録・削除のステージング検証
+- [ ] Cloudflareの本番ルーティング検証
+
+
+### 実装試作の追加（2026-11-14）
+
+Puttの作業ブランチで、旧サイトから新サイトへ利用者の明示操作でローカル記録を引き継ぐUIと通信処理を試作した。厳密な送信元・送信先Originとウィンドウ照合で受け渡し、認証鍵をURLへ載せず、既存の保存データを無断で上書きしない。旧Putt本番にはまだ適用していないため、**実際のクロスドメイン引き継ぎは未検証**。Puttの検証URLでランキングモックが表示されたことは利用者が確認済み。
+
+Cloudflare公式資料によると、`assets.base_path` は特定パス配信に対応し、Cloudflare Worker Routeは同じホストのCustom Domain Workerより前に動作できる。従って技術構成の方向性は成立するが、`hanage.app`本番のRoute競合・Service Worker/PWA/ランキング接続の実地検証は残る。
+- https://developers.cloudflare.com/workers/static-assets/routing/advanced/serving-a-subdirectory/
+- https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
+

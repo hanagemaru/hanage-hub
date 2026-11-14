@@ -1,0 +1,43 @@
+name: Verify hub game URL publishing flags (no deployment)
+
+on:
+  push:
+    branches: [plan/putt-hub-path-20261113]
+    paths:
+      - src/lib/site.ts
+      - src/app/sitemap.ts
+      - .github/workflows/deploy.yml
+      - scripts/verify-hub-play-flags.mjs
+      - src/workers/game-www-redirect.ts
+      - wrangler.game-www-redirect.jsonc
+      - scripts/verify-game-www-redirect.mjs
+      - .github/workflows/hub-play-url-flags.yml
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit
+      - run: npm run lint
+      - name: Verify default keeps old live URLs
+        run: |
+          npm run build
+          node scripts/verify-hub-play-flags.mjs default
+      - name: Verify Putt publication flag adds only its playable URL
+        run: |
+          npm run build
+          node scripts/verify-hub-play-flags.mjs putt
+        env:
+          NEXT_PUBLIC_PUTT_HUB_PLAY_ENABLED: 'true'
+          NEXT_PUBLIC_SWEEPER_HUB_PLAY_ENABLED: 'false'
+      - name: Verify narrowly scoped www redirect behavior
+        run: node --experimental-transform-types scripts/verify-game-www-redirect.mjs
+      - name: Dry-run www redirect Worker and routes (no deployment)
+        run: npx --yes wrangler@4.148.0 deploy --dry-run --config wrangler.game-www-redirect.jsonc --outdir /tmp/www-publish-check

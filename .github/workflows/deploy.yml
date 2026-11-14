@@ -26,11 +26,53 @@ jobs:
         env:
           NEXT_PUBLIC_CF_BEACON_TOKEN: ${{ vars.CF_BEACON_TOKEN }}
           NEXT_PUBLIC_ADSENSE_CLIENT_ID: ${{ vars.ADSENSE_CLIENT_ID }}
+          # Puttの新URLは公開・ランキング共用を確認済み。
+          # Repository variable を false にすれば旧URLへ切り戻せる。
+          NEXT_PUBLIC_PUTT_HUB_PLAY_ENABLED: ${{ vars.PUTT_HUB_PLAY_ENABLED || 'true' }}
+          NEXT_PUBLIC_SWEEPER_HUB_PLAY_ENABLED: ${{ vars.SWEEPER_HUB_PLAY_ENABLED }}
+      - name: Check published link target and sitemap at build time
+        run: node scripts/verify-hub-play-flags.mjs putt
       - name: Deploy to Cloudflare Workers
         run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Deploy www → apex redirect only on Putt game path
+        run: npx --yes wrangler@4.148.0 deploy --config wrangler.game-www-redirect.jsonc
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Verify new live hub links and scoped www redirect
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          const origin = 'https://hanage.app';
+          async function retry(url, verify) {
+            let last;
+            for (let i = 0; i < 15; i++) {
+              try {
+                const response = await fetch(url, { redirect: 'manual', cache: 'no-store', signal: AbortSignal.timeout(18000) });
+                if (await verify(response)) return;
+                last = `HTTP ${response.status} at ${url}`;
+              } catch (error) { last = String(error); }
+              await new Promise(resolve => setTimeout(resolve, 2500));
+            }
+            throw Error(`Post-deploy check failed: ${last}`);
+          }
+          await retry(origin + '/games/putt/', async response => {
+            if (response.status !== 200) return false;
+            const html = await response.text();
+            const button = html.match(/<a\b[^>]*class="buttonPrimary"[^>]*>/);
+            return !!button && button[0].includes('href="https://hanage.app/games/putt/play/"') &&
+              button[0].includes('target="_blank"');
+          });
+          await retry(origin + '/sitemap.xml', async response =>
+            response.status === 200 && (await response.text()).includes('https://hanage.app/games/putt/play/'));
+          await retry('https://www.hanage.app/games/putt/play/', async response =>
+            response.status === 302 && response.headers.get('location') === 'https://hanage.app/games/putt/play/');
+          await retry('https://putt.hanage.app/', async response => response.status === 200);
+          console.log('PASS: hub play link opens new-tab Putt, sitemap lists new URL, www redirects, old Putt remains live');
+          NODE
       # リポジトリ変数 HUB_SMOKE_URL を設定すると、公開URLの生存確認を行う。
       - name: Smoke test
         if: vars.HUB_SMOKE_URL != ''

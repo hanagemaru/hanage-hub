@@ -12,7 +12,6 @@ export function GameView({ game, locale }: { game: Game; locale: Locale }) {
   const t = getContent(locale);
   const text = t.games[game.id];
   const maker = getGameNote(locale, game);
-
   return (
     <main>
       <section className="gameIntro pageWidth">
@@ -35,7 +34,12 @@ export function GameView({ game, locale }: { game: Game; locale: Locale }) {
             ))}
           </div>
           <div className="buttonRow">
-            <a className="buttonPrimary" href={game.playUrl} target="_blank" rel="noreferrer">
+            <a
+              className="buttonPrimary"
+              href={game.playUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {text.playLabel}
             </a>
             <Link

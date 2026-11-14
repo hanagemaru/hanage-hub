@@ -1,0 +1,102 @@
+# Putt・Multicolor Sweeper：旧URLを維持する並行公開計画
+
+更新日: 2026-11-14（21時台の方針変更）
+**現行の正本。** 以前の「旧URL→新URLへ記録を手動引き継ぎする」案は**不採用**。試作・検証した事実は履歴として残すが、本番機能として提供しない。
+
+## 目的と前提
+
+- AdSense再審査に向け、ゲーム本体を`hanage.app`配下に追加する。ただしGoogleが従来のサブドメインを審査していなかった証拠はなく、URL移動だけでの承認を保証しない。
+- `hanage-hub`、`putt`、`multicolor-sweeper` の3リポジトリと、それぞれの独立したWorker/Cloudflare D1を維持する。
+- **既存URLを閉じない・リダイレクトしない・既存プレイヤーの記録を消さない・引き継ぎ操作を求めない。**
+
+## URLとランキング
+
+| 作品 | 旧URL（継続してプレイ可能） | 新URL（新規追加、未公開） |
+| --- | --- | --- |
+| Putt | https://putt.hanage.app/ | https://hanage.app/games/putt/play/ |
+| Multicolor Sweeper | https://mcsweeper.hanage.app/ | https://hanage.app/games/multicolor-sweeper/play/ |
+
+- 新URL公開後、**旧サイトのトップに新サイトへの案内とリンク**を設置。ただし旧URLでのゲーム開始・スコア登録・ランキング・PWA利用は引き続き可能にする。
+- ハブ内の「遊ぶ」導線だけ、検証後に新URLへ更新する。
+- ランキングは**作品ごとに既存の本番D1を新旧URLから共用**する。Puttの`putt-ranking`とSweeperの`multicolor-sweeper-ranking`は混ぜず、スコアDBのコピーも作らない。
+- 同じランキング板を使うので、旧URLの記録も新URLの総合ランキングに表示される。ただし**本人のID・認証鍵・表示名・端末内の自己ベストはURLごとに独立**し、`localStorage`は共有されない。
+- つまり旧URLで登録したスコアを新URLで「自分のスコア」として編集・削除したり、自己ベストの継続として扱ったりはできない。新URLでのスコア登録は**別の匿名プレイヤーID**になる。両方で登録すればランキングに2人分として載る場合がある。
+- 本番公開時の表示文面はこの制約を伝える。過去のIDや認証鍵を強制的に移す・新URLで自動的に同一人物とみなすことはしない。
+- **旧URLから新URLへの移行ボタン、postMessage認証鍵転送、本人のデータ引き継ぎUIは実装しない。** 前に用意した試作は撤去する。
+
+### 旧Puttに表示する案内（本番で新URLが稼働してから）
+
+「新しいPuttも公開しています。こちらのPuttも引き続き遊べます。」
+
+「ランキングの記録は新旧共通ですが、プレイヤーIDや端末内の自己ベストはURLごとに別管理です。」
+
+リンク「新しいPuttで遊ぶ」
+
+- `VITE_LEGACY_NEW_SITE_URL`を旧URLの本番ビルドに設定した場合だけ表示。新URLの配信とランキング共用の確認前には表示しない。
+- 独立したプレビューの旧URL相当にはテストリンクのみ表示し、「ランキングはモックであり共有されない」と説明する。
+- Sweeperも同じ考え方で、旧URLのトップの案内を制作する。
+
+## 共通公開ゲート
+
+| 段階 | 合格条件 | Putt | Sweeper |
+| --- | --- | --- | --- |
+| G0 計画・隔離 | 旧URL、既存Worker、D1を保持し別プレビューで試す | 完了 | 計画のみ |
+| G1 ゲーム・UI | 新URLのゲーム、アセット、PWA、ランキング画面を検証 | ゲームは実機確認済、ランキングはモックで確認済 | 未着手 |
+| G2 旧サイト告知 | 旧サイトで新URL案内、ゲーム継続、新旧の端末情報分離を検証 | Chromium/WebKit自動テスト成功、本番では新URL稼働後に有効化 | 未着手 |
+| G3 ランキング共用 | 新旧同一D1、同じ板、各ID独立、登録・表示・更新・削除、CSRF/Originを確認 | 別Workerで本番D1の表示一致を確認／ローカルDB CRUD成功。実Zone登録・本番書込未実施 | 未着手 |
+| G4 本番追加 | 旧URL維持、新URLのWorker Route、ハブリンク変更、切り戻し可能 | 未実施 | 未実施 |
+| G5 検証 | 既存利用者・PWA稼働、計測、Search Console/サイトマップ、AdSense再評価 | 未実施 | 未実施 |
+
+PuttでG3/G4を先に確立するが、Sweeperにも**同じ運用条件**を適用する。Sweeperを旧URLごと放棄したり、異なるランキングDBに分岐させたりしない。
+
+## 検証結果（2026-11-14）
+
+- Putt: 新URLの静的配信・APIパス・PWAのCI成功。利用者がプレイ・モックランキング表示を実機確認。
+- Putt: 別オリジン間の手動引き継ぎはChromium/WebKitで試験成功したが、**採用せずコードを撤去**したため、以後の完了基準に含めない。
+- Putt: 一時ローカルD1の同一DBに対し、旧・新API経路で登録・取得・名前変更・削除、ID認証と冪等性を確認。これは**本番D1での新サイト稼働の証明ではない**。
+- 最新の検証版・CI: https://github.com/hanagemaru/putt/pull/117
+
+### 2026-11-14時点の移行前利用規模（読み取り専用集計）
+
+| 指標 | Putt | Sweeper |
+| --- | ---: | ---: |
+| 直近7日の訪問セッション | 2 | 18 |
+| 直近30日の訪問セッション | 36 | 122 |
+| 直近30日でプレイ開始に達したセッション | 15 | 71 |
+| 累計ランキング登録ID | 44 | 59 |
+| 直近30日で記録更新したID | 4 | 4 |
+
+セッション数と登録IDは実人数ではない。旧URLを残すことで既存利用者の接続先を守る。
+
+## 次の作業
+
+1. Puttの旧サイト向け案内と新URLリンクのプレビュー自動検証（架空データのみ）、既存プレイとランキングの動作維持。
+2. 本番と同一スキーマの一時ローカルD1で確認済みのランキングを、Cloudflareの**本番用の経路・同じ既存D1バインド**で安全に配信できるかRouteの競合と切り戻しを検証。新旧で別Workerになるため、同じD1を新Workerに明示的にバインドする必要がある。
+3. Puttの本番切替前に旧URLのプレイ/PWA・新URLのゲーム/ランキング・旧記録の総合順位表示を確認。**古い端末情報が新URLへ引き継がれないことを含めて**説明を確定。
+4. Puttの運用が安定してからSweeperにもG0〜G5を適用。
+5. Search Consoleなどで新URLの認識状況を確認してからAdSense再申請を再検討する。
+
+## 切り戻し・安全対策
+
+- 新URLに障害があればハブリンクを旧URLへ戻し、新しいRouteを外す。**旧Workers・旧Custom Domain・同じ本番D1を維持**する。
+- URL・D1・PWA・ランキングの接続確認前に旧サイトで新サイトの告知は出さない。
+- 旧URLを301/302で新URLへ強制リダイレクトしない。旧URLのスコア登録を止めたり、旧プレイヤーを無断削除したりしない。
+- 旧・新の個別IDが同じ板に2件載り得ることは仕様として認め、同一人物と断定して勝手に記録を統合しない。
+
+## www.hanage.appのルート整理（2026-11-14）
+
+- 実測でwwwはrootへ自動転送していない（`www/`と`www/games/putt/`は200）。`www/games/putt/play/`は未使用404。
+- 同じゲームが`www`とroot両方で起動すると、端末内の匿名ID・自己ベストがさらに別になる。**新しいゲームの正式オリジンを`hanage.app`に統一**する。
+- `hanage-game-www-redirect`WorkerでwwwのPuttプレイパス2Routeだけを302/no-storeでrootへ転送する。ほかのwwwのページと旧Puttには触れない。ユニットテストとWrangler dry-run成功（本番未デプロイ）。
+- [wwwのHTTP実測](https://github.com/hanagemaru/hanage-hub/actions/runs/43596093123)、[リダイレクトdry-run成功](https://github.com/hanagemaru/hanage-hub/actions/runs/43596320442)。
+- Sweeperの新パスを作る際にも同じWWW経路整理を適用する。
+
+## 2026-11-14：Cloudflare/D1公開前検証の結果と現在地
+
+- 本番Zoneを読み取り専用で監査。4つの現行Custom Domainを確認でき、`hanage.app`のWorker Routesは0件。新Putt用パスは現在404で未使用。
+- Putt側で新Workerの本番候補`putt-hub`＋末尾スラッシュありなし2Route＋既存D1`putt-ranking`を`wrangler.hub-production.jsonc`に準備。`wrangler deploy --dry-run`に成功し、**本番Routeは一度も作成していない**。
+- D1共用については、旧Puttとは別の読み取り専用Workerに**実本番D1をバインド**し、4コースの総合ランキングが旧Puttと一致（35/16/8/10件）。POST/PUT/DELETEは拒否、一時Workerの削除も確認。
+- ハブの`src/lib/site.ts`と`src/app/sitemap.ts`をゲーム別のフラグ`PUTT_HUB_PLAY_ENABLED`/`SWEEPER_HUB_PLAY_ENABLED`に対応させる準備を実装。既定で旧URL、公開確認後だけ新URLとsitemap掲載。OFF/ONの両ビルドCI成功。
+- 旧Puttの新URL告知もリポ変数`PUTT_HUB_PLAY_URL`を設定して再デプロイした後にのみ表示。既定では告知しない。
+- **残りの本番変更:** Zoneの新専用Route設置とそのHTTPテスト、iPhoneの本番PWA動作・新URLスコア登録の最終確認、`www.hanage.app`での扱い、ハブ導線切替。Putt実機ゲームとモックランキングはユーザー確認済み。
+- 運用手順と切り戻し: [PUTT_HUB_RELEASE_GATE_2026-11-14.md](PUTT_HUB_RELEASE_GATE_2026-11-14.md)。

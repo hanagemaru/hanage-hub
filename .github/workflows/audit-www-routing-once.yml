@@ -1,0 +1,19 @@
+name: Audit WWW game URL behavior (no changes)
+on:
+  push:
+    branches: [plan/putt-hub-path-20261113]
+    paths:
+      - scripts/audit-www-game-routing.mjs
+      - .github/workflows/audit-www-routing-once.yml
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: HTTP HEADLESS read only
+        run: node scripts/audit-www-game-routing.mjs
