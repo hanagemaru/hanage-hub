@@ -1,5 +1,17 @@
 # Project status
 
+## 2026-11-14: Puttをhanage.app配下で本番公開（最新・検証済み）
+
+- **公開済み:** https://hanage.app/games/putt/play/。既存 https://putt.hanage.app/ も引き続き利用可能。新Worker`putt-hub`はPuttの専用パスのみに割り当て、ハブ本体のWorkerを残した。
+- ハブのPutt紹介ページの**「遊ぶ」は新URLを別タブで開く**。既存紹介文・制作ノート・画像は変更していない。新Puttの「ゲーム紹介に戻る」は同タブ、「遊び方」は別タブ。
+- 新旧Puttは**本番の同一D1 `putt-ranking`**を使い、4コースのランキング行が一致。旧URLは新URLへのリンクと「ランキングは共通、プレイヤーIDと自己ベストはURLごとに別」という説明を掲示済み。手動の記録引き継ぎ機能は提供しない。
+- ハブsitemapに新PuttゲームURLを追加し、Putt本体のcanonicalは新URL。 `www.hanage.app/games/putt/play/*`はapexへ302/no-store転送。
+- 2026-11-14の実デプロイとHTTP検証はすべて成功：[Puttの新Routeと共通D1](https://github.com/hanagemaru/putt/actions/runs/43603881560)、[ハブの新URL/新タブ/www転送](https://github.com/hanagemaru/hanage-hub/actions/runs/43604204732)、[旧Puttの案内実ブラウザ検証](https://github.com/hanagemaru/putt/actions/runs/43604379355)。
+- **Sweeperは未移行。** 既存URL・既存D1のままで、Puttで確立した旧URL維持＋共通D1方式を次に展開する予定。
+- **今後:** ユーザーによるiPhone Safari/PWAの新ゲーム実機確認、Search Consoleで新URLのインデックス状況確認、AdSense審査を評価。Search Console・AdSenseの結果はまだ未確認。
+- 以下の同日過去セクションにある「本番未反映」「新URLは404」「同タブ起動」などは**公開前の履歴**で、本項が最新状況。
+
+
 ## 2026-11-14: ハブとゲームの往復導線・SEOを最小限整備（本番未反映）
 
 - ハブの既存説明文・画像・制作ノート・ゲーム一覧の構造は維持。`GameView`の「遊ぶ」は新URL公開フラグOFFなら旧URLを別タブで開き、ONなら`hanage.app`配下のゲームを**同じタブ**で開く。Putt/Sweeper共通の方式。
