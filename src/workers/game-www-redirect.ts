@@ -1,18 +1,18 @@
 /**
  * Dedicated, path-scoped redirect Worker. It must never modify the existing
- * www.hanage.app hub app or redirect a different route (Putt and other games).
+ * www.hanage.app hub app or redirect anything beyond game play paths.
  * All stateful game access is canonicalized to one hanage.app origin to avoid
  * creating separate player identities on www and the apex.
  */
 const WWW_HOST = 'www.hanage.app';
 const ROOT_HOST = 'hanage.app';
-const PATH = '/games/putt/play';
+const PATHS = ['/games/putt/play', '/games/multicolor-sweeper/play'];
 
 export default {
   fetch(request: Request): Response {
     const url = new URL(request.url);
     if (url.hostname !== WWW_HOST ||
-      !(url.pathname === PATH || url.pathname.startsWith(PATH + '/'))) {
+      !PATHS.some(path => url.pathname === path || url.pathname.startsWith(path + '/'))) {
       return new Response('Not found', { status: 404 });
     }
     if (request.method !== 'GET' && request.method !== 'HEAD') {
