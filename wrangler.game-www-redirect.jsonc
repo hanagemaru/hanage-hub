@@ -1,0 +1,13 @@
+{
+  // Release candidate only. Deploy AFTER explicit approval and when apex Putt is live.
+  // Only the Putt play path is covered; other www.hanage.app pages remain untouched.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hanage-game-www-redirect",
+  "main": "./src/workers/game-www-redirect.ts",
+  "compatibility_date": "2026-08-01",
+  "routes": [
+    { "pattern": "www.hanage.app/games/putt/play", "zone_name": "hanage.app" },
+    { "pattern": "www.hanage.app/games/putt/play/*", "zone_name": "hanage.app" }
+  ],
+  "observability": { "enabled": true }
+}
