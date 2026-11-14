@@ -1,5 +1,7 @@
 # AdSense再申請前のコンテンツ方針
 
+> **2026-11-14 追記:** 2026-11-13に再審査で「有用性の低いコンテンツ」が再度通知された。従来の紹介ページ・制作ノート拡充は保持しつつ、ゲーム本体を `hanage.app/games/<slug>/play/` に追加する方針を採用。Puttの新URLは公開済み、Multicolor Sweeperは未移行。AdSense承認は未確認で、URL統合だけで承認されるとは限らない。最新の公開状況は [PROJECT_STATUS.md](PROJECT_STATUS.md) を参照。
+
 最終更新: 2026-11-04
 
 > **2026-11-04：再審査申請済み（結果待ち）。** `hanage.app` のAdSense再審査は運営者が申請完了。制作ノート2本はSearch Consoleでインデックス登録済みと確認。ゲーム紹介・遊び方・サイト紹介・更新情報の拡充と、[PR #40](https://github.com/hanagemaru/hanage-hub/pull/40)による文章修正・更新履歴の箇条書き化は本番反映済み。以下は申請前の検討・実施計画の記録であり、審査結果はまだ不明。
