@@ -40,15 +40,28 @@ export type Game = {
 };
 
 /**
- * ゲーム本体の公開URL。
- *
- * どちらも hanage.app のサブドメイン（Cloudflare Workers のカスタムドメイン）。
- * 配信先を変えるときはここだけを差し替える。
- * ハブ側の他のファイルは URL を直接持たない。
+ * ゲーム本体の公開URL。既存のサブドメインは維持する。
+ * 新URLを実際に公開・確認した後、作品ごとのビルド変数を明示的に有効化する。
+ * 未設定（既定）は必ず既存URLのままにし、404へ誘導しない。
+ * 同じ変数をサイトマップにも使用し、未公開URLを登録しない。
  */
+export const HUB_PLAY_ROUTES = {
+  multicolorSweeper: "/games/multicolor-sweeper/play/",
+  putt: "/games/putt/play/",
+} as const;
+
+export const HUB_PLAY_ENABLED = {
+  multicolorSweeper: process.env.NEXT_PUBLIC_SWEEPER_HUB_PLAY_ENABLED === "true",
+  putt: process.env.NEXT_PUBLIC_PUTT_HUB_PLAY_ENABLED === "true",
+} as const;
+
 export const GAME_URLS = {
-  multicolorSweeper: "https://mcsweeper.hanage.app/",
-  putt: "https://putt.hanage.app/",
+  multicolorSweeper: HUB_PLAY_ENABLED.multicolorSweeper
+    ? `https://hanage.app${HUB_PLAY_ROUTES.multicolorSweeper}`
+    : "https://mcsweeper.hanage.app/",
+  putt: HUB_PLAY_ENABLED.putt
+    ? `https://hanage.app${HUB_PLAY_ROUTES.putt}`
+    : "https://putt.hanage.app/",
 } as const;
 
 /** 運営者情報。about と contact はここを参照する */
