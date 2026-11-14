@@ -1,5 +1,12 @@
 # Project status
 
+## 2026-11-15: 両ゲームのiPhone Safari実機確認完了（最新）
+
+- ユーザーが**PuttとMulticolor Sweeperの両方**で、ハブの「遊ぶ」から**別タブ**で新ゲームが開き、**プレイとランキング表示**が正常であることを報告。
+- 両ゲームのハブ配下移行は公開と実機での主要画面・導線確認まで完了。旧URL、既存ランキングD1、各URLの匿名ID独立の方針は維持。
+- **未確認・次の段階:** 新URLのSearch Consoleでのインデックス状況／URL検査、AdSense審査・再申請状況。ホーム画面PWAのすべての起動条件、異なるオリジンからの新規記録登録の実機検証は今回の報告の範囲外。
+- 以下2026-11-14節の「ユーザーによるiPhone実機確認待ち」は当時の状況を示す履歴。本節を最新の正本とする。
+
 ## 2026-11-14: Putt / Multicolor Sweeper両方をハブ内で本番公開（最新）
 
 - **公開済み:** https://hanage.app/games/putt/play/ と https://hanage.app/games/multicolor-sweeper/play/ 。既存の `putt.hanage.app` と `mcsweeper.hanage.app` は双方とも稼働継続。
