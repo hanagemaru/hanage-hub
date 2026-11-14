@@ -12,10 +12,6 @@ export function GameView({ game, locale }: { game: Game; locale: Locale }) {
   const t = getContent(locale);
   const text = t.games[game.id];
   const maker = getGameNote(locale, game);
-  // ハブ配下に公開済みのゲームだけ同じタブで開く。
-  // 旧サブドメインにリンクする間は、従来どおり別タブを維持する。
-  const playOnHub = game.playUrl.startsWith("https://hanage.app/");
-
   return (
     <main>
       <section className="gameIntro pageWidth">
@@ -41,8 +37,8 @@ export function GameView({ game, locale }: { game: Game; locale: Locale }) {
             <a
               className="buttonPrimary"
               href={game.playUrl}
-              target={playOnHub ? undefined : "_blank"}
-              rel={playOnHub ? undefined : "noreferrer"}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               {text.playLabel}
             </a>
