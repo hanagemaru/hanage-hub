@@ -26,6 +26,9 @@ jobs:
         env:
           NEXT_PUBLIC_CF_BEACON_TOKEN: ${{ vars.CF_BEACON_TOKEN }}
           NEXT_PUBLIC_ADSENSE_CLIENT_ID: ${{ vars.ADSENSE_CLIENT_ID }}
+          # 既定は未設定/false。各ゲームの新URL公開後にだけ true を設定する。
+          NEXT_PUBLIC_PUTT_HUB_PLAY_ENABLED: ${{ vars.PUTT_HUB_PLAY_ENABLED }}
+          NEXT_PUBLIC_SWEEPER_HUB_PLAY_ENABLED: ${{ vars.SWEEPER_HUB_PLAY_ENABLED }}
       - name: Deploy to Cloudflare Workers
         run: npx wrangler deploy
         env:
