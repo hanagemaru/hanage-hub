@@ -32,6 +32,17 @@
 7. **SEO・PWA・継続監視。** `www.hanage.app`の新Puttだけは上述の302/no-store転送が実際に効くことを確認する。旧・新のPWAオフライン・起動・iPhone Safariツールバー、キャッシュ更新、Search ConsoleのURL検査、実際のアクセス・登録エラーを観察する。
 8. **Sweeperへ展開。** Putt公開が安定してから、同じ条件でSweeper固有のWorker/D1/旧URL告知を検証・段階公開する。PuttとDBを混ぜない。
 
+## ハブ内導線・SEOの公開ゲート（2026-11-14追記）
+
+- Puttの新URLが本番で正常に配信される**前は**、ハブの`NEXT_PUBLIC_PUTT_HUB_PLAY_ENABLED`を有効にしない。既存の`putt.hanage.app`リンクと別タブ動作を維持する。
+- 新URLが正常になったらフラグを`true`にしてハブを再ビルド。作品紹介ページの「遊ぶ」は`hanage.app/games/putt/play/`を**同じタブ**で開く（旧URLの間は従来どおり別タブ）。
+- ゲームのトップメニューには「ゲーム紹介に戻る」「遊び方」のリンクを設置し、本番`hanage.app`同一オリジンでは同じタブで紹介・遊び方へ戻れるようにする。プレイ中の3D画面には不要なリンクを追加しない。
+- 新PuttのHTMLは`canonical=https://hanage.app/games/putt/play/`を出力。旧Puttは`PUTT_HUB_PLAY_URL`を新URLに設定して再配信した時にのみcanonicalを新URLへ向ける。旧Puttのゲームやブックマーク利用は残す。
+- `sitemap.xml`への新ゲームURL追加はハブのフラグと連動。新URLは言語依存しないため、存在しない`/en/games/putt/play/`は追加しない。
+- **公開後の確認:** 新プレイURLのHTTP/PWA/ゲーム、ハブ紹介への戻りと遊び方、旧Putt・ランキングの維持、canonical/sitemap/内部リンクを確認。Search Consoleで新ゲームURLのインデックス状況を追う。
+- Putt新URLのゲームプレイ中・ホーム画面起動後のSafariタブ/PWA遷移はiPhone実機で確認する（WebKit自動テストで全環境の挙動を保証しない）。
+- これらは本番公開前の**PR上の実装・テスト**であり、現時点で本番に配信したものではない。
+
 ## 切り戻し
 
 - 新URLに問題があればハブの`PUTT_HUB_PLAY_ENABLED`を無効にし、旧URLへ戻して再配信。
