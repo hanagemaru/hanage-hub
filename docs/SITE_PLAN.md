@@ -2,7 +2,7 @@
 
 ## Role of this repository
 
-`hanage-hub` is the public entrance for games and small web apps made by hanagemaru. Each product remains in its own repository and is deployed independently.
+`hanage-hub` is the catalog and introduction site for games and small web apps made by hanagemaru. Each product remains in its own repository and is deployed independently, but new play URLs are published under `https://hanage.app/` on a product-specific path. Each path can be routed to its own Cloudflare Worker; the application code does not need to be bundled into the hub repository.
 
 ## Published products
 
@@ -20,11 +20,13 @@ Gradient Sweeper is **not** published on this hub. Its pages and links were remo
 | Hub site | `https://hanage.app/` |
 | Games index | `https://hanage.app/games/` |
 | Multicolor Sweeper introduction | `https://hanage.app/games/multicolor-sweeper/` |
-| Multicolor Sweeper game | `https://mcsweeper.hanage.app/` |
+| Multicolor Sweeper game (current legacy URL) | `https://mcsweeper.hanage.app/` |
+| Multicolor Sweeper game (planned, **not yet published**) | `https://hanage.app/games/multicolor-sweeper/play/` |
 | Putt introduction | `https://hanage.app/games/putt/` |
-| Putt game | `https://putt.hanage.app/` |
+| Putt game (**published**) | `https://hanage.app/games/putt/play/` |
+| Putt legacy game (still playable) | `https://putt.hanage.app/` |
 
-All game URLs live in `src/lib/site.ts` (`GAME_URLS`) so moving a game to another host is a one-place change.
+The catalog's play URLs live in `src/lib/site.ts` (`GAME_URLS`) and are guarded by per-game release flags. Do not switch a flag or add a play URL to the sitemap until its production route is verified. The root domain is the canonical origin for new app paths; www app paths must redirect to the root to avoid duplicate localStorage identities.
 
 ### Languages
 
@@ -46,13 +48,13 @@ Page files under `src/app` hold only metadata and a locale; the markup lives in
 `Content` type — so a new page, game, or update entry does not build until it has
 text in both languages.
 
-Future products should normally use another subdomain such as `tool-name.hanage.app`, while their introduction and help pages live under `hanage.app`.
+**Current policy (2026-11-14):** New products should normally ship at `hanage.app/games/<slug>/play/` (or a similar `hanage.app` path for non-game apps), not at a dedicated product subdomain. Introduction/help pages stay on `hanage.app`; app play links open in a separate tab. Existing subdomains remain available without forced redirects. For Putt and Multicolor Sweeper, old and new URLs share each game's production ranking D1 while browser-local IDs and personal bests remain origin-specific; no manual transfer feature is provided. This URL structure was adopted for AdSense content-value remediation, but does not guarantee approval. See [the parallel URL plan](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md) and [current status](PROJECT_STATUS.md).
 
 ## Design direction
 
 - The games index uses a compact tile grid: two columns on mobile and four columns on larger screens.
 - Only released or genuinely in-development products are shown; the grid is not padded with placeholder tiles.
-- Each product has an introduction page on the hub before opening the separate app.
+- Each product has an introduction page before opening the independently deployed app, generally in a separate browser tab at a same-domain play path.
 - The first release prioritizes fast loading, touch targets, readable Japanese text, and a simple storefront-like browse experience.
 - Corners are square. Tiles, cards, buttons, badges, and tags carry no border radius. This keeps the hub away from a generic phone-OS look and matches the pixel artwork, whose square edges the old 18px radius was clipping.
 - Depth comes from lines, never from shadows or blur — there is no `--shadow` and no `--radius`; do not reintroduce either. Line weight carries meaning, so keep the three tiers apart:
@@ -72,8 +74,8 @@ The hub deploys from `main` to Cloudflare Workers Static Assets. The Next.js sta
 - Primary URL: `https://hanage.app/`
 - Alias: `https://www.hanage.app/`
 - Worker URL: `https://hanage-hub.jibunnha.workers.dev/`
-- Multicolor Sweeper already runs on Cloudflare Workers with a D1 ranking database.
-- Putt remains on GitHub Pages until its Cloudflare migration is completed.
+- Multicolor Sweeper currently runs at its legacy subdomain on Cloudflare Workers with a D1 ranking database; the same-domain play path is not yet published.
+- Putt is live at `hanage.app/games/putt/play/` via its independent `putt-hub` Worker, and at the existing `putt.hanage.app/` Worker. Both read the same production `putt-ranking` D1. GitHub Pages is only a legacy fallback.
 - The former Netlify project is kept only as a temporary rollback target; its custom domains are detached.
 
 ## Advertising and privacy
@@ -81,6 +83,6 @@ The hub deploys from `main` to Cloudflare Workers Static Assets. The Next.js sta
 The shared implementation policy is [`docs/ADVERTISING_POLICY.md`](./ADVERTISING_POLICY.md). It is the source of truth for rules shared by the hub and all first-party games. Each game specification keeps only its game-specific display timing and transitions.
 
 - Planned providers: Google AdSense and H5 Games Ads.
-- No advertising or external analytics script is present today.
+- No game advertising is running. Cloudflare Web Analytics and limited first-party gameplay measurement are used; see the latest project and game status records for the exact rollout.
 - The public privacy notice is maintained at `https://hanage.app/privacy/`; each game must provide a visible link to it before advertising is enabled.
 - AdSense approval, required consent management, `ads.txt`, privacy disclosure, and real-device QA are release gates for advertising.
