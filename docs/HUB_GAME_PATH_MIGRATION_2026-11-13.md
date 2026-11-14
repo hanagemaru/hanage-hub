@@ -1,6 +1,6 @@
 # Puttをhanage.app配下で提供する検証計画
 
-> 2026-11-14以降、PuttとSweeperに共通する公開・引き継ぎゲートの正本は [GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。本書はPuttの初期技術検証の履歴とする。
+> **履歴資料。** 2026-11-14の最新決定により、手動の匿名ID・自己ベスト引き継ぎ機能は**不採用**。旧URLを維持したまま新URLを追加し、総合ランキングのD1だけ共用する。以下の「移行UI」等の記述は初期案の記録であり、**現行の実施指示ではない**。最新方針の正本は [GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。
 
 更新日: 2026-11-13
 
