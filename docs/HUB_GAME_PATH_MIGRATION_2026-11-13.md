@@ -1,5 +1,7 @@
 # Puttをhanage.app配下で提供する検証計画
 
+> 2026-11-14以降、PuttとSweeperに共通する公開・引き継ぎゲートの正本は [GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md)。本書はPuttの初期技術検証の履歴とする。
+
 更新日: 2026-11-13
 
 ## 背景と目的
