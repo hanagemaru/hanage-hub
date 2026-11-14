@@ -1,5 +1,13 @@
 # Project status
 
+## 2026-11-15: 両ゲームのSearch Consoleインデックス登録リクエスト完了（最新）
+
+- ユーザーが2026-11-15に、`https://hanage.app/games/putt/play/`および`https://hanage.app/games/multicolor-sweeper/play/`の**双方についてSearch Consoleでインデックス登録をリクエストした**ことを報告。
+- Puttは2026-11-15のSearch Consoleライブテスト画像で「URLはGoogleに登録できます」「ページをインデックスに登録可能です」と表示され、技術的なインデックス登録可能性を確認済み。
+- サイトマップ`https://hanage.app/sitemap.xml`はSearch Consoleで「成功しました」。画像の最終読み込みは2026-11-12で、新ゲームURLの公開（11月14日）より前。サイトマップ再送信は不要。
+- **注意:** リクエスト送信済みはGoogleインデックス登録済みを意味しない。実際の登録・検索結果への掲載は未確認。Sweeperのライブテスト結果画面そのものは本会話では受領していない。
+- **次:** AdSense側の審査ステータスを確認し、`hanage.app`の再申請を判断する。再申請済みとは記録しない。
+
 ## 2026-11-15: 両ゲームのiPhone Safari実機確認完了（最新）
 
 - ユーザーが**PuttとMulticolor Sweeperの両方**で、ハブの「遊ぶ」から**別タブ**で新ゲームが開き、**プレイとランキング表示**が正常であることを報告。
