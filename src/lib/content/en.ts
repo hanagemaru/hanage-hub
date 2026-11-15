@@ -99,7 +99,7 @@ export const en: Content = {
   privacyPage: {
     title: "Privacy Policy",
     description: "How information is handled on hanage.app and in the games published here.",
-    revision: "Effective 13 August 2026. Last updated 22 October 2026.",
+    revision: "Effective 13 August 2026. Last updated 15 November 2026.",
     translationNote:
       "This is a translation provided for convenience. The Japanese version is the authoritative text.",
     sections: [
@@ -141,6 +141,13 @@ export const en: Content = {
           "When you submit a score, we store a per-device anonymous ID, a hash of your credential, your display name, total and per-hole strokes, hole-out information, the speed and direction of each shot, and the submission time. Shot data is used to check for impossible scores. Data is stored in Cloudflare D1.",
           "Raw IP addresses are not stored in the ranking database. A hashed signal is used to limit excessive submissions. Rate-limit data older than 24 hours is removed when a subsequent score is submitted.",
           "Use Delete my records on the ranking screen to delete your display name, scores, and shots. Deletion cannot be undone. The credential for accessing your records stays on your device; transferring it to another device is not supported.",
+        ],
+      },
+      {
+        heading: "Horse Pedigree Puzzle rankings",
+        paragraphs: [
+          "When you submit a score, the game stores an anonymous player ID, credential hash, display name, difficulty, adjusted score, horse IDs, action history, and submission time in a separate Cloudflare D1 database. The action history is used to validate ranked scores.",
+          "You can delete your display name and ranking records from the ranking screen. This cannot be undone, and records cannot be transferred between devices.",
         ],
       },
       {
@@ -447,6 +454,13 @@ export const en: Content = {
   },
 
   updates: {
+    "horse-pedigree-release": {
+      title: "Horse Pedigree Puzzle released",
+      items: [
+        "Connect 12 racehorses across up to four generations in a new card puzzle",
+        "Three randomized difficulty modes, hints, corrected-time scoring, and online rankings",
+      ],
+    },
     "putt-ranking": {
       title: "Online rankings for Putt",
       items: [
