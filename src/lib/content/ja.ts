@@ -231,6 +231,16 @@ export const ja: Content = {
   },
 
   games: {
+    horsePedigree: {
+      subtitle: "名馬の血統をつなぐカードパズル",
+      description: "競走馬の親子関係をたどり、12頭の血統図を完成させるゲームです。知名度別に3段階の難易度があり、完成までの時間を競います。",
+      status: null,
+      playLabel: "ゲームを開く ↗",
+      specs: { price: "無料", content: "12頭・最大4世代", devices: "スマホ・PC" },
+      shotAlts: [],
+      shotsLabel: "競走馬血統ならべの画面",
+      metaDescription: "競走馬の血統を12枚のカードでつなぐブラウザゲーム。3段階の難易度と補正タイムランキング。",
+    },
     multicolorSweeper: {
       subtitle: "色つき爆弾のマインスイーパー",
       description: "爆弾に色がある9×9のマインスイーパーです。周囲の爆弾の数が色ごとに表示されるので、数字を手がかりに爆弾の位置を見つけます。",
@@ -264,6 +274,26 @@ export const ja: Content = {
   },
 
   howToPlay: {
+    horsePedigree: {
+      metaTitle: "競走馬血統ならべの遊び方",
+      metaDescription: "競走馬の親子関係をつなぐ血統カードゲームの遊び方とスコア。",
+      heroDescription: "手札の競走馬を場の馬につなぎ、12頭の血統図を完成させましょう。",
+      backLabel: "ゲーム紹介へ戻る",
+      sections: [
+        { heading: "遊び方", kind: "steps", steps: [
+          { title: "難易度を選ぶ", body: "初級・中級・上級。出題される馬の知名度が変わります。" },
+          { title: "手札を場の馬につなぐ", body: "手札を選び、場の馬と親・子・きょうだいの関係を指定します。ドラッグでも操作できます。" },
+          { title: "12頭を完成させる", body: "最大4世代の血統を、できるだけ速く並べます。" },
+        ] },
+        { heading: "スコア", kind: "list", items: [
+          "実プレイ時間にペナルティを加えた補正タイムで競います。",
+          "ヒント：+10秒。つながる馬の名前だけを教えます。",
+          "誤回答：1回につき+15秒。総当たりをしても有利になりにくい仕組みです。",
+          "諦めて自動配置：1頭につき合計+45秒。同じ馬のヒントとは重複しません。",
+          "ランキングは難易度ごとに分かれ、1人につき自己ベスト1件を登録できます。",
+        ] },
+      ],
+    },
     multicolorSweeper: {
       metaTitle: "Multicolor Sweeperの遊び方",
       metaDescription: "色つきの爆弾を、色ごとの数字から見つけるMulticolor Sweeperの遊び方。",
