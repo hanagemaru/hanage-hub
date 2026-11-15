@@ -242,6 +242,16 @@ export const en: Content = {
   },
 
   games: {
+    horsePedigree: {
+      subtitle: "Connect the bloodlines of famous racehorses",
+      description: "Build a pedigree by placing 12 connected thoroughbreds in their correct generations. Pick a difficulty based on how famous the horses are and race against the clock.",
+      status: null,
+      playLabel: "Open the game ↗",
+      specs: { price: "Free", content: "12 horses / up to 4 generations", devices: "Phone and desktop" },
+      shotAlts: [],
+      shotsLabel: "Horse pedigree puzzle screenshots",
+      metaDescription: "A browser game about thoroughbred pedigrees. Connect 12 horses in a four-generation family tree, with three difficulty modes.",
+    },
     multicolorSweeper: {
       subtitle: "Minesweeper with colored bombs",
       description:
@@ -277,6 +287,26 @@ export const en: Content = {
   },
 
   howToPlay: {
+    horsePedigree: {
+      metaTitle: "How to play the Horse Pedigree Puzzle",
+      metaDescription: "Connect famous racehorses by parentage, with hints and time penalties.",
+      heroDescription: "Build a 12-horse pedigree by connecting the cards in your hand to related horses.",
+      backLabel: "Back to game details",
+      sections: [
+        { heading: "How to play", kind: "steps", steps: [
+          { title: "Choose a difficulty", body: "Beginner, Intermediate, or Advanced changes how recognizable the horses are." },
+          { title: "Connect cards", body: "Select a hand card, choose a horse on the board, and identify the relationship. Dragging also works." },
+          { title: "Complete all 12 horses", body: "Finish a connected pedigree spanning up to four generations." },
+        ] },
+        { heading: "Scoring", kind: "list", items: [
+          "Your ranked time is play time plus penalties.",
+          "Hint: +10 seconds for the name of a connected horse.",
+          "Wrong answer: +15 seconds per attempt.",
+          "Automatic placement: +45 seconds total per horse, with no extra hint charge on that horse.",
+          "The leaderboard has one personal-best entry per player for each difficulty.",
+        ] },
+      ],
+    },
     multicolorSweeper: {
       metaTitle: "How to play Multicolor Sweeper",
       metaDescription:
