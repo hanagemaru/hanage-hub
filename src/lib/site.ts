@@ -136,6 +136,7 @@ export type UpdateKind = "GAME" | "UPDATE" | "SITE";
  * 片方の言語だけ更新される事故を防ぐための仕掛け。
  */
 export type UpdateId =
+  | "horse-pedigree-release"
   | "putt-ranking"
   | "putt-four-courses"
   | "bgm"
@@ -158,6 +159,7 @@ export type UpdateMeta = {
  * トップページの1件も更新情報ページも、ここだけを見る。
  */
 export const updates: UpdateMeta[] = [
+  { id: "horse-pedigree-release", date: "2026-11-15", kind: "GAME" },
   { id: "putt-ranking", date: "2026-09-20", kind: "UPDATE" },
   { id: "putt-four-courses", date: "2026-09-19", kind: "UPDATE" },
   { id: "bgm", date: "2026-09-12", kind: "UPDATE" },
