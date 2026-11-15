@@ -9,7 +9,9 @@
     { "pattern": "www.hanage.app/games/putt/play", "zone_name": "hanage.app" },
     { "pattern": "www.hanage.app/games/putt/play/*", "zone_name": "hanage.app" },
     { "pattern": "www.hanage.app/games/multicolor-sweeper/play", "zone_name": "hanage.app" },
-    { "pattern": "www.hanage.app/games/multicolor-sweeper/play/*", "zone_name": "hanage.app" }
+    { "pattern": "www.hanage.app/games/multicolor-sweeper/play/*", "zone_name": "hanage.app" },
+    { "pattern": "www.hanage.app/games/horse-pedigree/play", "zone_name": "hanage.app" },
+    { "pattern": "www.hanage.app/games/horse-pedigree/play/*", "zone_name": "hanage.app" }
   ],
   "observability": { "enabled": true }
 }

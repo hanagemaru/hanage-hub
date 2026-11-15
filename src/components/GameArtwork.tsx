@@ -163,9 +163,26 @@ function PuttScene() {
   );
 }
 
+/** 血統図のカードと父子線。動物や人物の実写画像は使用しない。 */
+function HorsePedigreeScene(){
+ return (
+  <svg className="artScene" viewBox="0 0 45 45" aria-hidden="true">
+   <rect width="45" height="45" fill="#e5e9e1"/>
+   <path d="M22.5 15V23M8.5 23H36.5M8.5 23V30M36.5 23V30" fill="none" stroke="#55776C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+   <rect x="12" y="5" width="21" height="11" rx="2.5" fill="#244A56"/>
+   <rect x="1" y="30" width="16" height="10" rx="2.5" fill="#365A75"/>
+   <rect x="28" y="30" width="16" height="10" rx="2.5" fill="#6E5767"/>
+   <path d="M19 13l-1-4 4-2 3 2 2-1 2 2-1 3h-9z" fill="#DCE3D9"/>
+   <circle cx="22" cy="10" r="0.6" fill="#244A56"/>
+   <path d="M6 36h6M33 36h6" stroke="#DBE8E8" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+ );
+}
+
 const scenes: Record<GameArtworkKind, React.ReactNode> = {
   sweeper: <SweeperScene />,
   putt: <PuttScene />,
+  horse: <HorsePedigreeScene />,
 };
 
 export function GameArtwork({

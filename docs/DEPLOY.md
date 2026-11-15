@@ -29,6 +29,12 @@ GitHub Actionsの `Deploy` は、`main` へのpush時にリポジトリ変数 `C
 
 公開状態と本番検証の証跡は [PROJECT_STATUS.md](PROJECT_STATUS.md)、旧URLを維持する共通運用は [GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md](GAME_URL_AND_PLAYER_MIGRATION_2026-11-14.md) を参照。
 
+## 競走馬血統ならべの同一ドメイン公開（2026-11-15）
+
+ゲーム本体は `horse-pedigree-hub` Workerが `hanage.app/games/horse-pedigree/play/*` のみ担当する。独立D1 `horse-pedigree-ranking` と本番の `RANKING_SECRET` を使用する。ゲーム用Worker/DBは2026-11-15に作成して本番E2E検証済み。ハブの紹介ページはゲームのHTTP検証が済んだ後に公開する。
+
+本番結果・詳細は [HORSE_PEDIGREE_RELEASE_2026-11-15.md](HORSE_PEDIGREE_RELEASE_2026-11-15.md) を参照。Putt/Sweeperやハブ本体のWorkerとDBはそのまま利用する。
+
 ## Cloudflare切り替え状況
 
 完了済み:

@@ -99,7 +99,7 @@ export const en: Content = {
   privacyPage: {
     title: "Privacy Policy",
     description: "How information is handled on hanage.app and in the games published here.",
-    revision: "Effective 13 August 2026. Last updated 22 October 2026.",
+    revision: "Effective 13 August 2026. Last updated 15 November 2026.",
     translationNote:
       "This is a translation provided for convenience. The Japanese version is the authoritative text.",
     sections: [
@@ -141,6 +141,13 @@ export const en: Content = {
           "When you submit a score, we store a per-device anonymous ID, a hash of your credential, your display name, total and per-hole strokes, hole-out information, the speed and direction of each shot, and the submission time. Shot data is used to check for impossible scores. Data is stored in Cloudflare D1.",
           "Raw IP addresses are not stored in the ranking database. A hashed signal is used to limit excessive submissions. Rate-limit data older than 24 hours is removed when a subsequent score is submitted.",
           "Use Delete my records on the ranking screen to delete your display name, scores, and shots. Deletion cannot be undone. The credential for accessing your records stays on your device; transferring it to another device is not supported.",
+        ],
+      },
+      {
+        heading: "Horse Pedigree Puzzle rankings",
+        paragraphs: [
+          "When you submit a score, the game stores an anonymous player ID, credential hash, display name, difficulty, adjusted score, horse IDs, action history, and submission time in a separate Cloudflare D1 database. The action history is used to validate ranked scores.",
+          "You can delete your display name and ranking records from the ranking screen. This cannot be undone, and records cannot be transferred between devices.",
         ],
       },
       {
@@ -242,6 +249,16 @@ export const en: Content = {
   },
 
   games: {
+    horsePedigree: {
+      subtitle: "Connect the bloodlines of famous racehorses",
+      description: "Build a pedigree by placing 12 connected thoroughbreds in their correct generations. Pick a difficulty based on how famous the horses are and race against the clock.",
+      status: null,
+      playLabel: "Open the game ↗",
+      specs: { price: "Free", content: "12 horses / up to 4 generations", devices: "Phone and desktop" },
+      shotAlts: [],
+      shotsLabel: "Horse pedigree puzzle screenshots",
+      metaDescription: "A browser game about thoroughbred pedigrees. Connect 12 horses in a four-generation family tree, with three difficulty modes.",
+    },
     multicolorSweeper: {
       subtitle: "Minesweeper with colored bombs",
       description:
@@ -277,6 +294,26 @@ export const en: Content = {
   },
 
   howToPlay: {
+    horsePedigree: {
+      metaTitle: "How to play the Horse Pedigree Puzzle",
+      metaDescription: "Connect famous racehorses by parentage, with hints and time penalties.",
+      heroDescription: "Build a 12-horse pedigree by connecting the cards in your hand to related horses.",
+      backLabel: "Back to game details",
+      sections: [
+        { heading: "How to play", kind: "steps", steps: [
+          { title: "Choose a difficulty", body: "Beginner, Intermediate, or Advanced changes how recognizable the horses are." },
+          { title: "Connect cards", body: "Select a hand card, choose a horse on the board, and identify the relationship. Dragging also works." },
+          { title: "Complete all 12 horses", body: "Finish a connected pedigree spanning up to four generations." },
+        ] },
+        { heading: "Scoring", kind: "list", items: [
+          "Your ranked time is play time plus penalties.",
+          "Hint: +10 seconds for the name of a connected horse.",
+          "Wrong answer: +15 seconds per attempt.",
+          "Automatic placement: +45 seconds total per horse, with no extra hint charge on that horse.",
+          "The leaderboard has one personal-best entry per player for each difficulty.",
+        ] },
+      ],
+    },
     multicolorSweeper: {
       metaTitle: "How to play Multicolor Sweeper",
       metaDescription:
@@ -417,6 +454,13 @@ export const en: Content = {
   },
 
   updates: {
+    "horse-pedigree-release": {
+      title: "Horse Pedigree Puzzle released",
+      items: [
+        "Connect 12 racehorses across up to four generations in a new card puzzle",
+        "Three randomized difficulty modes, hints, corrected-time scoring, and online rankings",
+      ],
+    },
     "putt-ranking": {
       title: "Online rankings for Putt",
       items: [

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { getContent, type HowToSection } from "@/lib/content";
 import { localePath, type Locale } from "@/lib/i18n";
-import type { Game } from "@/lib/site";
+import { HUB_PLAY_ENABLED, type Game } from "@/lib/site";
 
 function SectionBody({ section }: { section: HowToSection }) {
   switch (section.kind) {
@@ -68,6 +68,9 @@ export function HowToPlayView({ game, locale }: { game: Game; locale: Locale }) 
                 <Link className="buttonSecondary" href={localePath(locale, game.route)}>
                   {text.backLabel}
                 </Link>
+                {game.id === "horsePedigree" && !HUB_PLAY_ENABLED.horsePedigree ? (
+                 <span className="buttonSecondary">Coming soon</span>
+                ) : (
                 <a
                   className="buttonPrimary"
                   href={game.playUrl}
@@ -76,6 +79,7 @@ export function HowToPlayView({ game, locale }: { game: Game; locale: Locale }) 
                 >
                   {gameText.playLabel}
                 </a>
+                )}
               </div>
             ) : null}
           </article>

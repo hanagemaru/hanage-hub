@@ -6,7 +6,7 @@
  */
 const WWW_HOST = 'www.hanage.app';
 const ROOT_HOST = 'hanage.app';
-const PATHS = ['/games/putt/play', '/games/multicolor-sweeper/play'];
+const PATHS = ['/games/putt/play', '/games/multicolor-sweeper/play', '/games/horse-pedigree/play'];
 
 export default {
   fetch(request: Request): Response {

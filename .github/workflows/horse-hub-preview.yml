@@ -1,0 +1,34 @@
+name: Horse hub feature preview checks
+on:
+  push:
+    branches: ['feature/horse-pedigree-hub-20261115']
+    paths: ['.github/workflows/horse-hub-preview.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Build with horse NOT published (default)
+        run: npm run build
+      - name: Confirm gated horse paths not in production catalog
+        run: |
+          ! grep -q 'horse-pedigree/play/' out/sitemap.xml
+      - name: Build with horse published (test-only flag)
+        run: npm run build
+        env:
+          NEXT_PUBLIC_HORSE_PEDIGREE_PLAY_ENABLED: 'true'
+      - name: Verify horse catalog and play entry
+        run: |
+          test -f out/games/horse-pedigree/index.html
+          test -f out/games/horse-pedigree/how-to-play/index.html
+          grep -q 'horse-pedigree/play/' out/games/horse-pedigree/index.html
+          grep -q 'horse-pedigree/play/' out/sitemap.xml

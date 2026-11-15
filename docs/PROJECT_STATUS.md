@@ -252,6 +252,13 @@ Phase D (advertising)
     Practical constraints: do not change or remove any existing URL, add the new section under a fresh path, Japanese first with English translations following, and allow two to four weeks after publishing for Google to recrawl before ticking 「問題を修正しました」.
     **Revised on 2026-09-27 and implemented on branch `claude/determined-turing-57aih2`.** The owner narrowed the plan: write for players, not developers, in a short, blunt voice; no technical deep dives. What landed: a `/notes/` section (two notes: why Putt was made; Gradient Sweeper → Multicolor Sweeper), a 「作者のことば」 block on each game page linking to its note, a body for `/about/`, seven `/updates/` entries, and a designed 404 (`src/app/global-not-found.tsx`, bilingual because the URL does not tell the language). The four technical notes listed in `ADSENSE_CONTENT_PLAN.md` were not written. Owner-editable prose now lives in `content/<locale>/` as Markdown (see README); rebuild the font subset after any text change. After merging: resubmit the sitemap in Search Console, request indexing for the new URLs, and resubmit to AdSense only once they show as indexed.
 
+## 競走馬血統ならべ公開（2026-11-15）
+
+- [game PR #13](https://github.com/hanagemaru/-family-tree-game/pull/13) を main にマージ。v6の12頭×3難易度、生年872頭、利用条件を確認した写真371頭、補正タイムランキング
+- [本番Cloudflareデプロイ #43700964775](https://github.com/hanagemaru/hanage-hub/actions/runs/43700964775)：専用Worker `horse-pedigree-hub`、独立D1 `horse-pedigree-ranking`、署名secret設定。v6の実際の問題でランキング登録・改ざん拒否・削除まで本番検証完了
+- ハブ紹介・遊び方（日英）・ゲーム一覧・更新情報・プライバシー文言を公開する。詳細 [リリース記録](HORSE_PEDIGREE_RELEASE_2026-11-15.md)
+- ホームとゲーム一覧の「遊ぶ」は同一オリジン `https://hanage.app/games/horse-pedigree/play/` を別タブで開く。他ゲームのURL/Worker/DBを変えない
+
 Update this file whenever a major task is completed or a decision changes.
 
 ## 集客準備の更新（2026-09-20）
