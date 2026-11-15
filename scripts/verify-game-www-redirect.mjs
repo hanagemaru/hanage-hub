@@ -11,6 +11,10 @@ for (const path of [
   '/games/multicolor-sweeper/play/',
   '/games/multicolor-sweeper/play/assets/index.js',
   '/games/multicolor-sweeper/play/api/health?lang=ja',
+  '/games/horse-pedigree/play',
+  '/games/horse-pedigree/play/',
+  '/games/horse-pedigree/play/src/app.js',
+  '/games/horse-pedigree/play/api/rankings?difficulty=easy',
 ]) {
   const response = test('https://www.hanage.app' + path);
   assert.equal(response.status, 302);
