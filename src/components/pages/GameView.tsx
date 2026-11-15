@@ -5,7 +5,7 @@ import { Markdown } from "@/components/Markdown";
 import { Screenshots } from "@/components/Screenshots";
 import { getContent, screenshots, specList } from "@/lib/content";
 import { localePath, type Locale } from "@/lib/i18n";
-import type { Game } from "@/lib/site";
+import { HUB_PLAY_ENABLED, type Game } from "@/lib/site";
 import { getGameNote, noteRoute } from "@/lib/writing";
 
 export function GameView({ game, locale }: { game: Game; locale: Locale }) {
@@ -34,6 +34,9 @@ export function GameView({ game, locale }: { game: Game; locale: Locale }) {
             ))}
           </div>
           <div className="buttonRow">
+            {game.id === "horsePedigree" && !HUB_PLAY_ENABLED.horsePedigree ? (
+              <span className="buttonSecondary">公開準備中</span>
+            ) : (
             <a
               className="buttonPrimary"
               href={game.playUrl}
@@ -42,6 +45,7 @@ export function GameView({ game, locale }: { game: Game; locale: Locale }) {
             >
               {text.playLabel}
             </a>
+            )}
             <Link
               className="buttonSecondary"
               href={localePath(locale, game.howToPlayRoute)}
