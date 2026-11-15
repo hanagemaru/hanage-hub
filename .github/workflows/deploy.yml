@@ -109,7 +109,7 @@ jobs:
            await retry(origin+path,async res=>{
             if(!res.ok)return false;
             const html=await res.text();
-            const button=html.match(/<a\\b[^>]*class="buttonPrimary"[^>]*>/);
+            const button=html.match(/<a[^>]*class="buttonPrimary"[^>]*>/);
             return !!button&&button[0].includes('href="https://hanage.app/games/horse-pedigree/play/"')&&button[0].includes('target="_blank"');
            });
           }
