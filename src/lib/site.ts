@@ -1,7 +1,7 @@
-export type GameArtworkKind = "sweeper" | "putt";
+export type GameArtworkKind = "sweeper" | "putt" | "horse";
 
 /** 作品の識別子。文章側もこのキーで引く */
-export type GameId = "multicolorSweeper" | "putt";
+export type GameId = "multicolorSweeper" | "putt" | "horsePedigree";
 
 /**
  * 紹介ページに並べる実画面。ファイルは public/shots/ に置く。
@@ -48,11 +48,13 @@ export type Game = {
 export const HUB_PLAY_ROUTES = {
   multicolorSweeper: "/games/multicolor-sweeper/play/",
   putt: "/games/putt/play/",
+  horsePedigree: "/games/horse-pedigree/play/",
 } as const;
 
 export const HUB_PLAY_ENABLED = {
   multicolorSweeper: process.env.NEXT_PUBLIC_SWEEPER_HUB_PLAY_ENABLED === "true",
   putt: process.env.NEXT_PUBLIC_PUTT_HUB_PLAY_ENABLED === "true",
+  horsePedigree: process.env.NEXT_PUBLIC_HORSE_PEDIGREE_PLAY_ENABLED === "true",
 } as const;
 
 export const GAME_URLS = {
@@ -62,6 +64,7 @@ export const GAME_URLS = {
   putt: HUB_PLAY_ENABLED.putt
     ? `https://hanage.app${HUB_PLAY_ROUTES.putt}`
     : "https://putt.hanage.app/",
+  horsePedigree: `https://hanage.app${HUB_PLAY_ROUTES.horsePedigree}`,
 } as const;
 
 /** 運営者情報。about と contact はここを参照する */
@@ -104,8 +107,20 @@ export const putt: Game = {
   issuesUrl: "https://github.com/hanagemaru/putt/issues",
 };
 
-/** タイル一覧に出す順番 */
-export const games: Game[] = [multicolorSweeper, putt];
+export const horsePedigree: Game = {
+  id: "horsePedigree",
+  slug: "horse-pedigree",
+  titleLines: ["競走馬血統ならべ"],
+  route: "/games/horse-pedigree/",
+  howToPlayRoute: "/games/horse-pedigree/how-to-play/",
+  playUrl: GAME_URLS.horsePedigree,
+  shots: [],
+  artwork: "horse",
+  issuesUrl: "https://github.com/hanagemaru/-family-tree-game/issues",
+};
+
+/** 新しいゲームは専用Workerの本番配信とランキングAPI確認後だけ掲載。 */
+export const games: Game[] = [multicolorSweeper, putt, ...(HUB_PLAY_ENABLED.horsePedigree?[horsePedigree]:[])];
 
 /** 題名。改行位置から組み立てるので、二重に持たない */
 export function gameTitle(game: Game): string {
