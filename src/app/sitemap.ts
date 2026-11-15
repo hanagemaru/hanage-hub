@@ -13,6 +13,7 @@ const routes = [
   "/games/multicolor-sweeper/how-to-play/",
   "/games/putt/",
   "/games/putt/how-to-play/",
+  ...(HUB_PLAY_ENABLED.horsePedigree ? ["/games/horse-pedigree/", "/games/horse-pedigree/how-to-play/"] : []),
   "/notes/",
   ...getNotes("ja").map((note) => noteRoute(note.slug)),
   "/updates/",
@@ -30,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const liveGamePaths = [
     ...(HUB_PLAY_ENABLED.putt ? [HUB_PLAY_ROUTES.putt] : []),
     ...(HUB_PLAY_ENABLED.multicolorSweeper ? [HUB_PLAY_ROUTES.multicolorSweeper] : []),
+    ...(HUB_PLAY_ENABLED.horsePedigree ? [HUB_PLAY_ROUTES.horsePedigree] : []),
   ];
   return [
     ...locales.flatMap((locale) =>
