@@ -53,7 +53,7 @@ export function GameView({ game, locale }: { game: Game; locale: Locale }) {
               {t.gameDetail.howToPlayLabel}
             </Link>
           </div>
-          <Screenshots label={text.shotsLabel} shots={screenshots(game, text)} />
+          {game.shots.length > 0 ? <Screenshots label={text.shotsLabel} shots={screenshots(game, text)} /> : null}
         </div>
       </section>
       <section className="contentSection pageWidth" aria-labelledby="maker-note-title">
