@@ -31,8 +31,12 @@ jobs:
           NEXT_PUBLIC_PUTT_HUB_PLAY_ENABLED: ${{ vars.PUTT_HUB_PLAY_ENABLED || 'true' }}
           # Sweeper new URL is published; false restores the original link.
           NEXT_PUBLIC_SWEEPER_HUB_PLAY_ENABLED: ${{ vars.SWEEPER_HUB_PLAY_ENABLED || 'true' }}
+          # The horse Worker + isolated D1 were deployed and fully verified on 2026-11-15.
+          NEXT_PUBLIC_HORSE_PEDIGREE_PLAY_ENABLED: 'true'
       - name: Check published link target and sitemap at build time
         run: node scripts/verify-hub-play-flags.mjs both
+      - name: Verify horse game release links before touching the live hub
+        run: node scripts/verify-horse-hub-release.mjs
       - name: Deploy to Cloudflare Workers
         run: npx wrangler deploy
         env:
@@ -83,6 +87,40 @@ jobs:
             response.status === 302 && response.headers.get('location') === 'https://hanage.app/games/multicolor-sweeper/play/');
           await retry('https://mcsweeper.hanage.app/', async response => response.status === 200);
           console.log('PASS: both games open new tabs, sitemap and www redirects work, old URLs remain playable');
+          NODE
+      - name: Verify live horse introduction, game link and public canonical paths
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          const origin='https://hanage.app';
+          async function retry(url,valid){
+           let failure='';
+           for(let i=0;i<15;i++){
+            try{
+             const response=await fetch(url,{redirect:'manual',cache:'no-store',signal:AbortSignal.timeout(18000)});
+             if(await valid(response))return;
+             failure='HTTP '+response.status+' '+url;
+            }catch(e){failure=String(e);}
+            await new Promise(r=>setTimeout(r,2500));
+           }
+           throw Error('Horse release smoke failed: '+failure);
+          }
+          for(const path of ['/games/horse-pedigree/','/en/games/horse-pedigree/']){
+           await retry(origin+path,async res=>{
+            if(!res.ok)return false;
+            const html=await res.text();
+            const button=html.match(/<a\\b[^>]*class="buttonPrimary"[^>]*>/);
+            return !!button&&button[0].includes('href="https://hanage.app/games/horse-pedigree/play/"')&&button[0].includes('target="_blank"');
+           });
+          }
+          for(const path of ['/games/horse-pedigree/how-to-play/','/en/games/horse-pedigree/how-to-play/'])
+           await retry(origin+path,async res=>res.ok);
+          await retry(origin+'/games/',async res=>res.ok&&(await res.text()).includes('horse-pedigree'));
+          await retry(origin+'/sitemap.xml',async res=>res.ok&&(await res.text()).includes(origin+'/games/horse-pedigree/play/'));
+          await retry('https://www.hanage.app/games/horse-pedigree/play/',async res=>
+           res.status===302&&res.headers.get('location')==='https://hanage.app/games/horse-pedigree/play/');
+          await retry(origin+'/games/horse-pedigree/play/api/health',async res=>res.ok&&(await res.json()).ok===true);
+          console.log('HORSE_HUB_LIVE_RELEASE_SUCCESS: Japanese/English landing/how-to, catalog, game URL, sitemap, www redirect, D1 API');
           NODE
       # リポジトリ変数 HUB_SMOKE_URL を設定すると、公開URLの生存確認を行う。
       - name: Smoke test
