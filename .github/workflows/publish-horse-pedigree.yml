@@ -1,7 +1,7 @@
 name: Publish horse-pedigree game only (Worker + isolated D1)
 on:
   push:
-    branches: [feature/horse-pedigree-hub-20261115]
+    branches: [main]
     paths:
       - .github/workflows/publish-horse-pedigree.yml
   workflow_dispatch:
@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: hanagemaru/-family-tree-game
-          ref: 99a8644daadc8469d67361aaf31b13297647ef35
+          ref: 4980d6e0aec08f6bc30ca4776a896f87e0fab3b4
           path: game
       - uses: actions/setup-node@v4
         with:
@@ -34,6 +34,22 @@ jobs:
       - name: Build horse game assets (independent of hub / other games)
         working-directory: game
         run: npm run build
+      - name: Check merged UI files before deploying
+        working-directory: game
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          import assert from 'node:assert/strict';
+          const html=readFileSync('dist/index.html','utf8');
+          const home=readFileSync('dist/home-screen.css','utf8');
+          const app=readFileSync('dist/src/app.js','utf8');
+          assert.match(html,/href="\.\/home-screen\.css"/);
+          assert.match(html,/class="home-menu-button"/);
+          assert.ok(!html.includes('class="text-button help-nav"'),'duplicate header Help control found');
+          assert.match(home,/color:#F7FAFC/);
+          assert.match(app,/layoutFamily\(state,\{minimizeCrossings:true\}\)/);
+          console.log('HORSE_PRODUCTION_UI_BUILD_VERIFIED: new home CSS, single menu, optimized graph');
+          NODE
       - name: Provision ONLY horse-pedigree-ranking and bind its UUID locally
         run: node scripts/provision-horse-d1.mjs
       - name: Migrate dedicated D1 schema remotely (never touch Sweeper or Putt)
@@ -57,3 +73,31 @@ jobs:
           fi
       - name: Verify the actual published game, D1 ranking, protection and deletion
         run: node scripts/verify-horse-live.mjs
+      - name: Verify published redesign assets are the latest merged commit
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          const root='https://hanage.app/games/horse-pedigree/play/';
+          async function check(name,predicate){
+           let reason='';
+           for(let i=0;i<12;i++){
+            try{
+             const r=await fetch(root+name,{cache:'no-store',signal:AbortSignal.timeout(15000)});
+             const body=await r.text();
+             if(r.ok&&predicate(body))return;
+             reason='status '+r.status+', verification false for '+name;
+            }catch(e){reason=String(e);}
+            await new Promise(resolve=>setTimeout(resolve,1800));
+           }
+           throw Error('New horse game assets were not published: '+reason);
+          }
+          await check('',s=>s.includes('href="./home-screen.css"')&&s.includes('class="home-menu-button"')&&!s.includes('text-button help-nav'));
+          await check('home-screen.css',s=>s.includes('color:#F7FAFC')&&s.includes('.home-primary-button'));
+          await check('src/app.js',s=>s.includes('minimizeCrossings:true')&&s.includes('home-menu-button'));
+          await check('api/health',s=>{try{return JSON.parse(s).ok===true}catch{return false}});
+          for(const url of ['https://hanage.app/games/horse-pedigree/','https://hanage.app/games/putt/','https://hanage.app/games/multicolor-sweeper/']){
+           const r=await fetch(url,{cache:'no-store',signal:AbortSignal.timeout(15000)});
+           assert.equal(r.status,200,url+' must remain available');
+          }
+          console.log('HORSE_REDESIGN_LIVE_VERIFIED: new CSS, clean menu, minimized crossings, API, hub and two other games');
+          NODE
