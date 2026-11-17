@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: hanagemaru/-family-tree-game
-          ref: 85d6b411c402dd3a03f8224bdd99f7c969b1eb6b
+          ref: 3c5fac724b11a63aff8357db8fe5ad0c92f2c795
           path: game
       - uses: actions/setup-node@v4
         with:
@@ -54,7 +54,11 @@ jobs:
           assert.match(app,/pinchCamera\(/);
           assert.match(app,/if\(dialogKind==='horse-profile'\)\{closeDialog\(\);return;\}/);
           assert.match(html,/href="\.\/horse-profile\.css"/);
-          console.log('HORSE_PRODUCTION_UI_BUILD_VERIFIED: 808 horse biographies, tap anywhere, stable pinch, old UI intact');
+          for(const route of ['privacy','terms']){
+            const href='href="https://hanage.app/'+route+'/" target="_blank" rel="noopener noreferrer"';
+            assert.equal(app.split(href).length-1,2,'Home/game menu must both link to '+route);
+          }
+          console.log('HORSE_PRODUCTION_UI_BUILD_VERIFIED: 808 horse biographies, both legal links, stable pinch, original UI intact');
           NODE
       - name: Provision ONLY horse-pedigree-ranking and bind its UUID locally
         run: node scripts/provision-horse-d1.mjs
@@ -101,6 +105,10 @@ jobs:
           await check('home-screen.css',s=>s.includes('color:#F7FAFC')&&s.includes('.home-primary-button'));
           await check('src/app.js',s=>s.includes('minimizeCrossings:true')&&s.includes('home-menu-button')&&s.includes("if(dialogKind==='horse-profile'){closeDialog();return;}")&&s.includes('pinchCamera('));
           await check('horse-profile.css',s=>s.includes('dialog.horse-profile-dialog')&&s.includes('#modal-close{display:none!important}'));
+          await check('src/app.js',s=>['privacy','terms'].every(route=>{
+            const href='href="https://hanage.app/'+route+'/" target="_blank" rel="noopener noreferrer"';
+            return s.split(href).length-1===2;
+          }));
           await check('data/horse-profiles.v1.json',s=>{
            try{const data=JSON.parse(s);return data.coverage.named===872&&data.coverage.withProfileFacts===808}catch{return false}
           });
