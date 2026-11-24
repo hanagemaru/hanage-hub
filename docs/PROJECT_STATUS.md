@@ -291,3 +291,7 @@ Update this file whenever a major task is completed or a decision changes.
 ## Gameplay analytics disclosure (2026-10-23)
 
 The existing short Japanese/English gameplay analytics sentence now covers both Putt and Multicolor Sweeper. No extra public paragraphs are added. Publish before enabling Sweeper first-cell-open analytics in production (multicolor-sweeper PR #54).
+
+## 競走馬血統ならべのプレイ数計測の公開説明（2026-11-24）
+
+プライバシー日英の既存の計測文に「競走馬血統ならべ」を追加（新しい段落は増やしていない）。ゲーム側の計測は既定無効で、本番有効化（`GAMEPLAY_ANALYTICS_MODE=production`）はこの文言の公開後に行う。仕様は `-family-tree-game` の `docs/gameplay-analytics-2026-11-24.md`。
