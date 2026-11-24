@@ -173,7 +173,7 @@ export const en: Content = {
         paragraphs: [
           "Cloudflare Web Analytics is used on the hub and on production game pages where measurement is enabled. It collects aggregate information such as the pages visited, the referring source, browser and device type, and approximate region.",
           "The service uses no cookies or local storage and creates no identifier that follows a person across devices. The information it collects does not identify individuals.",
-          "Putt and Multicolor Sweeper record a temporary visit ID, acquisition category, gameplay progress and measurement time to improve the game.",
+          "Putt, Multicolor Sweeper and Horse Pedigree Puzzle record a temporary visit ID, acquisition category, gameplay progress and measurement time to improve the game.",
         ],
       },
       {
